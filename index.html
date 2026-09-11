@@ -1,24 +1,15 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0,
-maximum-scale=1.0, user-scalable=no">
-
-<meta name="theme-color" content="#080b2b">
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>LUNARO</title>
 
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <style>
-
-/* =========================
-   GENERAL
-========================= */
-
 *{
     box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
@@ -29,2338 +20,916 @@ html,body{
     padding:0;
     width:100%;
     min-height:100%;
+    font-family:Arial,Tahoma,sans-serif;
+    background:#070a2b;
+    color:white;
 }
 
 body{
-
-    font-family:
-    Arial,
-    Tahoma,
-    sans-serif;
-
-    background:
-    radial-gradient(
-        circle at 50% 25%,
-        #27205f 0%,
-        #10143b 38%,
-        #070a22 100%
-    );
-
-    color:#ffffff;
-
     overflow-x:hidden;
-
-    user-select:none;
 }
-
-
-/* =========================
-   STARS
-========================= */
-
-body::before{
-
-    content:"";
-
-    position:fixed;
-
-    inset:0;
-
-    pointer-events:none;
-
-    opacity:.28;
-
-    background-image:
-
-    radial-gradient(
-        circle,
-        #ffffff 1px,
-        transparent 1.5px
-    );
-
-    background-size:
-    48px 48px;
-
-    z-index:0;
-}
-
-
-/* =========================
-   APP
-========================= */
 
 .app{
-
-    position:relative;
-
-    z-index:1;
-
-    width:100%;
-
-    max-width:500px;
-
     min-height:100vh;
-
-    margin:auto;
-
-    padding:
-    18px
-    16px
-    110px;
+    padding:18px 16px 95px;
+    position:relative;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 50% 30%,rgba(91,55,190,.25),transparent 35%),
+      linear-gradient(180deg,#080b30,#11134a 55%,#080a29);
 }
 
+/* ستاره‌ها */
+.app::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:.55;
+    background-image:
+      radial-gradient(circle,#fff 1px,transparent 1px),
+      radial-gradient(circle,#bcaaff 1px,transparent 1px);
+    background-size:80px 80px,120px 120px;
+    background-position:10px 20px,40px 60px;
+}
 
-/* =========================
-   HEADER
-========================= */
-
-header{
-
+/* Header */
+.header{
+    position:relative;
+    z-index:2;
     display:flex;
-
-    align-items:center;
-
     justify-content:space-between;
-
+    align-items:center;
     margin-bottom:18px;
 }
 
 .logo{
-
     display:flex;
-
     align-items:center;
-
-    gap:7px;
-
-    font-size:30px;
-
+    gap:8px;
+    font-size:34px;
     font-weight:900;
-
-    letter-spacing:.5px;
+    letter-spacing:1px;
 }
 
-.logo-moon{
-
-    font-size:36px;
-
-    filter:
-    drop-shadow(
-        0 0 12px #8b6cff
-    );
+.moon-small{
+    font-size:40px;
 }
-
-
-/* =========================
-   LANGUAGE
-========================= */
 
 .language{
-
-    position:relative;
-}
-
-.language-button{
-
-    border:1px solid
-    rgba(170,150,255,.55);
-
-    background:
-    rgba(80,65,160,.45);
-
-    color:#ffffff;
-
-    padding:
-    10px 13px;
-
-    border-radius:16px;
-
-    font-size:13px;
-
-    cursor:pointer;
-
-    backdrop-filter:blur(10px);
-}
-
-.language-menu{
-
-    display:none;
-
-    position:absolute;
-
-    top:48px;
-
-    right:0;
-
-    width:165px;
-
-    padding:7px;
-
-    background:#171a42;
-
-    border:
-    1px solid
-    rgba(255,255,255,.15);
-
-    border-radius:16px;
-
-    box-shadow:
-    0 15px 35px
-    rgba(0,0,0,.45);
-
-    z-index:50;
-}
-
-.language-menu.show{
-
-    display:block;
-}
-
-.language-menu button{
-
-    display:block;
-
-    width:100%;
-
-    border:0;
-
-    background:transparent;
-
+    border:1px solid rgba(255,255,255,.25);
+    background:rgba(94,67,190,.35);
     color:#fff;
-
-    text-align:right;
-
-    padding:11px;
-
-    border-radius:10px;
-
-    font-size:13px;
-
-    cursor:pointer;
+    border-radius:16px;
+    padding:11px 13px;
+    font-size:15px;
+    outline:none;
 }
 
-.language-menu button:hover{
-
-    background:
-    rgba(255,255,255,.08);
+/* صفحات */
+.page{
+    position:relative;
+    z-index:2;
+    display:none;
 }
 
-
-/* =========================
-   CARD
-========================= */
-
-.card{
-
-    background:
-    rgba(255,255,255,.075);
-
-    border:
-    1px solid
-    rgba(255,255,255,.12);
-
-    border-radius:27px;
-
-    box-shadow:
-    0 15px 45px
-    rgba(0,0,0,.25);
-
-    backdrop-filter:
-    blur(14px);
-
-    -webkit-backdrop-filter:
-    blur(14px);
+.page.active{
+    display:block;
 }
 
-
-/* =========================
-   BALANCE
-========================= */
-
+/* Balance */
 .balance{
-
+    background:rgba(39,41,79,.78);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:28px;
+    padding:22px 18px;
     text-align:center;
-
-    padding:
-    24px
-    15px
-    22px;
-
-    margin-bottom:10px;
+    box-shadow:0 15px 40px rgba(0,0,0,.22);
 }
 
 .balance-title{
+    color:#c9c8df;
+    font-size:17px;
+}
 
-    color:#c9c9e9;
+.points{
+    font-size:36px;
+    font-weight:900;
+    margin:13px 0 4px;
+}
 
+.points-name{
+    color:#bbb9dd;
     font-size:15px;
-
-    margin-bottom:12px;
 }
 
-.balance-number{
-
-    direction:ltr;
-
-    font-family:
-    Arial,
-    sans-serif;
-
-    font-size:42px;
-
-    line-height:1.1;
-
-    font-weight:900;
-
-    letter-spacing:1px;
-
-    color:#ffffff;
-
-    min-height:47px;
-
-    text-shadow:
-    0 0 18px
-    rgba(170,145,255,.3);
-}
-
-.balance-unit{
-
-    margin-top:8px;
-
-    color:#bcb8ec;
-
-    font-size:14px;
-}
-
-
-/* =========================
-   MAIN COIN
-========================= */
-
-.coin-area{
-
+/* Main moon */
+.moon-area{
     text-align:center;
-
-    padding:
-    22px 0 18px;
+    margin:30px 0 25px;
 }
 
-.coin{
-
-    position:relative;
-
-    width:210px;
-
-    height:210px;
-
-    margin:auto;
-
+.moon-button{
+    width:300px;
+    height:300px;
+    max-width:75vw;
+    max-height:75vw;
     border-radius:50%;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    cursor:pointer;
-
+    border:12px solid rgba(135,95,255,.18);
     background:
-
-    radial-gradient(
-        circle at 32% 28%,
-        #bba7ff 0%,
-        #7b55ed 35%,
-        #5131bc 67%,
-        #281568 100%
-    );
-
-    border:
-    9px solid
-    rgba(255,255,255,.13);
-
+      radial-gradient(circle at 35% 28%,#a68bff,#6735df 48%,#321589 78%);
     box-shadow:
-
-    0 0 0 11px
-    rgba(110,75,220,.12),
-
-    0 0 55px
-    rgba(106,74,235,.48),
-
-    0 25px 50px
-    rgba(0,0,0,.35);
-
-    transition:
-    transform .09s ease;
-}
-
-.coin:active{
-
-    transform:
-    scale(.91);
-}
-
-.coin::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:7px;
-
-    border-radius:50%;
-
-    border:
-    1px solid
-    rgba(255,255,255,.15);
-}
-
-.coin-icon{
-
-    font-size:92px;
-
-    filter:
-    drop-shadow(
-        0 7px 8px
-        rgba(0,0,0,.2)
-    );
-}
-
-
-/* =========================
-   +1 EFFECT
-========================= */
-
-.plus-one{
-
-    position:absolute;
-
-    pointer-events:none;
-
-    color:#ffffff;
-
-    font-size:25px;
-
-    font-weight:900;
-
-    animation:
-    floatUp .75s ease-out
-    forwards;
-
-    text-shadow:
-    0 0 12px
-    rgba(255,255,255,.7);
-
-    z-index:10;
-}
-
-@keyframes floatUp{
-
-    0%{
-
-        opacity:1;
-
-        transform:
-        translateY(0)
-        scale(1);
-    }
-
-    100%{
-
-        opacity:0;
-
-        transform:
-        translateY(-75px)
-        scale(1.35);
-    }
-}
-
-.coin-hint{
-
-    margin-top:15px;
-
-    color:#c6c7e2;
-
-    font-size:14px;
-}
-
-
-/* =========================
-   ENERGY
-========================= */
-
-.energy-card{
-
-    padding:
-    17px 18px;
-
-    margin-top:8px;
-}
-
-.energy-top{
-
+      0 0 0 8px rgba(116,74,240,.18),
+      0 0 60px rgba(112,69,255,.45),
+      inset 0 0 35px rgba(0,0,0,.3);
     display:flex;
-
     align-items:center;
-
-    justify-content:space-between;
-
-    margin-bottom:10px;
-
-    font-size:14px;
+    justify-content:center;
+    margin:auto;
+    cursor:pointer;
+    user-select:none;
+    transition:.12s;
 }
 
-.energy-number{
+.moon-button:active{
+    transform:scale(.94);
+}
 
-    direction:ltr;
+.moon{
+    font-size:125px;
+    filter:drop-shadow(0 5px 10px rgba(0,0,0,.25));
+}
 
-    font-family:Arial,sans-serif;
+.tap-text{
+    margin-top:22px;
+    font-size:17px;
+    color:#e0ddff;
+}
 
-    color:#ffffff;
+/* Energy */
+.energy-box{
+    background:rgba(45,45,87,.75);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:25px;
+    padding:18px;
+    margin-bottom:20px;
+}
+
+.energy-head{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:12px;
+    color:#eee;
 }
 
 .energy-bar{
-
-    height:10px;
-
     width:100%;
-
-    background:
-    rgba(255,255,255,.1);
-
+    height:14px;
     border-radius:20px;
-
+    background:#171933;
     overflow:hidden;
 }
 
 .energy-fill{
-
     width:100%;
-
     height:100%;
-
     border-radius:20px;
-
-    background:
-    linear-gradient(
-        90deg,
-        #7655ed,
-        #ad8cff
-    );
-
-    transition:
-    width .2s ease;
+    background:linear-gradient(90deg,#7650ff,#ae8cff);
+    transition:.25s;
 }
 
-
-/* =========================
-   QUICK BUTTONS
-========================= */
-
-.quick-grid{
-
+/* Cards */
+.cards{
     display:grid;
-
-    grid-template-columns:
-    repeat(3,1fr);
-
-    gap:10px;
-
-    margin-top:15px;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
 }
 
-.quick{
-
-    min-height:100px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:8px;
-
+.card{
+    background:rgba(40,41,79,.8);
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:23px;
+    padding:20px 8px;
     text-align:center;
-
     cursor:pointer;
-
-    padding:10px;
+    min-height:110px;
 }
 
-.quick-icon{
-
-    font-size:29px;
+.card:active{
+    transform:scale(.97);
 }
 
-.quick-text{
-
-    font-size:12px;
-
-    color:#d9daf1;
+.card-icon{
+    font-size:34px;
+    margin-bottom:9px;
 }
 
+.card-title{
+    font-size:14px;
+    color:#eee;
+}
 
-/* =========================
-   SECTIONS
-========================= */
-
+/* Sections */
 .section{
-
-    display:none;
-
-    animation:
-    sectionIn .25s ease;
-}
-
-.section.active{
-
-    display:block;
-}
-
-@keyframes sectionIn{
-
-    from{
-        opacity:0;
-        transform:translateY(8px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-
-/* =========================
-   SECTION CARD
-========================= */
-
-.section-card{
-
+    background:rgba(38,40,78,.85);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:25px;
     padding:20px;
-
-    margin-top:5px;
+    margin-bottom:15px;
 }
 
-.section-title{
-
-    margin:0 0 18px;
-
+.section h2{
+    margin-top:0;
     font-size:22px;
-
-    font-weight:900;
 }
-
-
-/* =========================
-   MISSION
-========================= */
 
 .mission{
-
     display:flex;
-
     align-items:center;
-
-    justify-content:space-between;
-
-    gap:10px;
-
-    padding:
-    14px 0;
-
-    border-bottom:
-    1px solid
-    rgba(255,255,255,.08);
+    gap:13px;
+    padding:14px 0;
+    border-bottom:1px solid rgba(255,255,255,.08);
 }
 
 .mission:last-child{
-
     border-bottom:0;
+}
+
+.mission-icon{
+    font-size:30px;
 }
 
 .mission-info{
-
     flex:1;
 }
 
-.mission-name{
-
-    font-size:14px;
-
-    line-height:1.6;
+.mission-info strong{
+    display:block;
+    margin-bottom:5px;
 }
 
-.mission-sub{
-
-    margin-top:3px;
-
-    color:#9ea2c8;
-
-    font-size:11px;
+.mission-info small{
+    color:#aaa9c8;
 }
 
-.reward-button{
-
-    border:0;
-
-    border-radius:12px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #7654e9,
-        #5333bc
-    );
-
-    color:#ffffff;
-
-    padding:
-    10px 13px;
-
+.reward{
+    color:#ffd34d;
     font-weight:bold;
-
-    cursor:pointer;
 }
 
-.reward-button:disabled{
-
-    opacity:.55;
-
-    cursor:default;
-}
-
-
-/* =========================
-   FRIENDS
-========================= */
-
-.friend-box{
-
-    text-align:center;
-
-    padding:
-    12px 0;
-}
-
-.friend-icon{
-
-    font-size:65px;
-
-    margin-bottom:10px;
-}
-
-.friend-text{
-
-    color:#bfc1df;
-
-    line-height:1.9;
-
-    font-size:14px;
-}
-
-.invite-box{
-
-    margin-top:20px;
-
+/* Friends */
+.ref-box{
+    background:#171936;
+    border-radius:18px;
     padding:15px;
-
-    background:
-    rgba(255,255,255,.06);
-
-    border-radius:15px;
-
-    direction:ltr;
-
-    text-align:center;
-
-    color:#d7d4ff;
-
     word-break:break-all;
-
-    font-size:12px;
+    margin:15px 0;
+    color:#bbb9dc;
 }
 
-.copy-button{
-
-    margin-top:12px;
-
-    width:100%;
-
+.btn{
     border:0;
-
-    border-radius:13px;
-
-    padding:12px;
-
-    background:#7654e9;
-
-    color:#fff;
-
+    width:100%;
+    padding:15px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#7650ff,#a87cff);
+    color:white;
+    font-size:16px;
     font-weight:bold;
-
     cursor:pointer;
 }
 
-
-/* =========================
-   LEADERBOARD
-========================= */
-
-.rank-row{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    padding:
-    14px 4px;
-
-    border-bottom:
-    1px solid
-    rgba(255,255,255,.08);
+.btn:active{
+    transform:scale(.98);
 }
 
-.rank-row:last-child{
+/* Leaderboard */
+.rank{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 0;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
 
+.rank:last-child{
     border-bottom:0;
 }
 
-.rank-name{
-
+.rank-number{
+    width:36px;
+    height:36px;
     display:flex;
-
     align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#24264b;
+}
 
-    gap:10px;
-
-    font-size:14px;
+.rank-name{
+    flex:1;
 }
 
 .rank-score{
-
-    direction:ltr;
-
-    font-family:Arial,sans-serif;
-
     font-weight:bold;
+    color:#c8b9ff;
 }
 
-.you-row{
-
-    margin-top:8px;
-
-    padding:
-    15px;
-
-    border-radius:15px;
-
-    background:
-    rgba(116,84,230,.18);
-
-    border:
-    1px solid
-    rgba(140,115,255,.2);
-}
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-.bottom-nav{
-
+/* Bottom nav */
+.nav{
     position:fixed;
-
-    z-index:40;
-
+    z-index:10;
     bottom:0;
-
-    left:50%;
-
-    transform:
-    translateX(-50%);
-
-    width:100%;
-
-    max-width:500px;
-
+    left:0;
+    right:0;
+    height:82px;
     display:grid;
-
-    grid-template-columns:
-    repeat(4,1fr);
-
-    padding:
-    9px 10px
-    calc(9px + env(safe-area-inset-bottom));
-
-    background:
-    rgba(7,9,30,.95);
-
-    border-top:
-    1px solid
-    rgba(255,255,255,.1);
-
-    backdrop-filter:
-    blur(15px);
+    grid-template-columns:repeat(4,1fr);
+    background:rgba(6,8,34,.96);
+    border-top:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(12px);
 }
 
-.nav-button{
-
+.nav-item{
     border:0;
-
     background:transparent;
-
-    color:#8589ad;
-
+    color:#aaaac4;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    font-size:12px;
     cursor:pointer;
-
-    font-size:11px;
-
-    padding:5px;
 }
 
 .nav-icon{
-
-    display:block;
-
-    font-size:24px;
-
-    margin-bottom:4px;
+    font-size:27px;
 }
 
-.nav-button.active{
-
-    color:#c4b6ff;
+.nav-item.active{
+    color:#fff;
 }
 
-.nav-button.active
-.nav-icon{
-
-    filter:
-    drop-shadow(
-        0 0 7px
-        rgba(150,120,255,.6)
-    );
+.nav-item.active .nav-icon{
+    transform:scale(1.08);
 }
 
-
-/* =========================
-   TOAST
-========================= */
-
+/* Toast */
 .toast{
-
     position:fixed;
-
-    z-index:100;
-
-    top:20px;
-
+    z-index:30;
     left:50%;
-
-    transform:
-    translate(-50%,-100px);
-
-    background:#ffffff;
-
-    color:#17172b;
-
+    bottom:100px;
+    transform:translateX(-50%) translateY(20px);
+    background:#292b52;
+    padding:13px 20px;
     border-radius:15px;
-
-    padding:
-    11px 18px;
-
-    font-size:13px;
-
-    box-shadow:
-    0 12px 30px
-    rgba(0,0,0,.35);
-
-    transition:
-    transform .25s ease;
-
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
     white-space:nowrap;
 }
 
 .toast.show{
-
-    transform:
-    translate(-50%,0);
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
 }
 
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:360px){
-
-    .coin{
-
-        width:185px;
-
-        height:185px;
-    }
-
-    .coin-icon{
-
-        font-size:78px;
-    }
-
-    .balance-number{
-
-        font-size:36px;
-    }
+/* popup */
+.popup{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    background:rgba(0,0,0,.65);
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
 }
 
+.popup.show{
+    display:flex;
+}
+
+.popup-box{
+    width:100%;
+    max-width:600px;
+    background:#181a3d;
+    border-radius:28px 28px 0 0;
+    padding:25px 20px 35px;
+}
+
+.popup-box h2{
+    margin-top:0;
+}
+
+.language-list{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.lang-btn{
+    padding:14px;
+    border:1px solid rgba(255,255,255,.12);
+    background:#26284f;
+    color:white;
+    border-radius:16px;
+    font-size:15px;
+}
+
+/* desktop */
+@media(min-width:700px){
+    .app{
+        max-width:650px;
+        margin:auto;
+    }
+
+    .nav{
+        max-width:650px;
+        left:50%;
+        transform:translateX(-50%);
+        border-radius:25px 25px 0 0;
+    }
+}
 </style>
-
 </head>
-
 
 <body>
 
+<div class="app">
 
-<div
-id="toast"
-class="toast">
-</div>
+    <!-- HEADER -->
+    <header class="header">
+        <button class="language" onclick="openLanguage()">
+            🌐 <span id="languageName">فارسی</span>
+        </button>
 
+        <div class="logo">
+            <span>LUNARO</span>
+            <span class="moon-small">🌙</span>
+        </div>
+    </header>
 
-<main class="app">
 
+    <!-- HOME -->
+    <main id="homePage" class="page active">
 
-<!-- =====================
-     HEADER
-===================== -->
+        <section class="balance">
+            <div class="balance-title" data-i18n="balance">موجودی شما</div>
 
-<header>
+            <div class="points" id="points">0</div>
 
-<div class="logo">
+            <div class="points-name">
+                LUNARO Points
+            </div>
+        </section>
 
-<span class="logo-moon">🌙</span>
 
-<span>LUNARO</span>
+        <section class="moon-area">
 
-</div>
+            <button class="moon-button" id="moonButton">
+                <span class="moon">🌙</span>
+            </button>
 
+            <div class="tap-text" data-i18n="tap">
+                برای جمع‌آوری امتیاز روی ماه بزن
+            </div>
 
-<div class="language">
+        </section>
 
-<button
-class="language-button"
-onclick="toggleLanguages()"
->
 
-🌐
-<span id="languageName">
-فارسی
-</span>
+        <section class="energy-box">
 
-</button>
+            <div class="energy-head">
+                <span data-i18n="energy">انرژی ⚡</span>
+                <span id="energyText">100 / 100</span>
+            </div>
 
+            <div class="energy-bar">
+                <div class="energy-fill" id="energyFill"></div>
+            </div>
 
-<div
-id="languageMenu"
-class="language-menu"
->
+        </section>
 
-<button onclick="changeLanguage('fa')">
-🇮🇷 فارسی
-</button>
 
-<button onclick="changeLanguage('en')">
-🇬🇧 English
-</button>
+        <div class="cards">
 
-<button onclick="changeLanguage('ar')">
-🇸🇦 العربية
-</button>
+            <div class="card" onclick="showPage('leaderboard')">
+                <div class="card-icon">🏆</div>
+                <div class="card-title" data-i18n="ranking">رتبه‌بندی</div>
+            </div>
 
-<button onclick="changeLanguage('tr')">
-🇹🇷 Türkçe
-</button>
+            <div class="card" onclick="showPage('friends')">
+                <div class="card-icon">👥</div>
+                <div class="card-title" data-i18n="friends">دوستان</div>
+            </div>
 
-<button onclick="changeLanguage('es')">
-🇪🇸 Español
-</button>
+            <div class="card" onclick="showPage('missions')">
+                <div class="card-icon">🎯</div>
+                <div class="card-title" data-i18n="missions">مأموریت‌ها</div>
+            </div>
 
-<button onclick="changeLanguage('ru')">
-🇷🇺 Русский
-</button>
+        </div>
 
-<button onclick="changeLanguage('zh')">
-🇨🇳 中文
-</button>
+    </main>
 
-<button onclick="changeLanguage('de')">
-🇩🇪 Deutsch
-</button>
 
-</div>
+    <!-- MISSIONS -->
+    <main id="missionsPage" class="page">
 
-</div>
+        <section class="section">
 
-</header>
+            <h2>🎯 <span data-i18n="missions">مأموریت‌ها</span></h2>
 
+            <div class="mission">
 
+                <div class="mission-icon">🌙</div>
 
-<!-- =====================
-     HOME
-===================== -->
+                <div class="mission-info">
+                    <strong data-i18n="mission1">
+                        اولین کلیک امروز
+                    </strong>
+                    <small data-i18n="mission1desc">
+                        یک بار روی ماه بزن
+                    </small>
+                </div>
 
-<section
-id="home"
-class="section active"
->
+                <div class="reward">
+                    +100
+                </div>
 
+            </div>
 
-<div class="card balance">
 
-<div
-class="balance-title"
-data-i18n="balance">
-موجودی شما
-</div>
+            <div class="mission">
 
+                <div class="mission-icon">⚡</div>
 
-<div
-id="score"
-class="balance-number">
-0
-</div>
+                <div class="mission-info">
+                    <strong data-i18n="mission2">
+                        جمع‌آوری امتیاز
+                    </strong>
+                    <small data-i18n="mission2desc">
+                        50 بار روی ماه بزن
+                    </small>
+                </div>
 
+                <div class="reward">
+                    +500
+                </div>
 
-<div
-class="balance-unit"
-data-i18n="points">
-LUNARO Points
-</div>
+            </div>
 
-</div>
 
+            <div class="mission">
 
+                <div class="mission-icon">🚀</div>
 
-<div class="coin-area">
+                <div class="mission-info">
+                    <strong data-i18n="mission3">
+                        بازیکن فعال
+                    </strong>
+                    <small data-i18n="mission3desc">
+                        امروز وارد بازی شو
+                    </small>
+                </div>
 
-<div
-id="coin"
-class="coin"
->
+                <div class="reward">
+                    +250
+                </div>
 
-<span
-class="coin-icon">
-🌙
-</span>
+            </div>
 
-</div>
+        </section>
 
+    </main>
 
-<div
-class="coin-hint"
-data-i18n="tapHint">
-برای جمع‌آوری امتیاز روی ماه بزن
-</div>
 
-</div>
+    <!-- FRIENDS -->
+    <main id="friendsPage" class="page">
 
+        <section class="section">
 
+            <h2>👥 <span data-i18n="friends">دوستان</span></h2>
 
-<div class="card energy-card">
+            <p data-i18n="inviteText">
+                دوستانت را دعوت کن و با هم در LUNARO پیشرفت کنید.
+            </p>
 
-<div class="energy-top">
+            <div class="ref-box" id="refLink">
+                لینک دعوت شما
+            </div>
 
-<span>
-⚡
-<span data-i18n="energy">
-انرژی
-</span>
-</span>
+            <button class="btn" onclick="copyReferral()">
+                📋 <span data-i18n="copy">کپی لینک دعوت</span>
+            </button>
 
-<span
-id="energyText"
-class="energy-number">
-100 / 100
-</span>
+        </section>
 
-</div>
+    </main>
 
 
-<div class="energy-bar">
+    <!-- LEADERBOARD -->
+    <main id="leaderboardPage" class="page">
 
-<div
-id="energyFill"
-class="energy-fill">
-</div>
+        <section class="section">
 
-</div>
+            <h2>🏆 <span data-i18n="ranking">رتبه‌بندی</span></h2>
 
-</div>
+            <div class="rank">
+                <div class="rank-number">🥇</div>
+                <div class="rank-name">Lunaro Player</div>
+                <div class="rank-score">98,500</div>
+            </div>
 
+            <div class="rank">
+                <div class="rank-number">🥈</div>
+                <div class="rank-name">Moon Player</div>
+                <div class="rank-score">86,200</div>
+            </div>
 
+            <div class="rank">
+                <div class="rank-number">🥉</div>
+                <div class="rank-name">Lunar Star</div>
+                <div class="rank-score">72,400</div>
+            </div>
 
-<div class="quick-grid">
+            <div class="rank">
+                <div class="rank-number">4</div>
+                <div class="rank-name">You</div>
+                <div class="rank-score" id="myRankScore">0</div>
+            </div>
 
+        </section>
 
-<div
-class="card quick"
-onclick="showSection('missions',this)"
->
-
-<div class="quick-icon">
-🎯
-</div>
-
-<div
-class="quick-text"
-data-i18n="missions">
-ماموریت‌ها
-</div>
-
-</div>
-
-
-
-<div
-class="card quick"
-onclick="showSection('friends',this)"
->
-
-<div class="quick-icon">
-👥
-</div>
-
-<div
-class="quick-text"
-data-i18n="friends">
-دوستان
-</div>
+    </main>
 
 </div>
 
 
-
-<div
-class="card quick"
-onclick="showSection('leaderboard',this)"
->
-
-<div class="quick-icon">
-🏆
-</div>
-
-<div
-class="quick-text"
-data-i18n="leaderboard">
-رتبه‌بندی
-</div>
-
-</div>
-
-
-</div>
-
-</section>
-
-
-
-<!-- =====================
-     MISSIONS
-===================== -->
-
-<section
-id="missions"
-class="section"
->
-
-<div class="card section-card">
-
-<h2
-class="section-title"
-data-i18n="missions">
-🎯 ماموریت‌ها
-</h2>
-
-
-<div class="mission">
-
-<div class="mission-info">
-
-<div
-class="mission-name"
-data-i18n="daily">
-⭐ ورود روزانه
-</div>
-
-<div
-class="mission-sub"
-data-i18n="dailySub">
-پاداش امروز
-</div>
-
-</div>
-
-
-<button
-class="reward-button"
-onclick="claimReward(50,this)"
-data-i18n="claim">
-دریافت
-</button>
-
-</div>
-
-
-
-<div class="mission">
-
-<div class="mission-info">
-
-<div
-class="mission-name"
-data-i18n="active">
-📱 فعال بودن در بازی
-</div>
-
-<div
-class="mission-sub"
-data-i18n="activeSub">
-پاداش آزمایشی
-</div>
-
-</div>
-
-
-<button
-class="reward-button"
-onclick="claimReward(25,this)"
-data-i18n="claim">
-دریافت
-</button>
-
-</div>
-
-
-
-<div class="mission">
-
-<div class="mission-info">
-
-<div
-class="mission-name"
-data-i18n="goal">
-🚀 رسیدن به ۱۰۰۰ امتیاز
-</div>
-
-<div
-class="mission-sub"
-data-i18n="goalSub">
-هدف بازی
-</div>
-
-</div>
-
-
-<button
-class="reward-button"
-onclick="claimReward(100,this)"
-data-i18n="claim">
-دریافت
-</button>
-
-</div>
-
-</div>
-
-</section>
-
-
-
-<!-- =====================
-     FRIENDS
-===================== -->
-
-<section
-id="friends"
-class="section"
->
-
-<div class="card section-card">
-
-<h2
-class="section-title"
-data-i18n="friends">
-👥 دوستان
-</h2>
-
-
-<div class="friend-box">
-
-<div class="friend-icon">
-👥
-</div>
-
-
-<div
-class="friend-text"
-data-i18n="inviteInfo">
-
-دوستانت را به LUNARO دعوت کن و در نسخه‌های آینده از سیستم دعوت استفاده کن.
-
-</div>
-
-
-<div
-id="inviteText"
-class="invite-box">
-
-LUNARO Invite
-
-</div>
-
-
-<button
-class="copy-button"
-onclick="copyInvite()"
-data-i18n="copy">
-کپی لینک دعوت
-</button>
-
-</div>
-
-</div>
-
-</section>
-
-
-
-<!-- =====================
-     LEADERBOARD
-===================== -->
-
-<section
-id="leaderboard"
-class="section"
->
-
-<div class="card section-card">
-
-<h2
-class="section-title"
-data-i18n="leaderboard">
-🏆 رتبه‌بندی
-</h2>
-
-
-<div class="rank-row">
-
-<div class="rank-name">
-
-<span>🥇</span>
-
-<span data-i18n="player1">
-بازیکن اول
-</span>
-
-</div>
-
-<div class="rank-score">
-12540
-</div>
-
-</div>
-
-
-
-<div class="rank-row">
-
-<div class="rank-name">
-
-<span>🥈</span>
-
-<span data-i18n="player2">
-بازیکن دوم
-</span>
-
-</div>
-
-<div class="rank-score">
-9820
-</div>
-
-</div>
-
-
-
-<div class="rank-row">
-
-<div class="rank-name">
-
-<span>🥉</span>
-
-<span data-i18n="player3">
-بازیکن سوم
-</span>
-
-</div>
-
-<div class="rank-score">
-7450
-</div>
-
-</div>
-
-
-
-<div class="rank-row you-row">
-
-<div class="rank-name">
-
-<span>👤</span>
-
-<span data-i18n="you">
-شما
-</span>
-
-</div>
-
-<div
-id="rankScore"
-class="rank-score">
-0
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-
-</main>
-
-
-
-<!-- =====================
-     BOTTOM NAV
-===================== -->
-
-<nav class="bottom-nav">
-
-
-<button
-class="nav-button active"
-onclick="showSection('home',this)"
->
-
-<span class="nav-icon">
-🏠
-</span>
-
-<span data-i18n="home">
-خانه
-</span>
-
-</button>
-
-
-
-<button
-class="nav-button"
-onclick="showSection('missions',this)"
->
-
-<span class="nav-icon">
-🎯
-</span>
-
-<span data-i18n="missions">
-ماموریت‌ها
-</span>
-
-</button>
-
-
-
-<button
-class="nav-button"
-onclick="showSection('friends',this)"
->
-
-<span class="nav-icon">
-👥
-</span>
-
-<span data-i18n="friends">
-دوستان
-</span>
-
-</button>
-
-
-
-<button
-class="nav-button"
-onclick="showSection('leaderboard',this)"
->
-
-<span class="nav-icon">
-🏆
-</span>
-
-<span data-i18n="leaderboardShort">
-رتبه‌بندی
-</span>
-
-</button>
-
+<!-- NAVIGATION -->
+<nav class="nav">
+
+    <button class="nav-item active" onclick="showPage('home')">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="home">خانه</span>
+    </button>
+
+    <button class="nav-item" onclick="showPage('missions')">
+        <span class="nav-icon">🎯</span>
+        <span data-i18n="missions">مأموریت‌ها</span>
+    </button>
+
+    <button class="nav-item" onclick="showPage('friends')">
+        <span class="nav-icon">👥</span>
+        <span data-i18n="friends">دوستان</span>
+    </button>
+
+    <button class="nav-item" onclick="showPage('leaderboard')">
+        <span class="nav-icon">🏆</span>
+        <span data-i18n="ranking">رتبه‌بندی</span>
+    </button>
 
 </nav>
 
 
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+
+<!-- LANGUAGE POPUP -->
+<div class="popup" id="languagePopup" onclick="closeLanguage(event)">
+
+    <div class="popup-box" onclick="event.stopPropagation()">
+
+        <h2>🌐 Select Language</h2>
+
+        <div class="language-list">
+
+            <button class="lang-btn" onclick="setLanguage('fa')">
+                🇮🇷 فارسی
+            </button>
+
+            <button class="lang-btn" onclick="setLanguage('en')">
+                🇬🇧 English
+            </button>
+
+            <button class="lang-btn" onclick="setLanguage('ru')">
+                🇷🇺 Русский
+            </button>
+
+            <button class="lang-btn" onclick="setLanguage('tr')">
+                🇹🇷 Türkçe
+            </button>
+
+            <button class="lang-btn" onclick="setLanguage('ar')">
+                🇸🇦 العربية
+            </button>
+
+            <button class="lang-btn" onclick="setLanguage('es')">
+                🇪🇸 Español
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <script>
 
-/* =========================================
-   TRANSLATIONS
-========================================= */
+/* =========================
+   LUNARO GAME
+========================= */
 
-const translations = {
+let points = Number(localStorage.getItem("lunaro_points")) || 0;
 
-fa: {
+let energy = Number(localStorage.getItem("lunaro_energy"));
 
-language:"فارسی",
-
-balance:"موجودی شما",
-
-points:"LUNARO Points",
-
-tapHint:"برای جمع‌آوری امتیاز روی ماه بزن",
-
-energy:"انرژی",
-
-missions:"ماموریت‌ها",
-
-friends:"دوستان",
-
-leaderboard:"رتبه‌بندی",
-
-leaderboardShort:"رتبه‌بندی",
-
-home:"خانه",
-
-daily:"⭐ ورود روزانه",
-
-dailySub:"پاداش امروز",
-
-active:"📱 فعال بودن در بازی",
-
-activeSub:"پاداش آزمایشی",
-
-goal:"🚀 رسیدن به ۱۰۰۰ امتیاز",
-
-goalSub:"هدف بازی",
-
-claim:"دریافت",
-
-inviteInfo:"دوستانت را به LUNARO دعوت کن و در نسخه‌های آینده از سیستم دعوت استفاده کن.",
-
-copy:"کپی لینک دعوت",
-
-player1:"بازیکن اول",
-
-player2:"بازیکن دوم",
-
-player3:"بازیکن سوم",
-
-you:"شما",
-
-energyEmpty:"انرژی تمام شده؛ کمی صبر کن.",
-
-pointsAdded:"امتیاز اضافه شد",
-
-copied:"متن دعوت کپی شد"
-
-},
-
-
-en: {
-
-language:"English",
-
-balance:"Your balance",
-
-points:"LUNARO Points",
-
-tapHint:"Tap the moon to collect points",
-
-energy:"Energy",
-
-missions:"Missions",
-
-friends:"Friends",
-
-leaderboard:"Leaderboard",
-
-leaderboardShort:"Ranks",
-
-home:"Home",
-
-daily:"⭐ Daily login",
-
-dailySub:"Today's reward",
-
-active:"📱 Stay active",
-
-activeSub:"Test reward",
-
-goal:"🚀 Reach 1,000 points",
-
-goalSub:"Game goal",
-
-claim:"Claim",
-
-inviteInfo:"Invite your friends to LUNARO. The referral system will be connected in a future version.",
-
-copy:"Copy invite link",
-
-player1:"Player One",
-
-player2:"Player Two",
-
-player3:"Player Three",
-
-you:"You",
-
-energyEmpty:"Energy is empty. Please wait.",
-
-pointsAdded:"points added",
-
-copied:"Invite text copied"
-
-},
-
-
-ar: {
-
-language:"العربية",
-
-balance:"رصيدك",
-
-points:"نقاط LUNARO",
-
-tapHint:"اضغط على القمر لجمع النقاط",
-
-energy:"الطاقة",
-
-missions:"المهام",
-
-friends:"الأصدقاء",
-
-leaderboard:"لوحة المتصدرين",
-
-leaderboardShort:"الترتيب",
-
-home:"الرئيسية",
-
-daily:"⭐ تسجيل الدخول اليومي",
-
-dailySub:"مكافأة اليوم",
-
-active:"📱 ابقَ نشطًا",
-
-activeSub:"مكافأة تجريبية",
-
-goal:"🚀 الوصول إلى 1000 نقطة",
-
-goalSub:"هدف اللعبة",
-
-claim:"استلام",
-
-inviteInfo:"ادعُ أصدقاءك إلى LUNARO. سيتم ربط نظام الإحالة في إصدار مستقبلي.",
-
-copy:"نسخ رابط الدعوة",
-
-player1:"اللاعب الأول",
-
-player2:"اللاعب الثاني",
-
-player3:"اللاعب الثالث",
-
-you:"أنت",
-
-energyEmpty:"نفدت الطاقة. انتظر قليلًا.",
-
-pointsAdded:"نقاط أضيفت",
-
-copied:"تم نسخ نص الدعوة"
-
-},
-
-
-tr: {
-
-language:"Türkçe",
-
-balance:"Bakiyeniz",
-
-points:"LUNARO Puanları",
-
-tapHint:"Puan toplamak için aya dokunun",
-
-energy:"Enerji",
-
-missions:"Görevler",
-
-friends:"Arkadaşlar",
-
-leaderboard:"Sıralama",
-
-leaderboardShort:"Sıralama",
-
-home:"Ana Sayfa",
-
-daily:"⭐ Günlük giriş",
-
-dailySub:"Bugünün ödülü",
-
-active:"📱 Aktif kal",
-
-activeSub:"Deneme ödülü",
-
-goal:"🚀 1.000 puana ulaş",
-
-goalSub:"Oyun hedefi",
-
-claim:"Al",
-
-inviteInfo:"Arkadaşlarını LUNARO'ya davet et. Referans sistemi gelecek sürümde bağlanacaktır.",
-
-copy:"Davet bağlantısını kopyala",
-
-player1:"Birinci oyuncu",
-
-player2:"İkinci oyuncu",
-
-player3:"Üçüncü oyuncu",
-
-you:"Sen",
-
-energyEmpty:"Enerji bitti. Lütfen bekle.",
-
-pointsAdded:"puan eklendi",
-
-copied:"Davet metni kopyalandı"
-
-},
-
-
-es: {
-
-language:"Español",
-
-balance:"Tu saldo",
-
-points:"Puntos LUNARO",
-
-tapHint:"Toca la luna para conseguir puntos",
-
-energy:"Energía",
-
-missions:"Misiones",
-
-friends:"Amigos",
-
-leaderboard:"Clasificación",
-
-leaderboardShort:"Ranking",
-
-home:"Inicio",
-
-daily:"⭐ Inicio de sesión diario",
-
-dailySub:"Recompensa de hoy",
-
-active:"📱 Mantente activo",
-
-activeSub:"Recompensa de prueba",
-
-goal:"🚀 Alcanza 1.000 puntos",
-
-goalSub:"Objetivo del juego",
-
-claim:"Reclamar",
-
-inviteInfo:"Invita a tus amigos a LUNARO. El sistema de referidos se conectará en una futura versión.",
-
-copy:"Copiar invitación",
-
-player1:"Jugador uno",
-
-player2:"Jugador dos",
-
-player3:"Jugador tres",
-
-you:"Tú",
-
-energyEmpty:"La energía se agotó. Espera un poco.",
-
-pointsAdded:"puntos añadidos",
-
-copied:"Texto de invitación copiado"
-
-},
-
-
-ru: {
-
-language:"Русский",
-
-balance:"Ваш баланс",
-
-points:"Очки LUNARO",
-
-tapHint:"Нажмите на луну, чтобы получить очки",
-
-energy:"Энергия",
-
-missions:"Задания",
-
-friends:"Друзья",
-
-leaderboard:"Таблица лидеров",
-
-leaderboardShort:"Рейтинг",
-
-home:"Главная",
-
-daily:"⭐ Ежедневный вход",
-
-dailySub:"Награда за сегодня",
-
-active:"📱 Будьте активны",
-
-activeSub:"Тестовая награда",
-
-goal:"🚀 Набрать 1000 очков",
-
-goalSub:"Цель игры",
-
-claim:"Получить",
-
-inviteInfo:"Приглашайте друзей в LUNARO. Реферальная система будет подключена в будущей версии.",
-
-copy:"Копировать приглашение",
-
-player1:"Игрок 1",
-
-player2:"Игрок 2",
-
-player3:"Игрок 3",
-
-you:"Вы",
-
-energyEmpty:"Энергия закончилась. Подождите.",
-
-pointsAdded:"очков добавлено",
-
-copied:"Текст приглашения скопирован"
-
-},
-
-
-zh: {
-
-language:"中文",
-
-balance:"你的余额",
-
-points:"LUNARO 积分",
-
-tapHint:"点击月亮收集积分",
-
-energy:"能量",
-
-missions:"任务",
-
-friends:"好友",
-
-leaderboard:"排行榜",
-
-leaderboardShort:"排名",
-
-home:"首页",
-
-daily:"⭐ 每日登录",
-
-dailySub:"今日奖励",
-
-active:"📱 保持活跃",
-
-activeSub:"测试奖励",
-
-goal:"🚀 达到 1,000 积分",
-
-goalSub:"游戏目标",
-
-claim:"领取",
-
-inviteInfo:"邀请朋友加入 LUNARO，邀请系统将在未来版本中连接。",
-
-copy:"复制邀请",
-
-player1:"第一名玩家",
-
-player2:"第二名玩家",
-
-player3:"第三名玩家",
-
-you:"你",
-
-energyEmpty:"能量已耗尽，请稍候。",
-
-pointsAdded:"积分已添加",
-
-copied:"邀请文本已复制"
-
-},
-
-
-de: {
-
-language:"Deutsch",
-
-balance:"Dein Guthaben",
-
-points:"LUNARO Punkte",
-
-tapHint:"Tippe auf den Mond, um Punkte zu sammeln",
-
-energy:"Energie",
-
-missions:"Missionen",
-
-friends:"Freunde",
-
-leaderboard:"Rangliste",
-
-leaderboardShort:"Rangliste",
-
-home:"Start",
-
-daily:"⭐ Täglicher Login",
-
-dailySub:"Heutige Belohnung",
-
-active:"📱 Aktiv bleiben",
-
-activeSub:"Testbelohnung",
-
-goal:"🚀 1.000 Punkte erreichen",
-
-goalSub:"Spielziel",
-
-claim:"Abholen",
-
-inviteInfo:"Lade deine Freunde zu LUNARO ein. Das Empfehlungssystem wird in einer zukünftigen Version verbunden.",
-
-copy:"Einladung kopieren",
-
-player1:"Spieler Eins",
-
-player2:"Spieler Zwei",
-
-player3:"Spieler Drei",
-
-you:"Du",
-
-energyEmpty:"Energie ist leer. Bitte warte.",
-
-pointsAdded:"Punkte hinzugefügt",
-
-copied:"Einladungstext kopiert"
-
+if(isNaN(energy)){
+    energy = 100;
 }
-
-};
-
-
-/* =========================================
-   GAME DATA
-========================================= */
-
-let language =
-localStorage.getItem("lunaro_language")
-||
-detectLanguage();
-
-
-let score =
-Number(
-localStorage.getItem("lunaro_score")
-) || 0;
-
-
-let energy =
-Number(
-localStorage.getItem("lunaro_energy")
-);
-
-if(
-isNaN(energy)
-||
-energy < 0
-||
-energy > 100
-){
-
-energy = 100;
-
-}
-
 
 const maxEnergy = 100;
 
 
-/* =========================================
-   LANGUAGE DETECTION
-========================================= */
-
-function detectLanguage(){
-
-    const browserLanguage =
-    (
-        navigator.language ||
-        navigator.userLanguage ||
-        "en"
-    ).toLowerCase();
+/* زبان */
+let currentLanguage =
+    localStorage.getItem("lunaro_language") || "fa";
 
 
-    if(browserLanguage.startsWith("fa"))
-        return "fa";
+/* ترجمه‌ها */
+const translations = {
 
-    if(browserLanguage.startsWith("ar"))
-        return "ar";
+    fa:{
+        balance:"موجودی شما",
+        tap:"برای جمع‌آوری امتیاز روی ماه بزن",
+        energy:"انرژی ⚡",
+        ranking:"رتبه‌بندی",
+        friends:"دوستان",
+        missions:"مأموریت‌ها",
+        home:"خانه",
+        inviteText:"دوستانت را دعوت کن و با هم در LUNARO پیشرفت کنید.",
+        copy:"کپی لینک دعوت",
+        mission1:"اولین کلیک امروز",
+        mission1desc:"یک بار روی ماه بزن",
+        mission2:"جمع‌آوری امتیاز",
+        mission2desc:"50 بار روی ماه بزن",
+        mission3:"بازیکن فعال",
+        mission3desc:"امروز وارد بازی شو"
+    },
 
-    if(browserLanguage.startsWith("tr"))
-        return "tr";
+    en:{
+        balance:"Your Balance",
+        tap:"Tap the moon to collect points",
+        energy:"Energy ⚡",
+        ranking:"Leaderboard",
+        friends:"Friends",
+        missions:"Missions",
+        home:"Home",
+        inviteText:"Invite your friends and progress together in LUNARO.",
+        copy:"Copy referral link",
+        mission1:"First click today",
+        mission1desc:"Tap the moon once",
+        mission2:"Collect points",
+        mission2desc:"Tap the moon 50 times",
+        mission3:"Active player",
+        mission3desc:"Enter the game today"
+    },
 
-    if(browserLanguage.startsWith("es"))
-        return "es";
+    ru:{
+        balance:"Ваш баланс",
+        tap:"Нажимайте на луну, чтобы получать очки",
+        energy:"Энергия ⚡",
+        ranking:"Рейтинг",
+        friends:"Друзья",
+        missions:"Задания",
+        home:"Главная",
+        inviteText:"Приглашайте друзей и развивайтесь вместе в LUNARO.",
+        copy:"Скопировать ссылку",
+        mission1:"Первый клик сегодня",
+        mission1desc:"Нажмите на луну один раз",
+        mission2:"Собирайте очки",
+        mission2desc:"Нажмите 50 раз",
+        mission3:"Активный игрок",
+        mission3desc:"Зайдите в игру сегодня"
+    },
 
-    if(browserLanguage.startsWith("ru"))
-        return "ru";
+    tr:{
+        balance:"Bakiyeniz",
+        tap:"Puan toplamak için aya dokun",
+        energy:"Enerji ⚡",
+        ranking:"Sıralama",
+        friends:"Arkadaşlar",
+        missions:"Görevler",
+        home:"Ana Sayfa",
+        inviteText:"Arkadaşlarını davet et ve LUNARO'da birlikte ilerle.",
+        copy:"Davet bağlantısını kopyala",
+        mission1:"Bugünün ilk tıklaması",
+        mission1desc:"Aya bir kez dokun",
+        mission2:"Puan topla",
+        mission2desc:"Aya 50 kez dokun",
+        mission3:"Aktif oyuncu",
+        mission3desc:"Bugün oyuna gir"
+    },
 
-    if(browserLanguage.startsWith("zh"))
-        return "zh";
+    ar:{
+        balance:"رصيدك",
+        tap:"اضغط على القمر لجمع النقاط",
+        energy:"الطاقة ⚡",
+        ranking:"لوحة المتصدرين",
+        friends:"الأصدقاء",
+        missions:"المهام",
+        home:"الرئيسية",
+        inviteText:"ادعُ أصدقاءك وتقدموا معًا في LUNARO.",
+        copy:"نسخ رابط الدعوة",
+        mission1:"أول نقرة اليوم",
+        mission1desc:"اضغط على القمر مرة واحدة",
+        mission2:"جمع النقاط",
+        mission2desc:"اضغط على القمر 50 مرة",
+        mission3:"لاعب نشط",
+        mission3desc:"ادخل اللعبة اليوم"
+    },
 
-    if(browserLanguage.startsWith("de"))
-        return "de";
+    es:{
+        balance:"Tu saldo",
+        tap:"Toca la luna para conseguir puntos",
+        energy:"Energía ⚡",
+        ranking:"Clasificación",
+        friends:"Amigos",
+        missions:"Misiones",
+        home:"Inicio",
+        inviteText:"Invita a tus amigos y progresa juntos en LUNARO.",
+        copy:"Copiar enlace de invitación",
+        mission1:"Primer clic del día",
+        mission1desc:"Toca la luna una vez",
+        mission2:"Conseguir puntos",
+        mission2desc:"Toca la luna 50 veces",
+        mission3:"Jugador activo",
+        mission3desc:"Entra al juego hoy"
+    }
 
-    return "en";
-}
-
-
-/* =========================================
-   CHANGE LANGUAGE
-========================================= */
-
-function changeLanguage(newLanguage){
-
-    if(!translations[newLanguage])
-        return;
-
-
-    language = newLanguage;
-
-
-    localStorage.setItem(
-        "lunaro_language",
-        language
-    );
-
-
-    document.documentElement.lang =
-    language;
-
-
-    document.documentElement.dir =
-    (
-        language === "fa" ||
-        language === "ar"
-    )
-    ?
-    "rtl"
-    :
-    "ltr";
-
-
-    document.getElementById(
-        "languageName"
-    ).textContent =
-    translations[language].language;
-
-
-    document
-    .getElementById("languageMenu")
-    .classList.remove("show");
-
-
-    document
-    .querySelectorAll("[data-i18n]")
-    .forEach(element => {
-
-        const key =
-        element.getAttribute("data-i18n");
+};
 
 
-        if(
-            translations[language][key]
-        ){
+/* نام زبان‌ها */
+const languageNames = {
+    fa:"فارسی",
+    en:"English",
+    ru:"Русский",
+    tr:"Türkçe",
+    ar:"العربية",
+    es:"Español"
+};
 
-            element.textContent =
-            translations[language][key];
 
+/* نمایش اطلاعات */
+function updateUI(){
+
+    document.getElementById("points").textContent =
+        points.toLocaleString();
+
+    document.getElementById("energyText").textContent =
+        energy + " / " + maxEnergy;
+
+    document.getElementById("energyFill").style.width =
+        energy + "%";
+
+    document.getElementById("myRankScore").textContent =
+        points.toLocaleString();
+
+    document.getElementById("languageName").textContent =
+        languageNames[currentLanguage];
+
+
+    const texts = translations[currentLanguage];
+
+    document.querySelectorAll("[data-i18n]").forEach(el=>{
+
+        const key = el.getAttribute("data-i18n");
+
+        if(texts[key]){
+            el.textContent = texts[key];
         }
 
     });
 
 
-    render();
-
-}
-
-
-/* =========================================
-   LANGUAGE MENU
-========================================= */
-
-function toggleLanguages(){
-
-    document
-    .getElementById("languageMenu")
-    .classList.toggle("show");
-
-}
-
-
-/* =========================================
-   SHOW SECTION
-========================================= */
-
-function showSection(
-    sectionId,
-    button
-){
-
-    document
-    .querySelectorAll(".section")
-    .forEach(section => {
-
-        section.classList.remove(
-            "active"
-        );
-
-    });
-
-
-    const section =
-    document.getElementById(
-        sectionId
-    );
-
-
-    if(section){
-
-        section.classList.add(
-            "active"
-        );
-
+    if(currentLanguage === "fa" || currentLanguage === "ar"){
+        document.documentElement.dir = "rtl";
+    }else{
+        document.documentElement.dir = "ltr";
     }
 
-
-    document
-    .querySelectorAll(".nav-button")
-    .forEach(nav => {
-
-        nav.classList.remove(
-            "active"
-        );
-
-    });
-
-
-    if(button){
-
-        button.classList.add(
-            "active"
-        );
-
-    }
-
-}
-
-
-/* =========================================
-   FORMAT NUMBER
-========================================= */
-
-function formatNumber(number){
-
-    return Number(number)
-    .toLocaleString(
-        "en-US"
-    );
-
-}
-
-
-/* =========================================
-   RENDER
-========================================= */
-
-function render(){
-
-    document.getElementById(
-        "score"
-    ).textContent =
-    formatNumber(score);
-
-
-    document.getElementById(
-        "rankScore"
-    ).textContent =
-    formatNumber(score);
-
-
-    document.getElementById(
-        "energyText"
-    ).textContent =
-    formatNumber(energy)
-    +
-    " / "
-    +
-    formatNumber(maxEnergy);
-
-
-    document.getElementById(
-        "energyFill"
-    ).style.width =
-    energy + "%";
-
+    document.documentElement.lang = currentLanguage;
 
     localStorage.setItem(
-        "lunaro_score",
-        score
+        "lunaro_points",
+        points
     );
-
 
     localStorage.setItem(
         "lunaro_energy",
@@ -2370,366 +939,211 @@ function render(){
 }
 
 
-/* =========================================
-   TAP MOON
-========================================= */
-
-function tapMoon(event){
+/* کلیک روی ماه */
+document.getElementById("moonButton").addEventListener("click",function(){
 
     if(energy <= 0){
 
         showToast(
-            "⚡ "
-            +
-            translations[
-                language
-            ].energyEmpty
+            currentLanguage === "fa"
+            ? "انرژی شما تمام شده است ⚡"
+            : "Energy is empty ⚡"
         );
 
         return;
-
     }
 
 
-    score += 1;
+    points += 1;
 
     energy -= 1;
 
+    updateUI();
 
-    render();
-
-
-    createPlusOne(event);
+});
 
 
-    const coin =
-    document.getElementById(
-        "coin"
-    );
+/* بازیابی انرژی */
+setInterval(function(){
 
+    if(energy < maxEnergy){
 
-    coin.style.transform =
-    "scale(.91)";
+        energy++;
 
-
-    setTimeout(
-        () => {
-
-            coin.style.transform =
-            "";
-
-        },
-        90
-    );
-
-}
-
-
-/* =========================================
-   +1 ANIMATION
-========================================= */
-
-function createPlusOne(event){
-
-    const coin =
-    document.getElementById(
-        "coin"
-    );
-
-
-    const plus =
-    document.createElement(
-        "div"
-    );
-
-
-    plus.className =
-    "plus-one";
-
-
-    plus.textContent =
-    "+1";
-
-
-    const rect =
-    coin.getBoundingClientRect();
-
-
-    let x =
-    rect.width / 2;
-
-
-    let y =
-    rect.height / 2;
-
-
-    if(event){
-
-        x =
-        event.clientX
-        -
-        rect.left;
-
-        y =
-        event.clientY
-        -
-        rect.top;
+        updateUI();
 
     }
 
-
-    plus.style.left =
-    x + "px";
+},3000);
 
 
-    plus.style.top =
-    y + "px";
+/* صفحات */
+function showPage(page){
+
+    document.querySelectorAll(".page")
+        .forEach(p=>p.classList.remove("active"));
+
+    document.querySelectorAll(".nav-item")
+        .forEach(n=>n.classList.remove("active"));
 
 
-    coin.appendChild(
-        plus
-    );
+    const pageElement =
+        document.getElementById(page + "Page");
 
-
-    setTimeout(
-        () => {
-
-            plus.remove();
-
-        },
-        800
-    );
-
-}
-
-
-/* =========================================
-   REWARD
-========================================= */
-
-function claimReward(
-    amount,
-    button
-){
-
-    if(
-        !button ||
-        button.disabled
-    )
-        return;
-
-
-    score += amount;
-
-
-    button.disabled =
-    true;
-
-
-    button.textContent =
-    "✓";
-
-
-    render();
-
-
-    showToast(
-
-        "🎁 +"
-        +
-        formatNumber(amount)
-        +
-        " "
-        +
-        translations[
-            language
-        ].pointsAdded
-
-    );
-
-}
-
-
-/* =========================================
-   COPY INVITE
-========================================= */
-
-function copyInvite(){
-
-    const text =
-    "🌙 LUNARO";
-
-
-    if(
-        navigator.clipboard
-        &&
-        navigator.clipboard.writeText
-    ){
-
-        navigator.clipboard
-        .writeText(text)
-        .then(() => {
-
-            showToast(
-                "✓ "
-                +
-                translations[
-                    language
-                ].copied
-            );
-
-        })
-        .catch(() => {
-
-            showToast(
-                translations[
-                    language
-                ].copied
-            );
-
-        });
-
+    if(pageElement){
+        pageElement.classList.add("active");
     }
 
-    else{
 
-        showToast(
-            translations[
-                language
-            ].copied
-        );
+    const index = {
+        home:0,
+        missions:1,
+        friends:2,
+        leaderboard:3
+    };
+
+    const nav =
+        document.querySelectorAll(".nav-item");
+
+    if(nav[index[page]]){
+        nav[index[page]].classList.add("active");
+    }
+
+}
+
+
+/* زبان */
+function openLanguage(){
+
+    document
+      .getElementById("languagePopup")
+      .classList.add("show");
+
+}
+
+
+function closeLanguage(event){
+
+    if(event.target.id === "languagePopup"){
+
+        document
+          .getElementById("languagePopup")
+          .classList.remove("show");
 
     }
 
 }
 
 
-/* =========================================
-   TOAST
-========================================= */
+function setLanguage(lang){
 
-let toastTimer;
+    currentLanguage = lang;
+
+    localStorage.setItem(
+        "lunaro_language",
+        lang
+    );
+
+    updateUI();
+
+    document
+      .getElementById("languagePopup")
+      .classList.remove("show");
+
+}
 
 
+/* Toast */
 function showToast(message){
 
     const toast =
-    document.getElementById(
-        "toast"
-    );
+        document.getElementById("toast");
 
+    toast.textContent = message;
 
-    toast.textContent =
-    message;
+    toast.classList.add("show");
 
-
-    toast.classList.add(
-        "show"
-    );
-
-
-    clearTimeout(
-        toastTimer
-    );
-
-
-    toastTimer =
-    setTimeout(
-        () => {
-
-            toast.classList.remove(
-                "show"
-            );
-
-        },
-        1800
-    );
+    setTimeout(()=>{
+        toast.classList.remove("show");
+    },1800);
 
 }
 
 
-/* =========================================
-   ENERGY REGENERATION
-========================================= */
+/* لینک دعوت */
+function getReferralLink(){
 
-setInterval(
-    () => {
+    let username = "LUNARO_GAME";
+
+    try{
 
         if(
-            energy < maxEnergy
+          window.Telegram &&
+          Telegram.WebApp &&
+          Telegram.WebApp.initDataUnsafe &&
+          Telegram.WebApp.initDataUnsafe.user
         ){
 
-            energy += 1;
-
-            render();
+            username =
+                Telegram.WebApp.initDataUnsafe.user.username
+                || username;
 
         }
 
-    },
-    3000
-);
+    }catch(e){}
+
+    return "https://t.me/LUNARO_GAME?start=" + username;
+
+}
 
 
-/* =========================================
-   CLOSE LANGUAGE MENU
-========================================= */
-
-document.addEventListener(
-    "click",
-    function(event){
-
-        const languageBox =
-        document.querySelector(
-            ".language"
-        );
+document.getElementById("refLink").textContent =
+    getReferralLink();
 
 
-        if(
-            languageBox &&
-            !languageBox.contains(
-                event.target
-            )
-        ){
+/* کپی لینک */
+function copyReferral(){
 
-            document
-            .getElementById(
-                "languageMenu"
-            )
-            .classList.remove(
-                "show"
+    const link =
+        document.getElementById("refLink").textContent;
+
+    navigator.clipboard.writeText(link)
+        .then(()=>{
+
+            showToast(
+                currentLanguage === "fa"
+                ? "لینک کپی شد ✅"
+                : "Link copied ✅"
             );
 
-        }
+        })
+        .catch(()=>{
+
+            showToast(link);
+
+        });
+
+}
+
+
+/* Telegram */
+try{
+
+    if(window.Telegram && Telegram.WebApp){
+
+        Telegram.WebApp.ready();
+
+        Telegram.WebApp.expand();
 
     }
-);
+
+}catch(e){}
 
 
-/* =========================================
-   COIN EVENT
-========================================= */
-
-document
-.getElementById("coin")
-.addEventListener(
-    "click",
-    tapMoon
-);
-
-
-/* =========================================
-   INITIALIZE
-========================================= */
-
-changeLanguage(
-    language
-);
-
-render();
+/* شروع */
+updateUI();
 
 </script>
 
-
 </body>
-
 </html>
