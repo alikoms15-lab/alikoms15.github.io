@@ -2,532 +2,1127 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LUNARO — LNR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>LUNARO — Automatic Mining</title>
 
 <style>
 *{
+    box-sizing:border-box;
     margin:0;
     padding:0;
-    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
 
 :root{
-    --bg:#05060b;
-    --card:rgba(16,18,30,.72);
-    --card2:rgba(21,24,40,.82);
-    --line:rgba(255,255,255,.08);
-    --text:#fff;
-    --muted:#8f95a8;
-    --blue:#637cff;
-    --purple:#9b5cff;
-    --cyan:#42d9ff;
-    --green:#62e6a6;
+    --bg:#02010a;
+    --purple:#8b35ff;
+    --purple2:#c85cff;
+    --blue:#4c3cff;
+    --cyan:#25eaff;
+    --gold:#ffd85a;
+    --text:#f5f1ff;
+    --muted:#aaa5d9;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+    background:#02010a;
+    color:white;
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 }
 
 body{
-    font-family:Inter,Arial,sans-serif;
-    background:
-        radial-gradient(circle at 50% -10%,rgba(98,75,255,.25),transparent 35%),
-        radial-gradient(circle at 0% 50%,rgba(50,130,255,.08),transparent 30%),
-        #05060b;
-    color:var(--text);
-    min-height:100vh;
     overflow-x:hidden;
 }
 
-/* BACKGROUND */
-
-.stars{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    opacity:.45;
-    background-image:
-        radial-gradient(#fff 1px,transparent 1px),
-        radial-gradient(#fff 1px,transparent 1px);
-    background-size:80px 80px,130px 130px;
-    background-position:0 0,40px 70px;
-}
-
-/* APP */
+/* =========================
+   SPACE BACKGROUND
+========================= */
 
 .app{
-    width:100%;
-    max-width:520px;
     min-height:100vh;
-    margin:auto;
-    padding:22px 18px 105px;
+    position:relative;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 50% 20%,rgba(102,25,255,.24),transparent 30%),
+        radial-gradient(circle at 10% 45%,rgba(64,0,255,.14),transparent 25%),
+        radial-gradient(circle at 90% 50%,rgba(115,0,255,.14),transparent 25%),
+        linear-gradient(180deg,#02010b 0%,#050018 48%,#02010b 100%);
+}
+
+.app::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:.65;
+
+    background-image:
+        radial-gradient(circle,#fff 0 1px,transparent 1.5px),
+        radial-gradient(circle,#a86cff 0 1px,transparent 1.5px),
+        radial-gradient(circle,#fff 0 1px,transparent 1.5px);
+
+    background-size:
+        140px 160px,
+        210px 230px,
+        280px 300px;
+
+    background-position:
+        20px 30px,
+        90px 100px,
+        40px 20px;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.screen{
     position:relative;
     z-index:2;
-}
-
-/* HEADER */
-
-.header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:24px;
-}
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:11px;
-}
-
-.logo{
-    width:43px;
-    height:43px;
-    border-radius:15px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:22px;
-    font-weight:800;
-    background:
-        linear-gradient(145deg,#151a38,#0a0d18);
-    border:1px solid rgba(130,120,255,.35);
-    box-shadow:
-        0 0 30px rgba(99,124,255,.18),
-        inset 0 0 20px rgba(130,100,255,.1);
-}
-
-.brand-name{
-    font-size:19px;
-    font-weight:800;
-    letter-spacing:.5px;
-}
-
-.brand-name span{
-    color:#8c8fff;
-}
-
-.wallet-btn{
-    border:1px solid rgba(255,255,255,.1);
-    background:rgba(255,255,255,.045);
-    color:#fff;
-    border-radius:13px;
-    padding:11px 14px;
-    font-size:12px;
-    font-weight:700;
-    cursor:pointer;
-    backdrop-filter:blur(15px);
-}
-
-/* BALANCE */
-
-.balance-card{
-    position:relative;
-    overflow:hidden;
-    border:1px solid var(--line);
-    background:
-        linear-gradient(145deg,rgba(24,27,49,.9),rgba(10,12,21,.8));
-    border-radius:28px;
-    padding:24px;
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.3),
-        inset 0 1px rgba(255,255,255,.04);
-}
-
-.balance-card:before{
-    content:"";
-    position:absolute;
-    width:190px;
-    height:190px;
-    right:-80px;
-    top:-100px;
-    border-radius:50%;
-    background:#665cff;
-    filter:blur(80px);
-    opacity:.3;
-}
-
-.balance-label{
-    color:var(--muted);
-    font-size:12px;
-    font-weight:600;
-}
-
-.balance{
-    margin-top:7px;
-    font-size:38px;
-    font-weight:800;
-    letter-spacing:-1.5px;
-}
-
-.balance span{
-    font-size:16px;
-    color:#969cff;
-    margin-left:6px;
-}
-
-.balance-bottom{
-    margin-top:18px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.level{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:12px;
-    color:#aeb4c7;
-}
-
-.level-badge{
-    padding:6px 9px;
-    border-radius:8px;
-    color:#aeb5ff;
-    background:rgba(110,100,255,.13);
-    border:1px solid rgba(120,110,255,.18);
-}
-
-.speed{
-    font-size:12px;
-    color:var(--green);
-}
-
-/* MINING */
-
-.mining{
-    margin-top:18px;
-    border-radius:30px;
-    padding:28px 20px;
-    text-align:center;
-    border:1px solid rgba(255,255,255,.07);
-    background:
-        radial-gradient(circle at 50% 35%,rgba(91,82,255,.12),transparent 35%),
-        rgba(12,14,24,.78);
-    backdrop-filter:blur(20px);
-}
-
-.mining-title{
-    font-size:13px;
-    color:#a0a6ba;
-    margin-bottom:12px;
-}
-
-.moon-wrap{
-    height:235px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    position:relative;
-}
-
-.orbit{
-    position:absolute;
-    width:210px;
-    height:210px;
-    border-radius:50%;
-    border:1px solid rgba(115,111,255,.18);
-    box-shadow:
-        0 0 40px rgba(91,86,255,.08);
-    animation:rotate 14s linear infinite;
-}
-
-.orbit:after{
-    content:"";
-    position:absolute;
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:#77e5ff;
-    top:17px;
-    left:50%;
-    box-shadow:0 0 15px #77e5ff;
-}
-
-.moon{
-    width:145px;
-    height:145px;
-    border-radius:50%;
-    position:relative;
-    background:
-        radial-gradient(circle at 35% 28%,#b9b9ff,#6d72e8 42%,#272c78 75%,#111431);
-    box-shadow:
-        0 0 30px rgba(110,110,255,.45),
-        0 0 90px rgba(95,80,255,.18);
-    animation:pulse 3s ease-in-out infinite;
-}
-
-.moon:before,
-.moon:after{
-    content:"";
-    position:absolute;
-    border-radius:50%;
-    background:rgba(20,23,60,.28);
-}
-
-.moon:before{
-    width:28px;
-    height:28px;
-    top:30px;
-    left:32px;
-}
-
-.moon:after{
-    width:18px;
-    height:18px;
-    bottom:30px;
-    right:31px;
-}
-
-.mining-status{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    padding:8px 12px;
-    border-radius:30px;
-    background:rgba(83,224,166,.07);
-    border:1px solid rgba(83,224,166,.14);
-    color:#70e6ad;
-    font-size:11px;
-    font-weight:700;
-}
-
-.status-dot{
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:#5ee7a6;
-    box-shadow:0 0 10px #5ee7a6;
-}
-
-/* CLAIM */
-
-.claim-btn{
     width:100%;
-    margin-top:18px;
-    border:none;
-    border-radius:17px;
-    padding:17px;
-    color:#fff;
-    font-size:15px;
-    font-weight:800;
-    letter-spacing:.3px;
-    cursor:pointer;
-    background:linear-gradient(100deg,#596dff,#965cff);
-    box-shadow:
-        0 12px 35px rgba(98,91,255,.25);
-    transition:.2s;
+    max-width:620px;
+    margin:auto;
+    padding:
+        22px
+        18px
+        150px;
 }
 
-.claim-btn:active{
-    transform:scale(.98);
-}
+/* =========================
+   TOP BAR
+========================= */
 
-.claim-btn:hover{
-    filter:brightness(1.08);
-}
-
-/* STATS */
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
+.topbar{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
     gap:10px;
-    margin-top:18px;
 }
 
-.stat{
-    padding:15px 10px;
-    text-align:center;
-    border-radius:17px;
-    border:1px solid var(--line);
-    background:rgba(14,16,27,.72);
+.wallet-box,
+.level-box{
+    height:84px;
+    min-width:210px;
+
+    border:1px solid rgba(126,61,255,.75);
+    border-radius:27px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(27,13,69,.85),
+            rgba(5,3,25,.82)
+        );
+
+    box-shadow:
+        0 0 20px rgba(105,32,255,.12),
+        inset 0 0 20px rgba(125,40,255,.08);
+
+    backdrop-filter:blur(18px);
 }
 
-.stat-value{
-    font-size:15px;
-    font-weight:800;
-}
-
-.stat-label{
-    margin-top:5px;
-    color:#777e94;
-    font-size:9px;
-    text-transform:uppercase;
-    letter-spacing:.5px;
-}
-
-/* PROGRESS */
-
-.progress-card{
-    margin-top:18px;
-    padding:19px;
-    border-radius:20px;
-    border:1px solid var(--line);
-    background:rgba(15,17,29,.7);
-}
-
-.progress-top{
+.wallet-box{
     display:flex;
-    justify-content:space-between;
-    margin-bottom:11px;
-}
-
-.progress-top span{
-    font-size:11px;
-    color:#8f95a8;
-}
-
-.progress-top strong{
-    font-size:11px;
-}
-
-.progress{
-    width:100%;
-    height:7px;
-    border-radius:20px;
-    background:#202333;
-    overflow:hidden;
-}
-
-.progress-bar{
-    width:68%;
-    height:100%;
-    border-radius:20px;
-    background:linear-gradient(90deg,#6175ff,#a05eff);
-    box-shadow:0 0 15px rgba(100,90,255,.5);
-}
-
-/* QUICK MENU */
-
-.section-title{
-    margin:26px 3px 12px;
-    display:flex;
-    justify-content:space-between;
     align-items:center;
+    padding:10px 14px;
+    gap:12px;
 }
 
-.section-title h3{
-    font-size:14px;
-}
+.wallet-icon{
+    width:45px;
+    height:45px;
+    border-radius:14px;
 
-.section-title span{
-    font-size:10px;
-    color:#777d90;
-}
-
-.quick{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:11px;
-}
-
-.quick-card{
-    padding:18px;
-    border-radius:20px;
-    background:rgba(15,17,29,.72);
-    border:1px solid var(--line);
-    cursor:pointer;
-    transition:.2s;
-}
-
-.quick-card:hover{
-    transform:translateY(-2px);
-    border-color:rgba(130,120,255,.25);
-}
-
-.icon{
-    width:36px;
-    height:36px;
-    border-radius:12px;
     display:flex;
     align-items:center;
     justify-content:center;
-    background:rgba(99,112,255,.11);
-    margin-bottom:12px;
-    font-size:17px;
+
+    font-size:25px;
+    color:#27eaff;
+
+    background:rgba(21,225,255,.08);
+    box-shadow:
+        0 0 15px rgba(0,229,255,.25);
 }
 
-.quick-card h4{
-    font-size:12px;
+.wallet-info{
+    flex:1;
+}
+
+.wallet-title{
+    font-size:13px;
+    color:#22eddf;
     margin-bottom:5px;
 }
 
-.quick-card p{
-    font-size:10px;
-    color:#777e92;
+.wallet-address{
+    font-size:16px;
+    color:white;
 }
 
-/* NAV */
-
-.bottom-nav{
-    position:fixed;
-    bottom:12px;
-    left:50%;
-    transform:translateX(-50%);
-    width:min(485px,calc(100% - 24px));
-    padding:10px;
-    border:1px solid rgba(255,255,255,.09);
-    background:rgba(10,12,20,.84);
-    backdrop-filter:blur(22px);
-    border-radius:23px;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    z-index:10;
-    box-shadow:0 15px 50px rgba(0,0,0,.45);
+.wallet-arrow{
+    color:#b9a7ff;
+    font-size:25px;
 }
 
-.nav-item{
+.level-box{
+    width:205px;
+    padding:10px 18px;
     text-align:center;
-    color:#6e7488;
-    font-size:9px;
-    font-weight:600;
-    padding:8px 0;
-    cursor:pointer;
 }
 
-.nav-icon{
+.level-title{
+    font-size:22px;
+    font-weight:800;
+    color:#dba9ff;
+
+    text-shadow:
+        0 0 15px rgba(190,70,255,.7);
+}
+
+.level-progress{
+    width:100%;
+    height:16px;
+    margin-top:8px;
+
+    border-radius:20px;
+    overflow:hidden;
+
+    background:#171048;
+    box-shadow:inset 0 0 8px #000;
+}
+
+.level-progress span{
     display:block;
-    font-size:18px;
-    margin-bottom:4px;
+    height:100%;
+    width:35%;
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #7429ff,
+            #d65cff
+        );
+
+    box-shadow:
+        0 0 14px #a33cff;
 }
 
-.nav-item.active{
-    color:#8c91ff;
+.level-number{
+    font-size:12px;
+    color:#c5bdf4;
+    margin-top:4px;
 }
 
-@keyframes rotate{
-    to{transform:rotate(360deg);}
+/* =========================
+   LUNARO BRAND
+========================= */
+
+.brand{
+    text-align:center;
+    margin-top:-4px;
+    position:relative;
+    z-index:5;
+}
+
+.brand-logo{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:13px;
+}
+
+.moon{
+    width:56px;
+    height:56px;
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle at 30% 30%,
+            #fff,
+            #bd5cff 28%,
+            #6323ff 65%,
+            #170052 100%
+        );
+
+    box-shadow:
+        0 0 20px #b640ff,
+        0 0 50px rgba(134,50,255,.7);
+
+    position:relative;
+}
+
+.moon::after{
+    content:"";
+    position:absolute;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#060316;
+    top:-4px;
+    right:-7px;
+}
+
+.brand-name{
+    font-size:40px;
+    letter-spacing:7px;
+    font-weight:900;
+
+    color:#fff;
+
+    text-shadow:
+        0 0 10px rgba(255,255,255,.5),
+        0 0 30px rgba(161,58,255,.55);
+}
+
+.brand-sub{
+    font-size:12px;
+    letter-spacing:6px;
+    color:#aaa2df;
+    margin-top:1px;
+}
+
+/* =========================
+   HERO PLANET
+========================= */
+
+.hero{
+    position:relative;
+    height:430px;
+    margin-top:8px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.hero-glow{
+    position:absolute;
+    width:370px;
+    height:370px;
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(159,55,255,.35),
+            rgba(81,20,255,.16) 42%,
+            transparent 72%
+        );
+
+    filter:blur(18px);
+}
+
+.planet{
+    position:absolute;
+    width:340px;
+    height:340px;
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            #6d43a8,
+            #24114a 35%,
+            #0a061a 72%,
+            #02010a 100%
+        );
+
+    box-shadow:
+        0 0 25px #b33cff,
+        0 0 60px rgba(131,30,255,.8),
+        inset -30px -20px 60px #000;
+
+    overflow:visible;
+}
+
+/* crater texture */
+.planet::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+
+    opacity:.65;
+
+    background:
+        radial-gradient(circle at 20% 30%,#05000e 0 9px,transparent 10px),
+        radial-gradient(circle at 70% 20%,#130727 0 13px,transparent 14px),
+        radial-gradient(circle at 55% 65%,#05000d 0 16px,transparent 17px),
+        radial-gradient(circle at 30% 70%,#18072e 0 12px,transparent 13px),
+        radial-gradient(circle at 78% 62%,#06000f 0 10px,transparent 11px);
+}
+
+.planet::after{
+    content:"";
+    position:absolute;
+    inset:-9px;
+    border-radius:50%;
+
+    border:2px solid rgba(224,113,255,.8);
+
+    box-shadow:
+        0 0 15px #ff55ff,
+        0 0 35px #8d32ff,
+        inset 0 0 25px #7a26ff;
+}
+
+/* =========================
+   ORBIT
+========================= */
+
+.orbit{
+    position:absolute;
+    width:440px;
+    height:135px;
+
+    border:4px solid rgba(208,81,255,.9);
+    border-radius:50%;
+
+    transform:rotate(-17deg);
+
+    box-shadow:
+        0 0 10px #ff52ff,
+        0 0 30px #8e24ff;
+
+    z-index:4;
+}
+
+.orbit::after{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    border-top:2px solid #fff;
+    opacity:.7;
+}
+
+/* =========================
+   LNR TEXT
+========================= */
+
+.lnr{
+    position:relative;
+    z-index:6;
+
+    font-size:108px;
+    font-weight:1000;
+    letter-spacing:-5px;
+
+    color:#e8c9ff;
+
+    transform:skew(-7deg);
+
+    text-shadow:
+        2px 2px 0 #7d27d9,
+        5px 5px 0 #4a1590,
+        0 0 12px #fff,
+        0 0 35px #b340ff,
+        0 0 70px #6c20ff;
+}
+
+/* =========================
+   BALANCE
+========================= */
+
+.balance{
+    text-align:center;
+    margin-top:-8px;
+}
+
+.balance-title{
+    font-size:26px;
+    letter-spacing:2px;
+    color:#c9c0f2;
+}
+
+.balance-title span{
+    color:#d36aff;
+}
+
+.balance-value{
+    margin-top:6px;
+
+    font-size:68px;
+    line-height:1;
+    font-weight:900;
+
+    color:#fff;
+
+    text-shadow:
+        0 0 10px #fff,
+        0 0 30px rgba(165,70,255,.65);
+}
+
+.balance-token{
+    margin-top:8px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:9px;
+
+    color:#ffd768;
+    font-size:23px;
+    font-weight:800;
+}
+
+.token-icon{
+    width:31px;
+    height:31px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border-radius:50%;
+
+    background:#32115c;
+    border:1px solid #a849ff;
+
+    color:#d85cff;
+
+    box-shadow:0 0 12px #8e35ff;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+    margin-top:42px;
+
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+
+    border:1px solid rgba(129,51,255,.65);
+    border-radius:28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(17,9,42,.8),
+            rgba(4,3,20,.88)
+        );
+
+    box-shadow:
+        0 0 25px rgba(93,27,255,.1),
+        inset 0 0 30px rgba(100,40,255,.05);
+
+    overflow:hidden;
+}
+
+.stat{
+    min-height:170px;
+    padding:20px 8px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+}
+
+.stat + .stat{
+    border-left:1px solid rgba(111,81,188,.3);
+}
+
+.stat-icon{
+    width:52px;
+    height:52px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    font-size:27px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(137,51,255,.4),
+            rgba(23,5,59,.6)
+        );
+
+    border:1px solid rgba(170,75,255,.5);
+
+    box-shadow:
+        0 0 20px rgba(140,46,255,.35);
+}
+
+.stat:nth-child(2) .stat-icon{
+    color:#ffd85a;
+}
+
+.stat:nth-child(3) .stat-icon{
+    color:#cf64ff;
+}
+
+.stat-name{
+    margin-top:13px;
+    color:#aaa5dc;
+    font-size:14px;
+}
+
+.stat-value{
+    margin-top:8px;
+    font-size:31px;
+    font-weight:850;
+    color:#f8f5ff;
+}
+
+.stat:nth-child(2) .stat-value{
+    color:#ffd85a;
+}
+
+.stat-unit{
+    font-size:14px;
+    color:#b5a9e7;
+    margin-top:2px;
+}
+
+/* =========================
+   CLAIM
+========================= */
+
+.claim{
+    margin:40px 10px 0;
+
+    height:105px;
+
+    border-radius:55px;
+
+    border:2px solid #a938ff;
+
+    background:
+        linear-gradient(
+            100deg,
+            #3510b7,
+            #8b26ff 50%,
+            #3915b8
+        );
+
+    box-shadow:
+        0 0 15px #8b27ff,
+        0 0 40px rgba(147,38,255,.55),
+        inset 0 0 25px rgba(255,255,255,.2);
+
+    display:flex;
+    align-items:center;
+
+    position:relative;
+
+    overflow:hidden;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.claim:active{
+    transform:scale(.98);
+}
+
+.claim::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:70%;
+    height:100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.25),
+            transparent
+        );
+
+    transform:skewX(-20deg);
+    animation:shine 4s infinite;
+}
+
+@keyframes shine{
+    0%{left:-100%}
+    35%,100%{left:150%}
+}
+
+.claim-icon{
+    margin-left:25px;
+
+    width:65px;
+    height:65px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:32px;
+
+    border:1px solid rgba(255,255,255,.45);
+    background:rgba(20,0,60,.25);
+
+    box-shadow:
+        0 0 20px rgba(255,255,255,.15);
+}
+
+.claim-text{
+    flex:1;
+    text-align:center;
+
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:2px;
+
+    text-shadow:
+        0 0 12px #fff;
+}
+
+.claim-arrow{
+    margin-right:27px;
+    font-size:40px;
+    color:#d6a9ff;
+}
+
+/* =========================
+   ACTIVE MINING
+========================= */
+
+.mining-status{
+    margin:38px auto 25px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+
+    color:#27eaff;
+    font-size:15px;
+    letter-spacing:1px;
+}
+
+.status-line{
+    width:140px;
+    height:1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #36ddff
+        );
+}
+
+.status-line.right{
+    transform:rotate(180deg);
+}
+
+.status-dot{
+    width:15px;
+    height:15px;
+    border-radius:50%;
+
+    background:#25eaff;
+
+    box-shadow:
+        0 0 8px #25eaff,
+        0 0 20px #25eaff;
+
+    animation:pulse 1.5s infinite;
 }
 
 @keyframes pulse{
-    0%,100%{
-        transform:scale(1);
-        box-shadow:0 0 30px rgba(110,110,255,.45),
-                   0 0 90px rgba(95,80,255,.18);
-    }
     50%{
-        transform:scale(1.035);
-        box-shadow:0 0 45px rgba(110,110,255,.6),
-                   0 0 110px rgba(95,80,255,.25);
+        transform:scale(1.3);
+        opacity:.6;
     }
 }
 
-@media(max-width:380px){
-    .balance{
-        font-size:32px;
+/* =========================
+   LUNARO INFO CARD
+========================= */
+
+.info-card{
+    min-height:108px;
+
+    border-radius:28px;
+
+    border:1px solid rgba(106,44,255,.65);
+
+    background:
+        radial-gradient(
+            circle at 75% 50%,
+            rgba(94,20,255,.25),
+            transparent 35%
+        ),
+        linear-gradient(
+            110deg,
+            rgba(11,5,31,.92),
+            rgba(4,3,20,.8)
+        );
+
+    display:flex;
+    align-items:center;
+
+    padding:18px 25px;
+
+    position:relative;
+    overflow:hidden;
+}
+
+.info-card::after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:70px;
+    right:60px;
+    bottom:-20px;
+
+    background:#38117a;
+
+    filter:blur(25px);
+    opacity:.7;
+}
+
+.info-logo{
+    width:65px;
+    height:65px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid #b84dff;
+
+    color:#e2a2ff;
+    font-size:23px;
+    font-weight:900;
+
+    box-shadow:
+        0 0 20px rgba(174,60,255,.45);
+}
+
+.info-text{
+    margin-left:20px;
+}
+
+.info-title{
+    font-size:22px;
+    font-weight:800;
+}
+
+.info-sub{
+    color:#8d75d0;
+    margin-top:4px;
+    font-size:13px;
+}
+
+.info-right{
+    margin-left:auto;
+    color:#a864ff;
+    font-size:13px;
+    text-align:right;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav{
+    position:fixed;
+
+    z-index:100;
+
+    left:50%;
+    bottom:0;
+
+    transform:translateX(-50%);
+
+    width:100%;
+    max-width:620px;
+
+    height:112px;
+
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+
+    padding:12px 10px 17px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(5,3,21,.72),
+            #02010b 70%
+        );
+
+    border-top:1px solid rgba(101,54,200,.25);
+
+    backdrop-filter:blur(22px);
+}
+
+.nav-item{
+    position:relative;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+    color:#aaa6dc;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.nav-icon{
+    font-size:31px;
+    filter:drop-shadow(0 0 5px rgba(144,75,255,.4));
+}
+
+.nav-label{
+    font-size:15px;
+}
+
+.nav-item.active{
+    color:#eee4ff;
+}
+
+.nav-item.active .nav-icon{
+    color:#c75aff;
+
+    filter:
+        drop-shadow(0 0 7px #b63cff)
+        drop-shadow(0 0 18px #7b20ff);
+}
+
+.nav-item.active::after{
+    content:"";
+
+    position:absolute;
+
+    bottom:0;
+
+    width:108px;
+    max-width:85%;
+
+    height:3px;
+
+    border-radius:10px;
+
+    background:#bb45ff;
+
+    box-shadow:
+        0 0 10px #c13dff,
+        0 0 22px #8d27ff;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:520px){
+
+    .screen{
+        padding-left:12px;
+        padding-right:12px;
+        padding-top:15px;
+    }
+
+    .wallet-box{
+        min-width:0;
+        width:48%;
+        height:70px;
+        border-radius:22px;
+    }
+
+    .wallet-icon{
+        width:38px;
+        height:38px;
+        font-size:21px;
+    }
+
+    .wallet-title{
+        font-size:11px;
+    }
+
+    .wallet-address{
+        font-size:14px;
+    }
+
+    .level-box{
+        width:48%;
+        height:70px;
+        border-radius:22px;
+        padding:7px 12px;
+    }
+
+    .level-title{
+        font-size:19px;
+    }
+
+    .brand{
+        margin-top:20px;
+    }
+
+    .brand-name{
+        font-size:31px;
+        letter-spacing:4px;
     }
 
     .moon{
-        width:125px;
-        height:125px;
+        width:45px;
+        height:45px;
+    }
+
+    .brand-sub{
+        font-size:9px;
+        letter-spacing:4px;
+    }
+
+    .hero{
+        height:350px;
+    }
+
+    .planet{
+        width:285px;
+        height:285px;
+    }
+
+    .hero-glow{
+        width:320px;
+        height:320px;
     }
 
     .orbit{
-        width:185px;
-        height:185px;
+        width:365px;
+        height:115px;
+    }
+
+    .lnr{
+        font-size:83px;
+    }
+
+    .balance-title{
+        font-size:21px;
+    }
+
+    .balance-value{
+        font-size:53px;
+    }
+
+    .balance-token{
+        font-size:20px;
+    }
+
+    .stats{
+        margin-top:30px;
+    }
+
+    .stat{
+        min-height:140px;
+        padding:12px 4px;
+    }
+
+    .stat-icon{
+        width:44px;
+        height:44px;
+        font-size:22px;
+    }
+
+    .stat-name{
+        font-size:11px;
+    }
+
+    .stat-value{
+        font-size:23px;
+    }
+
+    .stat-unit{
+        font-size:12px;
+    }
+
+    .claim{
+        height:86px;
+        margin-top:30px;
+    }
+
+    .claim-icon{
+        width:53px;
+        height:53px;
+        margin-left:15px;
+    }
+
+    .claim-text{
+        font-size:27px;
+    }
+
+    .claim-arrow{
+        margin-right:17px;
+        font-size:31px;
+    }
+
+    .info-card{
+        min-height:90px;
+        padding:14px;
+    }
+
+    .info-logo{
+        width:54px;
+        height:54px;
+        font-size:19px;
+    }
+
+    .info-text{
+        margin-left:13px;
+    }
+
+    .info-title{
+        font-size:18px;
+    }
+
+    .info-sub{
+        font-size:11px;
+    }
+
+    .info-right{
+        display:none;
+    }
+
+    .nav-icon{
+        font-size:26px;
+    }
+
+    .nav-label{
+        font-size:12px;
+    }
+
+    .bottom-nav{
+        height:96px;
     }
 }
 </style>
@@ -535,251 +1130,368 @@ body{
 
 <body>
 
-<div class="stars"></div>
-
 <div class="app">
 
-    <!-- HEADER -->
-    <header class="header">
+<main class="screen">
 
-        <div class="brand">
-            <div class="logo">L</div>
+    <!-- TOP -->
+    <div class="topbar">
 
-            <div class="brand-name">
-                LUNA<span>RO</span>
-            </div>
-        </div>
+        <div class="wallet-box">
 
-        <button class="wallet-btn" onclick="connectWallet()">
-            Connect Wallet
-        </button>
+            <div class="wallet-icon">▣</div>
 
-    </header>
+            <div class="wallet-info">
+                <div class="wallet-title">
+                    ● Wallet Connected
+                </div>
 
-
-    <!-- BALANCE -->
-    <section class="balance-card">
-
-        <div class="balance-label">
-            Total Balance
-        </div>
-
-        <div class="balance">
-            <span id="balance">25,000.00</span>
-            <span>LNR</span>
-        </div>
-
-        <div class="balance-bottom">
-
-            <div class="level">
-                <span class="level-badge">LVL 3</span>
-                <span>Miner Level</span>
+                <div class="wallet-address">
+                    UQCN...iD7
+                </div>
             </div>
 
-            <div class="speed">
-                +0.70 LNR / hour
+            <div class="wallet-arrow">›</div>
+
+        </div>
+
+        <div class="level-box">
+
+            <div class="level-title">
+                LVL 3
             </div>
 
+            <div class="level-progress">
+                <span></span>
+            </div>
+
+            <div class="level-number">
+                348 / 1,000
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- BRAND -->
+    <div class="brand">
+
+        <div class="brand-logo">
+
+            <div class="moon"></div>
+
+            <div>
+                <div class="brand-name">
+                    LUNARO
+                </div>
+
+                <div class="brand-sub">
+                    AUTOMATIC MINING
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PLANET -->
+    <section class="hero">
+
+        <div class="hero-glow"></div>
+
+        <div class="planet"></div>
+
+        <div class="orbit"></div>
+
+        <div class="lnr">
+            LNR
         </div>
 
     </section>
 
 
-    <!-- MINING -->
-    <section class="mining">
+    <!-- BALANCE -->
+    <section class="balance">
 
-        <div class="mining-title">
-            LUNARO MINING
+        <div class="balance-title">
+            TOTAL BALANCE <span>ⓘ</span>
         </div>
 
-        <div class="moon-wrap">
-
-            <div class="orbit"></div>
-
-            <div class="moon"></div>
-
+        <div class="balance-value" id="totalBalance">
+            25,458.72
         </div>
 
-        <div class="mining-status">
-            <span class="status-dot"></span>
-            Mining Active
-        </div>
+        <div class="balance-token">
 
-        <button class="claim-btn" onclick="claimMining()">
-            CLAIM LNR
-        </button>
+            <div class="token-icon">
+                L
+            </div>
+
+            LNR
+
+        </div>
 
     </section>
 
 
     <!-- STATS -->
-    <div class="stats">
+    <section class="stats">
 
         <div class="stat">
-            <div class="stat-value">0.70</div>
-            <div class="stat-label">LNR / Hour</div>
+
+            <div class="stat-icon">
+                ▣
+            </div>
+
+            <div class="stat-name">
+                WALLET BALANCE
+            </div>
+
+            <div class="stat-value">
+                25,000.00
+            </div>
+
+            <div class="stat-unit">
+                LNR
+            </div>
+
         </div>
+
 
         <div class="stat">
-            <div class="stat-value">LVL 3</div>
-            <div class="stat-label">Miner</div>
+
+            <div class="stat-icon">
+                ⛏
+            </div>
+
+            <div class="stat-name">
+                MINED <span style="color:#ffd85a">(NOT CLAIMED)</span>
+            </div>
+
+            <div class="stat-value" id="mined">
+                458.72
+            </div>
+
+            <div class="stat-unit">
+                LNR
+            </div>
+
         </div>
+
 
         <div class="stat">
-            <div class="stat-value">24/7</div>
-            <div class="stat-label">Mining</div>
-        </div>
 
-    </div>
+            <div class="stat-icon">
+                ⚡
+            </div>
 
+            <div class="stat-name">
+                MINING SPEED
+            </div>
 
-    <!-- PROGRESS -->
-    <section class="progress-card">
+            <div class="stat-value">
+                0.70
+            </div>
 
-        <div class="progress-top">
-            <span>Mining Progress</span>
-            <strong>68%</strong>
-        </div>
+            <div class="stat-unit">
+                LNR / hour
+            </div>
 
-        <div class="progress">
-            <div class="progress-bar"></div>
         </div>
 
     </section>
 
 
-    <!-- QUICK ACTIONS -->
-    <div class="section-title">
-        <h3>Quick Actions</h3>
-        <span>LUNARO ECOSYSTEM</span>
+    <!-- CLAIM -->
+    <button class="claim" id="claimButton">
+
+        <div class="claim-icon">
+            ⚡
+        </div>
+
+        <div class="claim-text">
+            CLAIM
+        </div>
+
+        <div class="claim-arrow">
+            ›
+        </div>
+
+    </button>
+
+
+    <!-- STATUS -->
+    <div class="mining-status">
+
+        <div class="status-line"></div>
+
+        <div class="status-dot"></div>
+
+        <div>
+            AUTOMATIC MINING ACTIVE
+        </div>
+
+        <div class="status-line right"></div>
+
     </div>
 
-    <section class="quick">
 
-        <div class="quick-card" onclick="openStore()">
+    <!-- INFO -->
+    <section class="info-card">
 
-            <div class="icon">⛏</div>
+        <div class="info-logo">
+            LNR
+        </div>
 
-            <h4>Miner Store</h4>
+        <div class="info-text">
 
-            <p>Upgrade your mining power</p>
+            <div class="info-title">
+                LUNARO
+            </div>
+
+            <div class="info-sub">
+                Lunar Mining Network
+            </div>
 
         </div>
 
-
-        <div class="quick-card" onclick="openMissions()">
-
-            <div class="icon">🎯</div>
-
-            <h4>Missions</h4>
-
-            <p>Complete tasks & earn LNR</p>
-
-        </div>
-
-
-        <div class="quick-card" onclick="openFriends()">
-
-            <div class="icon">👥</div>
-
-            <h4>Referral</h4>
-
-            <p>Invite friends & earn</p>
-
-        </div>
-
-
-        <div class="quick-card" onclick="openWithdraw()">
-
-            <div class="icon">↗</div>
-
-            <h4>Withdraw</h4>
-
-            <p>Send your LNR tokens</p>
-
+        <div class="info-right">
+            The future is yours<br>
+            ◐
         </div>
 
     </section>
 
-</div>
+</main>
 
 
 <!-- BOTTOM NAV -->
-
 <nav class="bottom-nav">
 
     <div class="nav-item active">
-        <span class="nav-icon">⌂</span>
-        Home
+        <div class="nav-icon">◐</div>
+        <div class="nav-label">Mine</div>
     </div>
 
     <div class="nav-item">
-        <span class="nav-icon">◉</span>
-        Mining
+        <div class="nav-icon">☑</div>
+        <div class="nav-label">Tasks</div>
     </div>
 
     <div class="nav-item">
-        <span class="nav-icon">▣</span>
-        Store
+        <div class="nav-icon">⛏</div>
+        <div class="nav-label">Miners</div>
     </div>
 
     <div class="nav-item">
-        <span class="nav-icon">♧</span>
-        Friends
+        <div class="nav-icon">♟</div>
+        <div class="nav-label">Friends</div>
+    </div>
+
+    <div class="nav-item">
+        <div class="nav-icon">●</div>
+        <div class="nav-label">Profile</div>
     </div>
 
 </nav>
 
+</div>
+
 
 <script>
 
-let balance = 25000;
+/* =========================
+   DEMO AUTOMATIC MINING
+========================= */
 
-function connectWallet(){
+let walletBalance = 25000;
+let mined = 458.72;
 
-    alert("Wallet connection will be connected to TON Connect.");
+const miningSpeed = 0.70;
 
+/*
+   سرعت فعلی:
+   0.70 LNR در ساعت
+*/
+
+let lastTime = Date.now();
+
+function updateMining(){
+
+    const now = Date.now();
+
+    const elapsedHours =
+        (now - lastTime) / 3600000;
+
+    mined += miningSpeed * elapsedHours;
+
+    lastTime = now;
+
+    document.getElementById("mined").textContent =
+        mined.toLocaleString(
+            "en-US",
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
 }
 
-function claimMining(){
+setInterval(updateMining,1000);
 
-    const amount = 0.70;
 
-    balance += amount;
+/* =========================
+   CLAIM
+========================= */
 
-    document.getElementById("balance").innerText =
-        balance.toLocaleString("en-US",{
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        });
+document
+.getElementById("claimButton")
+.addEventListener("click",function(){
 
-    alert("Mining reward claimed successfully!");
+    if(mined <= 0){
+        return;
+    }
 
-}
+    walletBalance += mined;
 
-function openStore(){
+    mined = 0;
 
-    alert("Miner Store");
+    document.getElementById("mined").textContent =
+        "0.00";
 
-}
+    document.getElementById("totalBalance").textContent =
+        walletBalance.toLocaleString(
+            "en-US",
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
 
-function openMissions(){
+});
 
-    alert("Missions");
 
-}
+/* =========================
+   NAVIGATION VISUAL
+========================= */
 
-function openFriends(){
+document
+.querySelectorAll(".nav-item")
+.forEach(item=>{
 
-    alert("Referral");
+    item.addEventListener("click",()=>{
 
-}
+        document
+        .querySelectorAll(".nav-item")
+        .forEach(x=>x.classList.remove("active"));
 
-function openWithdraw(){
+        item.classList.add("active");
 
-    alert("Withdraw");
+    });
 
-}
+});
 
 </script>
 
