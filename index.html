@@ -3,159 +3,165 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#050510">
-<meta name="apple-mobile-web-app-capable" content="yes">
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 
-<title>LUNARO — Automatic Mining</title>
+<title>LUNARO — LNR</title>
 
 <style>
 /* =========================================================
-   LUNARO — COMPLETE SINGLE FILE UI
+   LUNARO
+   ONE FILE MINI APP
+   Image source: lunaro-bg.png
    ========================================================= */
 
 :root{
-    --bg:#04040d;
-    --bg2:#08081a;
-    --panel:rgba(17,17,37,.72);
-    --panel2:rgba(26,24,54,.72);
-    --line:rgba(255,255,255,.09);
-
-    --purple:#8d55ff;
-    --purple2:#b777ff;
-    --blue:#42c7ff;
-    --cyan:#59e6ff;
-
-    --text:#ffffff;
-    --muted:#9292ad;
-    --muted2:#68687e;
-
-    --green:#55e7b0;
-    --danger:#ff668c;
-
-    --radius:22px;
+  --bg:#02030b;
+  --bg2:#070019;
+  --purple:#8b2cff;
+  --purple2:#b94cff;
+  --violet:#6b20ff;
+  --pink:#f052ff;
+  --cyan:#20e8ff;
+  --gold:#ffd86a;
+  --green:#28f4c0;
+  --text:#fff;
+  --muted:#8f91aa;
+  --line:rgba(150,75,255,.28);
+  --glass:rgba(8,7,30,.72);
+  --glass2:rgba(16,10,45,.86);
+  --shadow:0 0 30px rgba(120,20,255,.25);
+  --radius:22px;
 }
 
 *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    -webkit-tap-highlight-color:transparent;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
-    width:100%;
-    min-height:100%;
-    background:var(--bg);
-    color:var(--text);
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
+  margin:0;
+  width:100%;
+  min-height:100%;
+  background:#02020a;
+  color:white;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
 }
 
 body{
-    overflow-x:hidden;
+  overflow-x:hidden;
 }
 
 button,
 input{
-    font:inherit;
+  font:inherit;
 }
 
 button{
-    border:0;
-    cursor:pointer;
+  border:0;
+  color:white;
 }
 
-.app{
-    width:100%;
-    max-width:520px;
-    min-height:100vh;
-    margin:auto;
-    position:relative;
-    overflow:hidden;
-    background:
-        radial-gradient(circle at 50% 18%, rgba(100,45,190,.16), transparent 27%),
-        radial-gradient(circle at 15% 45%, rgba(38,82,180,.10), transparent 25%),
-        radial-gradient(circle at 85% 70%, rgba(122,44,220,.10), transparent 30%),
-        linear-gradient(180deg,#04040c 0%,#050510 45%,#03030a 100%);
+#app{
+  width:100%;
+  min-height:100vh;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(100,0,255,.25),transparent 32%),
+    radial-gradient(circle at 10% 70%,rgba(40,0,180,.18),transparent 30%),
+    #02020a;
 }
 
 /* =========================================================
-   SPACE BACKGROUND
+   SPACE
    ========================================================= */
 
 .space{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    overflow:hidden;
-    z-index:0;
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:0;
 }
 
 .space:before{
-    content:"";
-    position:absolute;
-    width:420px;
-    height:420px;
-    left:50%;
-    top:80px;
-    transform:translateX(-50%);
-    background:
-        radial-gradient(circle,
-            rgba(142,79,255,.20) 0%,
-            rgba(92,45,180,.09) 35%,
-            transparent 70%);
-    filter:blur(18px);
+  content:"";
+  position:absolute;
+  inset:-20%;
+  background:
+    radial-gradient(circle at 50% 30%,
+      rgba(125,0,255,.32),
+      transparent 25%),
+    radial-gradient(circle at 20% 55%,
+      rgba(25,0,150,.22),
+      transparent 25%),
+    radial-gradient(circle at 80% 65%,
+      rgba(145,0,255,.18),
+      transparent 25%);
+  filter:blur(35px);
+  animation:nebula 10s ease-in-out infinite alternate;
 }
 
-.space:after{
-    content:"";
-    position:absolute;
-    width:700px;
-    height:280px;
-    left:50%;
-    top:260px;
-    transform:translateX(-50%) rotate(-16deg);
-    background:
-        radial-gradient(ellipse,
-            rgba(69,105,255,.08),
-            transparent 65%);
-    filter:blur(35px);
+@keyframes nebula{
+  from{transform:scale(1) rotate(0deg)}
+  to{transform:scale(1.12) rotate(2deg)}
 }
 
-.stars{
-    position:absolute;
-    inset:0;
-    background-image:
-        radial-gradient(circle at 8% 12%,rgba(255,255,255,.75) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 18% 34%,rgba(255,255,255,.5) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 31% 8%,rgba(255,255,255,.7) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 43% 25%,rgba(255,255,255,.55) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 61% 13%,rgba(255,255,255,.8) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 77% 29%,rgba(255,255,255,.55) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 92% 10%,rgba(255,255,255,.7) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 12% 62%,rgba(255,255,255,.45) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 29% 78%,rgba(255,255,255,.65) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 47% 63%,rgba(255,255,255,.4) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 72% 77%,rgba(255,255,255,.65) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 89% 61%,rgba(255,255,255,.5) 0 1px,transparent 1.5px);
-    opacity:.65;
+.star{
+  position:absolute;
+  width:2px;
+  height:2px;
+  border-radius:50%;
+  background:white;
+  opacity:.7;
+  box-shadow:0 0 7px white;
+  animation:twinkle 2s infinite alternate;
+}
+
+.star:nth-child(1){left:7%;top:8%;animation-delay:.2s}
+.star:nth-child(2){left:18%;top:22%;animation-delay:.8s}
+.star:nth-child(3){left:31%;top:11%;animation-delay:1.2s}
+.star:nth-child(4){left:45%;top:6%;animation-delay:.4s}
+.star:nth-child(5){left:62%;top:13%;animation-delay:1.5s}
+.star:nth-child(6){left:78%;top:7%;animation-delay:.7s}
+.star:nth-child(7){left:91%;top:20%;animation-delay:1.8s}
+.star:nth-child(8){left:13%;top:44%;animation-delay:1.1s}
+.star:nth-child(9){left:86%;top:39%;animation-delay:.3s}
+.star:nth-child(10){left:5%;top:68%;animation-delay:1.7s}
+.star:nth-child(11){left:95%;top:72%;animation-delay:.9s}
+.star:nth-child(12){left:48%;top:49%;animation-delay:1.3s}
+.star:nth-child(13){left:25%;top:76%;animation-delay:.6s}
+.star:nth-child(14){left:72%;top:82%;animation-delay:1.9s}
+.star:nth-child(15){left:55%;top:91%;animation-delay:.5s}
+
+@keyframes twinkle{
+  from{opacity:.2;transform:scale(.7)}
+  to{opacity:1;transform:scale(1.5)}
 }
 
 /* =========================================================
-   MAIN
+   APP SHELL
    ========================================================= */
 
-.main{
-    position:relative;
-    z-index:2;
-    padding:16px 15px 105px;
+.shell{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:540px;
+  min-height:100vh;
+  margin:auto;
+  padding:
+    calc(env(safe-area-inset-top) + 10px)
+    14px
+    calc(env(safe-area-inset-bottom) + 100px);
 }
 
 /* =========================================================
@@ -163,138 +169,149 @@ button{
    ========================================================= */
 
 .header{
-    display:grid;
-    grid-template-columns:1fr auto 1fr;
-    align-items:center;
-    gap:10px;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:8px;
+  position:relative;
+  z-index:10;
 }
 
-.wallet-pill,
-.level-pill{
-    min-height:45px;
-    border:1px solid rgba(255,255,255,.09);
-    background:rgba(15,15,31,.72);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-    border-radius:15px;
-    display:flex;
-    align-items:center;
+.brand{
+  text-align:center;
+  user-select:none;
+}
+
+.brand-row{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
+}
+
+.moon{
+  width:25px;
+  height:25px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 65% 35%,
+      transparent 0 43%,
+      #b85cff 45% 65%,
+      #7a20ff 70%);
+  filter:
+    drop-shadow(0 0 7px #a52cff)
+    drop-shadow(0 0 15px rgba(150,40,255,.6));
+}
+
+.brand-name{
+  font-size:21px;
+  line-height:1;
+  letter-spacing:3px;
+  font-weight:900;
+  text-shadow:
+    0 0 8px #b84cff,
+    0 0 20px rgba(130,30,255,.75);
+}
+
+.brand-sub{
+  margin-top:4px;
+  font-size:6px;
+  letter-spacing:3px;
+  color:#aaa5c7;
+  font-weight:800;
+}
+
+.pill{
+  min-width:0;
+  padding:8px 10px;
+  border-radius:13px;
+  border:1px solid rgba(130,75,255,.55);
+  background:
+    linear-gradient(180deg,
+      rgba(25,14,67,.92),
+      rgba(6,6,25,.8));
+  box-shadow:
+    inset 0 0 12px rgba(130,40,255,.08),
+    0 0 14px rgba(100,30,255,.16);
+  backdrop-filter:blur(12px);
 }
 
 .wallet-pill{
-    padding:7px 10px;
-    gap:8px;
+  cursor:pointer;
+}
+
+.wallet-top{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:8px;
+  color:#7dffec;
+  font-weight:800;
+  white-space:nowrap;
 }
 
 .wallet-icon{
-    width:29px;
-    height:29px;
-    border-radius:10px;
-    display:grid;
-    place-items:center;
-    background:linear-gradient(145deg,#31204d,#15152b);
-    color:#ad78ff;
-    box-shadow:0 0 18px rgba(143,78,255,.18);
-    font-size:14px;
+  width:14px;
+  height:11px;
+  border:2px solid #29eaff;
+  border-radius:3px;
+  box-shadow:0 0 7px #1eeaff;
+  position:relative;
 }
 
-.wallet-info{
-    min-width:0;
-}
-
-.wallet-status{
-    font-size:9px;
-    color:var(--cyan);
-    font-weight:700;
-    white-space:nowrap;
-    display:flex;
-    align-items:center;
-    gap:4px;
-}
-
-.wallet-status i{
-    width:5px;
-    height:5px;
-    background:var(--cyan);
-    border-radius:50%;
-    box-shadow:0 0 8px var(--cyan);
+.wallet-icon:after{
+  content:"";
+  position:absolute;
+  right:-4px;
+  top:2px;
+  width:5px;
+  height:5px;
+  border:1px solid #29eaff;
+  border-left:0;
+  border-radius:0 3px 3px 0;
 }
 
 .wallet-address{
-    margin-top:2px;
-    color:#a5a5b9;
-    font-size:9px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    max-width:72px;
-}
-
-.logo{
-    text-align:center;
-    white-space:nowrap;
-}
-
-.logo-name{
-    font-size:19px;
-    font-weight:900;
-    letter-spacing:3px;
-    line-height:1;
-    background:linear-gradient(90deg,#fff,#cbb6ff,#fff);
-    -webkit-background-clip:text;
-    color:transparent;
-    text-shadow:0 0 22px rgba(164,112,255,.2);
-}
-
-.logo-sub{
-    font-size:6px;
-    color:#88849e;
-    letter-spacing:3px;
-    margin-top:6px;
+  margin-top:4px;
+  color:#aaa9c2;
+  font-size:7px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .level-pill{
-    justify-self:end;
-    padding:7px 9px;
-    width:91px;
-    flex-direction:column;
-    align-items:flex-start;
-    justify-content:center;
-    gap:4px;
+  justify-self:end;
+  min-width:76px;
 }
 
-.level-top{
-    display:flex;
-    width:100%;
-    justify-content:space-between;
-    align-items:center;
+.level-title{
+  font-size:9px;
+  font-weight:900;
+  color:#d2b7ff;
+  text-align:center;
 }
 
-.level-label{
-    font-size:9px;
-    font-weight:800;
-    color:#d6caff;
-}
-
-.level-count{
-    font-size:8px;
-    color:#77768d;
-}
-
-.level-bar{
-    width:100%;
-    height:4px;
-    border-radius:99px;
-    background:#252238;
-    overflow:hidden;
+.level-track{
+  height:5px;
+  border-radius:99px;
+  background:#17112e;
+  overflow:hidden;
+  margin:5px 0 3px;
 }
 
 .level-fill{
-    width:34.8%;
-    height:100%;
-    background:linear-gradient(90deg,#7542ff,#c477ff);
-    box-shadow:0 0 9px rgba(150,87,255,.7);
-    border-radius:99px;
+  height:100%;
+  width:35%;
+  background:linear-gradient(90deg,#6b21ff,#bd50ff);
+  box-shadow:0 0 10px #a632ff;
+}
+
+.level-meta{
+  display:flex;
+  justify-content:space-between;
+  font-size:6px;
+  color:#77728e;
 }
 
 /* =========================================================
@@ -302,1016 +319,806 @@ button{
    ========================================================= */
 
 .hero{
-    min-height:470px;
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding-top:28px;
+  position:relative;
+  margin-top:9px;
+  text-align:center;
 }
 
-.hero-glow{
-    position:absolute;
-    width:300px;
-    height:300px;
-    top:80px;
-    border-radius:50%;
-    background:radial-gradient(circle,
-        rgba(139,78,255,.22),
-        rgba(60,70,200,.08) 45%,
-        transparent 70%);
-    filter:blur(16px);
+.hero-art{
+  width:100%;
+  height:260px;
+  position:relative;
+  overflow:hidden;
+  border-radius:28px;
+  background:
+    radial-gradient(circle at center,
+      rgba(120,20,255,.18),
+      transparent 50%);
 }
 
-/* orbit */
+/*
+  We use the uploaded LUNARO image as the visual source.
+  The image contains the original planet artwork.
+  Only the planet region is shown through the clipping window.
+*/
 
-.orbit{
-    position:absolute;
-    top:100px;
-    width:290px;
-    height:145px;
-    border:1px solid rgba(128,101,255,.34);
-    border-radius:50%;
-    transform:rotate(-18deg);
-    box-shadow:
-        0 0 25px rgba(110,73,255,.12),
-        inset 0 0 25px rgba(110,73,255,.08);
+.planet-source{
+  position:absolute;
+  width:152%;
+  max-width:none;
+  height:auto;
+  left:-26.8%;
+  top:-22.5%;
+  filter:
+    saturate(1.12)
+    contrast(1.05)
+    drop-shadow(0 0 25px rgba(142,40,255,.45));
+  user-select:none;
+  pointer-events:none;
 }
 
-.orbit:before,
-.orbit:after{
-    content:"";
-    position:absolute;
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:#9f70ff;
-    box-shadow:0 0 12px #9f70ff;
+.hero-art:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 55%,
+      rgba(2,3,11,.45) 80%,
+      rgba(2,3,11,.95) 100%);
+  pointer-events:none;
 }
-
-.orbit:before{
-    left:34px;
-    top:28px;
-}
-
-.orbit:after{
-    right:35px;
-    bottom:23px;
-    background:#56dfff;
-    box-shadow:0 0 12px #56dfff;
-}
-
-/* planet */
-
-.planet{
-    position:absolute;
-    top:83px;
-    width:230px;
-    height:230px;
-    border-radius:50%;
-    background:
-        radial-gradient(circle at 32% 28%,
-            #8c72ff 0%,
-            #6846dc 18%,
-            #302070 45%,
-            #15112f 72%,
-            #080712 100%);
-    box-shadow:
-        0 0 25px rgba(127,73,255,.42),
-        0 0 70px rgba(95,48,210,.28),
-        inset -24px -22px 50px rgba(0,0,0,.72),
-        inset 13px 8px 30px rgba(164,120,255,.3);
-    overflow:hidden;
-}
-
-.planet:before{
-    content:"";
-    position:absolute;
-    width:310px;
-    height:95px;
-    left:-42px;
-    top:78px;
-    border-radius:50%;
-    border:10px solid rgba(170,126,255,.20);
-    transform:rotate(-18deg);
-    box-shadow:
-        0 0 20px rgba(145,90,255,.22),
-        inset 0 0 15px rgba(0,0,0,.3);
-}
-
-.planet:after{
-    content:"";
-    position:absolute;
-    width:140px;
-    height:140px;
-    left:40px;
-    top:43px;
-    border-radius:50%;
-    background:
-        radial-gradient(circle at 40% 35%,
-            rgba(190,155,255,.24),
-            transparent 42%);
-    filter:blur(5px);
-}
-
-.planet-letter{
-    position:absolute;
-    z-index:3;
-    inset:0;
-    display:grid;
-    place-items:center;
-    font-size:56px;
-    font-weight:1000;
-    letter-spacing:-5px;
-    font-style:italic;
-    background:
-        linear-gradient(180deg,#ffffff 0%,#d4c6ff 30%,#8055e9 67%,#39216e 100%);
-    -webkit-background-clip:text;
-    color:transparent;
-    filter:
-        drop-shadow(0 3px 0 #23134d)
-        drop-shadow(0 9px 12px rgba(0,0,0,.65))
-        drop-shadow(0 0 14px rgba(153,101,255,.65));
-}
-
-.planet-shine{
-    position:absolute;
-    z-index:4;
-    width:75px;
-    height:28px;
-    left:48px;
-    top:37px;
-    border-radius:50%;
-    background:rgba(255,255,255,.18);
-    filter:blur(12px);
-    transform:rotate(-25deg);
-}
-
-/* balance */
 
 .balance{
-    position:absolute;
-    top:325px;
-    text-align:center;
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:2px;
+  z-index:5;
 }
 
 .balance-label{
-    color:#9995aa;
-    font-size:9px;
-    letter-spacing:2.4px;
-    font-weight:700;
+  font-size:10px;
+  font-weight:900;
+  color:#b8b3c8;
+  letter-spacing:1px;
 }
 
 .balance-value{
-    margin-top:7px;
-    font-size:34px;
-    line-height:1;
-    font-weight:900;
-    letter-spacing:-1.5px;
-    text-shadow:0 0 24px rgba(255,255,255,.09);
+  margin-top:3px;
+  font-size:35px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:-1.5px;
+  color:#fff;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 15px #9c35ff,
+    0 0 30px rgba(130,25,255,.8);
 }
 
-.balance-unit{
-    margin-top:6px;
-    color:#a579ff;
-    font-size:11px;
-    font-weight:900;
-    letter-spacing:3px;
+.balance-token{
+  margin-top:5px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:5px;
+  color:#ffd969;
+  font-weight:900;
+  font-size:10px;
+}
+
+.token-dot{
+  width:15px;
+  height:15px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 35% 30%,#fff,#bd61ff 35%,#5d15c9);
+  box-shadow:0 0 12px #a838ff;
 }
 
 /* =========================================================
-   STAT CARDS
+   STATS
    ========================================================= */
 
 .stats{
-    margin-top:-8px;
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:8px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  overflow:hidden;
+  border:1px solid rgba(112,52,255,.55);
+  border-radius:20px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10,10,40,.87),
+      rgba(3,4,20,.92));
+  box-shadow:
+    0 0 20px rgba(94,23,255,.18),
+    inset 0 0 25px rgba(120,35,255,.08);
+  backdrop-filter:blur(14px);
 }
 
-.stat-card{
-    min-height:101px;
-    padding:13px 11px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.075);
-    background:
-        linear-gradient(145deg,
-            rgba(29,27,55,.78),
-            rgba(11,11,25,.68));
-    backdrop-filter:blur(16px);
-    box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.035),
-        0 12px 30px rgba(0,0,0,.12);
+.stat{
+  min-width:0;
+  padding:14px 6px 13px;
+  text-align:center;
+  border-right:1px solid rgba(105,65,255,.22);
+}
+
+.stat:last-child{
+  border-right:0;
 }
 
 .stat-icon{
-    width:27px;
-    height:27px;
-    border-radius:9px;
-    display:grid;
-    place-items:center;
-    background:rgba(132,77,255,.12);
-    color:#a778ff;
-    font-size:12px;
-    margin-bottom:9px;
+  width:27px;
+  height:27px;
+  margin:auto;
+  display:grid;
+  place-items:center;
+  border-radius:9px;
+  background:rgba(122,40,255,.12);
+  border:1px solid rgba(145,68,255,.32);
+  color:#bd63ff;
+  box-shadow:0 0 15px rgba(130,40,255,.18);
+  font-size:14px;
+}
+
+.stat:nth-child(2) .stat-icon{
+  color:#ffd76a;
+}
+
+.stat:nth-child(3) .stat-icon{
+  color:#d75aff;
 }
 
 .stat-title{
-    font-size:7px;
-    letter-spacing:.9px;
-    color:#7f7e94;
-    font-weight:800;
+  margin-top:7px;
+  color:#77768e;
+  font-size:7px;
+  font-weight:800;
+  white-space:nowrap;
 }
 
 .stat-value{
-    margin-top:4px;
-    font-size:14px;
-    font-weight:850;
-    white-space:nowrap;
+  margin-top:4px;
+  font-size:15px;
+  font-weight:950;
+  white-space:nowrap;
 }
 
 .stat-unit{
-    margin-top:3px;
-    font-size:7px;
-    color:#77758b;
+  font-size:7px;
+  color:#817f99;
+  margin-top:2px;
 }
 
 /* =========================================================
    CLAIM
    ========================================================= */
 
-.claim-wrap{
-    margin-top:13px;
+.claim{
+  width:100%;
+  height:58px;
+  margin-top:13px;
+  border-radius:30px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(
+      180deg,
+      #a52cff 0%,
+      #6b18ee 48%,
+      #4511b7 100%);
+  border:1px solid rgba(224,174,255,.65);
+  box-shadow:
+    0 0 8px #b132ff,
+    0 0 24px rgba(130,30,255,.85),
+    0 0 45px rgba(105,20,255,.35),
+    inset 0 1px 3px rgba(255,255,255,.35);
+  font-size:20px;
+  font-weight:950;
+  letter-spacing:1px;
+  transition:.2s ease;
 }
 
-.claim-btn{
-    width:100%;
-    height:57px;
-    border-radius:18px;
-    color:#fff;
-    font-weight:950;
-    letter-spacing:2px;
-    font-size:14px;
-    background:
-        linear-gradient(100deg,#7139df,#a65cff,#7140e8);
-    box-shadow:
-        0 0 28px rgba(132,67,255,.30),
-        0 8px 25px rgba(76,36,165,.22),
-        inset 0 1px 0 rgba(255,255,255,.25);
-    position:relative;
-    overflow:hidden;
-    transition:.2s;
+.claim:before{
+  content:"";
+  position:absolute;
+  inset:5px;
+  border-radius:25px;
+  border:1px solid rgba(255,255,255,.18);
 }
 
-.claim-btn:active{
-    transform:scale(.98);
-}
-
-.claim-btn:before{
-    content:"";
-    position:absolute;
-    top:0;
-    left:-80%;
-    width:45%;
-    height:100%;
-    background:linear-gradient(90deg,
-        transparent,
-        rgba(255,255,255,.22),
-        transparent);
-    transform:skewX(-20deg);
-    animation:shine 3.5s infinite;
+.claim:after{
+  content:"";
+  position:absolute;
+  top:-80%;
+  left:-40%;
+  width:35%;
+  height:250%;
+  transform:rotate(20deg);
+  background:rgba(255,255,255,.15);
+  filter:blur(8px);
+  animation:shine 3s infinite;
 }
 
 @keyframes shine{
-    0%,60%{left:-80%}
-    100%{left:140%}
+  0%{left:-40%}
+  60%,100%{left:125%}
 }
 
-.mining-active{
-    margin-top:10px;
-    text-align:center;
-    font-size:8px;
-    letter-spacing:1.7px;
-    color:#737288;
-    font-weight:800;
+.claim:active{
+  transform:scale(.975);
+  box-shadow:
+    0 0 15px #c03bff,
+    0 0 40px rgba(150,40,255,.9);
+}
+
+.claim[disabled]{
+  opacity:.45;
+  cursor:not-allowed;
+  filter:grayscale(.4);
+}
+
+.claim-inner{
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+}
+
+.bolt{
+  font-size:20px;
+}
+
+/* =========================================================
+   ACTIVE
+   ========================================================= */
+
+.active-mining{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:7px;
+  margin:9px 0 12px;
+  color:#20e7da;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.8px;
 }
 
 .active-dot{
-    display:inline-block;
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:var(--cyan);
-    margin-right:5px;
-    box-shadow:0 0 10px var(--cyan);
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#20ffd8;
+  box-shadow:
+    0 0 7px #20ffd8,
+    0 0 15px #20ffd8;
+  animation:pulse 1.2s infinite;
+}
+
+@keyframes pulse{
+  50%{transform:scale(.55);opacity:.5}
 }
 
 /* =========================================================
-   LUNARO INFO
-   ========================================================= */
-
-.info-card{
-    margin-top:18px;
-    min-height:117px;
-    border-radius:20px;
-    position:relative;
-    overflow:hidden;
-    border:1px solid rgba(145,102,255,.18);
-    background:
-        radial-gradient(circle at 85% 35%,rgba(124,70,255,.35),transparent 32%),
-        radial-gradient(circle at 70% 90%,rgba(41,123,255,.15),transparent 35%),
-        linear-gradient(120deg,#11112b,#171431 55%,#090916);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
-}
-
-.info-stars{
-    position:absolute;
-    inset:0;
-    opacity:.5;
-    background-image:
-        radial-gradient(circle at 72% 22%,#fff 0 1px,transparent 1.5px),
-        radial-gradient(circle at 87% 53%,#b9a2ff 0 1px,transparent 1.5px),
-        radial-gradient(circle at 63% 78%,#fff 0 1px,transparent 1.5px);
-}
-
-.info-content{
-    position:relative;
-    z-index:2;
-    padding:20px;
-}
-
-.info-brand{
-    display:flex;
-    align-items:center;
-    gap:9px;
-}
-
-.info-logo{
-    width:33px;
-    height:33px;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    background:
-        radial-gradient(circle at 35% 30%,#c5a8ff,#6941ce 50%,#221441);
-    box-shadow:0 0 18px rgba(134,76,255,.32);
-    font-weight:1000;
-    font-size:11px;
-}
-
-.info-small{
-    font-size:8px;
-    color:#9b98af;
-    letter-spacing:1.2px;
-    text-transform:uppercase;
-}
-
-.info-title{
-    margin-top:6px;
-    font-size:16px;
-    font-weight:900;
-}
-
-.info-desc{
-    margin-top:5px;
-    color:#77758d;
-    font-size:8px;
-}
-
-.info-moon{
-    position:absolute;
-    right:28px;
-    top:23px;
-    width:55px;
-    height:55px;
-    border-radius:50%;
-    background:linear-gradient(145deg,#f0eaff,#9c82e8);
-    box-shadow:0 0 30px rgba(179,144,255,.28);
-}
-
-.info-moon:after{
-    content:"";
-    position:absolute;
-    width:55px;
-    height:55px;
-    border-radius:50%;
-    background:#101023;
-    left:15px;
-    top:-6px;
-}
-
-/* =========================================================
-   PAGE SYSTEM
+   CONTENT
    ========================================================= */
 
 .page{
-    display:none;
-    animation:pageIn .25s ease;
+  display:none;
+  animation:pageIn .25s ease;
 }
 
 .page.active{
-    display:block;
+  display:block;
 }
 
 @keyframes pageIn{
-    from{
-        opacity:0;
-        transform:translateY(8px);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:none}
 }
 
-.page-head{
-    margin:22px 2px 15px;
+.section-card{
+  border:1px solid rgba(108,48,255,.35);
+  border-radius:20px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(14,10,44,.88),
+      rgba(4,5,23,.94));
+  box-shadow:
+    inset 0 0 30px rgba(110,25,255,.06),
+    0 0 20px rgba(70,15,180,.1);
+  padding:15px;
+  margin-top:12px;
+  backdrop-filter:blur(16px);
 }
 
-.page-kicker{
-    font-size:8px;
-    letter-spacing:2px;
-    color:#8c6ce8;
-    font-weight:900;
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:14px;
+  font-weight:950;
 }
 
-.page-title{
-    margin-top:5px;
-    font-size:27px;
-    font-weight:950;
+.section-title small{
+  font-size:8px;
+  color:#77758d;
+  font-weight:700;
 }
 
-.page-subtitle{
-    margin-top:5px;
-    color:#747388;
-    font-size:10px;
+/* =========================================================
+   INFO BANNER
+   ========================================================= */
+
+.info-banner{
+  position:relative;
+  min-height:104px;
+  overflow:hidden;
+  border-radius:19px;
+  border:1px solid rgba(117,50,255,.45);
+  background:
+    radial-gradient(circle at 80% 30%,rgba(160,35,255,.35),transparent 30%),
+    linear-gradient(135deg,#08062a,#160436,#05051d);
+  box-shadow:0 0 25px rgba(107,24,255,.15);
+}
+
+.info-banner:after{
+  content:"";
+  position:absolute;
+  right:-35px;
+  bottom:-50px;
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  border:1px solid rgba(174,76,255,.45);
+  box-shadow:
+    0 0 30px rgba(142,38,255,.35),
+    inset 0 0 30px rgba(150,40,255,.15);
+}
+
+.info-content{
+  position:relative;
+  z-index:2;
+  padding:16px;
+  max-width:78%;
+}
+
+.info-logo{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 35% 30%,#fff,#a53aff 40%,#35108e);
+  box-shadow:0 0 20px rgba(157,46,255,.7);
+  font-weight:950;
+  margin-bottom:9px;
+}
+
+.info-title{
+  font-size:12px;
+  font-weight:950;
+}
+
+.info-text{
+  margin-top:4px;
+  color:#77768f;
+  font-size:8px;
+}
+
+.info-tag{
+  margin-top:8px;
+  color:#c35aff;
+  font-size:9px;
+  font-weight:900;
 }
 
 /* =========================================================
    TASKS
    ========================================================= */
 
-.task-card{
-    border:1px solid var(--line);
-    background:linear-gradient(145deg,rgba(23,22,47,.84),rgba(9,9,22,.75));
-    border-radius:20px;
-    padding:16px;
-    margin-bottom:10px;
+.task{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 0;
+  border-bottom:1px solid rgba(117,75,255,.14);
 }
 
-.task-row{
-    display:flex;
-    align-items:center;
-    gap:12px;
+.task:last-child{
+  border-bottom:0;
 }
 
 .task-icon{
-    width:44px;
-    height:44px;
-    flex:0 0 44px;
-    border-radius:14px;
-    display:grid;
-    place-items:center;
-    background:rgba(134,77,255,.14);
-    color:#b582ff;
-    font-size:18px;
+  width:38px;
+  height:38px;
+  flex:none;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:rgba(123,37,255,.13);
+  border:1px solid rgba(140,55,255,.3);
+  font-size:18px;
 }
 
 .task-info{
-    min-width:0;
-    flex:1;
+  flex:1;
+  min-width:0;
 }
 
 .task-name{
-    font-size:12px;
-    font-weight:850;
-}
-
-.task-desc{
-    margin-top:4px;
-    font-size:8px;
-    color:#77758b;
+  font-size:11px;
+  font-weight:900;
 }
 
 .task-reward{
-    margin-top:5px;
-    color:#a978ff;
-    font-size:8px;
-    font-weight:800;
+  margin-top:3px;
+  font-size:8px;
+  color:#ffd75d;
 }
 
 .task-btn{
-    padding:10px 12px;
-    border-radius:11px;
-    background:#26203e;
-    color:#b783ff;
-    font-size:8px;
-    font-weight:900;
-    border:1px solid rgba(167,120,255,.15);
+  padding:8px 12px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#7c25ff,#a33cff);
+  font-size:8px;
+  font-weight:900;
+  cursor:pointer;
 }
 
 .task-btn.done{
-    color:#54dfac;
-    background:rgba(70,211,160,.08);
+  background:#132a2a;
+  color:#4fffd8;
 }
 
 /* =========================================================
    MINERS
    ========================================================= */
 
-.journey{
-    border-radius:20px;
-    padding:17px;
-    background:
-        radial-gradient(circle at 90% 20%,rgba(130,72,255,.18),transparent 35%),
-        linear-gradient(145deg,#181631,#0d0d20);
-    border:1px solid rgba(154,108,255,.14);
-    margin-bottom:15px;
-}
-
-.journey-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.journey-title{
-    font-size:12px;
-    font-weight:900;
-}
-
-.journey-level{
-    color:#a676ff;
-    font-size:9px;
-    font-weight:900;
-}
-
-.journey-bar{
-    height:7px;
-    background:#29243b;
-    border-radius:99px;
-    margin-top:14px;
-    overflow:hidden;
-}
-
-.journey-fill{
-    width:34.8%;
-    height:100%;
-    border-radius:99px;
-    background:linear-gradient(90deg,#7240e8,#b36aff);
-    box-shadow:0 0 15px rgba(145,77,255,.5);
-}
-
-.journey-meta{
-    margin-top:8px;
-    display:flex;
-    justify-content:space-between;
-    color:#77758c;
-    font-size:8px;
-}
-
 .miner-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:12px;
 }
 
-.miner-card{
-    min-height:205px;
-    border-radius:20px;
-    padding:15px;
-    background:linear-gradient(145deg,rgba(25,23,51,.88),rgba(10,10,24,.82));
-    border:1px solid var(--line);
-    position:relative;
-    overflow:hidden;
+.miner{
+  position:relative;
+  padding:14px;
+  border-radius:17px;
+  border:1px solid rgba(117,57,255,.3);
+  background:
+    linear-gradient(145deg,
+      rgba(24,12,57,.82),
+      rgba(5,6,27,.9));
 }
 
-.miner-orb{
-    width:65px;
-    height:65px;
-    margin:3px auto 13px;
-    border-radius:50%;
-    background:
-        radial-gradient(circle at 33% 27%,#d4c3ff,#7646d8 40%,#17102f 72%);
-    box-shadow:0 0 24px rgba(124,68,240,.35);
-    display:grid;
-    place-items:center;
-    font-size:20px;
+.miner.locked{
+  opacity:.48;
 }
 
 .miner-level{
-    text-align:center;
-    font-size:10px;
-    font-weight:900;
+  color:#b85aff;
+  font-size:8px;
+  font-weight:950;
+}
+
+.miner-name{
+  margin-top:6px;
+  font-size:12px;
+  font-weight:950;
 }
 
 .miner-speed{
-    text-align:center;
-    margin-top:6px;
-    color:#9b70ff;
-    font-size:9px;
-    font-weight:800;
+  margin-top:8px;
+  font-size:9px;
+  color:#ffd968;
 }
 
 .miner-require{
-    text-align:center;
-    margin-top:9px;
-    color:#6e6c80;
-    font-size:7px;
-    line-height:1.5;
+  margin-top:5px;
+  color:#77768d;
+  font-size:7px;
 }
 
-.miner-btn{
-    display:block;
-    width:100%;
-    margin-top:13px;
-    height:31px;
-    border-radius:10px;
-    background:#29243d;
-    color:#777487;
-    font-size:7px;
-    font-weight:900;
+.miner-bar{
+  height:4px;
+  margin-top:10px;
+  border-radius:99px;
+  overflow:hidden;
+  background:#17132b;
 }
 
-.miner-card.unlocked .miner-btn{
-    color:#fff;
-    background:linear-gradient(90deg,#713ddd,#9c5cff);
+.miner-bar span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#7621ff,#cb52ff);
 }
 
 /* =========================================================
-   CHART
+   JOURNEY
    ========================================================= */
 
-.chart-card{
-    margin-top:15px;
-    padding:16px;
-    border-radius:20px;
-    border:1px solid var(--line);
-    background:rgba(16,15,34,.76);
+.journey{
+  margin-top:12px;
 }
 
-.chart-head{
-    display:flex;
-    justify-content:space-between;
+.journey-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
 }
 
-.chart-title{
-    font-size:10px;
-    font-weight:900;
+.journey-dot{
+  width:26px;
+  height:26px;
+  flex:none;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#100b2e;
+  border:1px solid #5c25a9;
+  color:#807a96;
+  font-size:8px;
+  font-weight:900;
 }
 
-.chart-value{
-    color:#a876ff;
-    font-size:10px;
-    font-weight:900;
+.journey-dot.current{
+  background:#7726ed;
+  color:#fff;
+  box-shadow:0 0 15px #8b2cff;
 }
 
-.chart{
-    width:100%;
-    height:130px;
-    margin-top:12px;
+.journey-line{
+  height:2px;
+  flex:1;
+  background:#29154f;
 }
 
-.chart svg{
-    width:100%;
-    height:100%;
-}
-
-.chart-grid{
-    stroke:rgba(255,255,255,.06);
-    stroke-width:1;
-}
-
-.chart-line{
-    fill:none;
-    stroke:#9b64ff;
-    stroke-width:3;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-    filter:drop-shadow(0 0 6px rgba(146,84,255,.6));
-}
-
-.chart-area{
-    fill:url(#chartGradient);
-    opacity:.45;
+.journey-line.done{
+  background:linear-gradient(90deg,#7b27ff,#bd4fff);
 }
 
 /* =========================================================
    FRIENDS
    ========================================================= */
 
-.referral-box{
-    border-radius:22px;
-    padding:20px;
-    background:
-        radial-gradient(circle at 100% 0,rgba(129,69,255,.25),transparent 38%),
-        linear-gradient(145deg,#17152f,#0b0b1c);
-    border:1px solid rgba(155,106,255,.16);
-}
-
-.ref-label{
-    color:#858296;
-    font-size:8px;
-    letter-spacing:1.4px;
-    font-weight:800;
+.ref-box{
+  text-align:center;
 }
 
 .ref-code{
-    margin-top:10px;
-    font-size:25px;
-    font-weight:950;
-    letter-spacing:4px;
-    color:#c8afff;
+  margin:15px 0 8px;
+  padding:13px;
+  border-radius:14px;
+  border:1px dashed rgba(169,83,255,.6);
+  background:rgba(110,30,255,.08);
+  color:#c46bff;
+  font-size:20px;
+  font-weight:950;
+  letter-spacing:3px;
 }
 
 .ref-link{
-    margin-top:9px;
-    color:#686679;
-    font-size:8px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
+  color:#77758f;
+  font-size:8px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
-.ref-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    margin-top:16px;
+.primary{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border-radius:13px;
+  background:linear-gradient(135deg,#7522ff,#a83eff);
+  cursor:pointer;
+  font-size:10px;
+  font-weight:900;
+  box-shadow:0 0 20px rgba(126,35,255,.25);
 }
 
-.ref-btn{
-    height:43px;
-    border-radius:13px;
-    background:#27213d;
-    color:#b17cff;
-    font-size:9px;
-    font-weight:900;
-    border:1px solid rgba(164,113,255,.12);
+.friend-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
 }
 
-.ref-btn.primary{
-    color:#fff;
-    background:linear-gradient(90deg,#713ddd,#9e5aff);
+.friend-stat{
+  padding:13px;
+  border-radius:15px;
+  background:rgba(15,10,42,.7);
+  border:1px solid rgba(106,52,255,.28);
 }
 
-.reward-card{
-    margin-top:12px;
-    padding:16px;
-    border-radius:18px;
-    border:1px solid var(--line);
-    background:rgba(16,15,34,.74);
+.friend-stat span{
+  display:block;
+  color:#77758e;
+  font-size:7px;
 }
 
-.reward-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.reward-title{
-    font-size:10px;
-    font-weight:900;
-}
-
-.reward-percent{
-    color:#aa76ff;
-    font-size:17px;
-    font-weight:950;
-}
-
-.reward-text{
-    margin-top:7px;
-    color:#747287;
-    font-size:8px;
-    line-height:1.6;
+.friend-stat strong{
+  display:block;
+  margin-top:5px;
+  font-size:17px;
 }
 
 /* =========================================================
    PROFILE
    ========================================================= */
 
-.profile-card{
-    border-radius:22px;
-    padding:18px;
-    background:linear-gradient(145deg,#17152f,#0b0b1c);
-    border:1px solid var(--line);
+.profile-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid rgba(113,73,255,.14);
 }
 
-.profile-wallet{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.profile-icon{
-    width:50px;
-    height:50px;
-    border-radius:16px;
-    display:grid;
-    place-items:center;
-    background:linear-gradient(145deg,#432a70,#171329);
-    color:#b47cff;
-    font-size:20px;
+.profile-row:last-child{
+  border-bottom:0;
 }
 
 .profile-label{
-    color:#77758a;
-    font-size:8px;
+  color:#77758d;
+  font-size:8px;
 }
 
-.profile-address{
-    margin-top:4px;
-    font-size:12px;
-    font-weight:850;
+.profile-value{
+  max-width:65%;
+  text-align:right;
+  font-size:9px;
+  font-weight:900;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-.profile-section{
-    margin-top:12px;
+.withdraw{
+  margin-top:13px;
 }
 
-.profile-section-title{
-    margin-bottom:8px;
-    font-size:10px;
-    font-weight:900;
+.input{
+  width:100%;
+  padding:13px;
+  color:#fff;
+  background:#080720;
+  border:1px solid rgba(117,55,255,.35);
+  border-radius:13px;
+  outline:none;
 }
 
-.input-wrap{
-    position:relative;
+.input:focus{
+  border-color:#9b45ff;
+  box-shadow:0 0 15px rgba(138,44,255,.15);
 }
 
-.amount-input{
-    width:100%;
-    height:48px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.08);
-    background:#0a0a18;
-    color:#fff;
-    padding:0 60px 0 14px;
-    outline:none;
-    font-size:12px;
-}
-
-.amount-input:focus{
-    border-color:rgba(151,96,255,.5);
-}
-
-.input-unit{
-    position:absolute;
-    right:14px;
-    top:16px;
-    color:#9365e8;
-    font-size:9px;
-    font-weight:900;
-}
-
-.withdraw-btn{
-    width:100%;
-    height:48px;
-    margin-top:8px;
-    border-radius:14px;
-    background:linear-gradient(90deg,#713ddd,#9c59ff);
-    color:#fff;
-    font-size:10px;
-    font-weight:950;
-    letter-spacing:.5px;
-}
-
-.history{
-    margin-top:14px;
-}
-
-.history-empty{
-    padding:18px;
-    border-radius:15px;
-    background:#090916;
-    color:#626174;
-    text-align:center;
-    font-size:8px;
+.withdraw-history{
+  margin-top:12px;
 }
 
 .history-item{
-    padding:13px;
-    border-radius:14px;
-    background:#0a0a18;
-    margin-top:7px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 0;
+  border-bottom:1px solid rgba(113,73,255,.12);
 }
 
-.history-left strong{
-    display:block;
-    font-size:9px;
+.history-left{
+  display:flex;
+  gap:9px;
+  align-items:center;
 }
 
-.history-left span{
-    display:block;
-    margin-top:4px;
-    color:#666477;
-    font-size:7px;
+.history-icon{
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border-radius:9px;
+  background:rgba(110,30,255,.13);
 }
 
-.history-status{
-    color:#e4a45b;
-    font-size:8px;
+.history-title{
+  font-size:9px;
+  font-weight:900;
+}
+
+.history-date{
+  color:#6e6b82;
+  font-size:7px;
+  margin-top:3px;
+}
+
+.history-amount{
+  color:#ffd766;
+  font-size:9px;
+  font-weight:900;
 }
 
 /* =========================================================
    BOTTOM NAV
    ========================================================= */
 
-.bottom-nav{
-    position:fixed;
-    z-index:20;
-    bottom:12px;
-    left:50%;
-    transform:translateX(-50%);
-    width:min(calc(100% - 22px),498px);
-    height:69px;
-    border-radius:23px;
-    padding:7px;
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    background:
-        linear-gradient(180deg,
-            rgba(23,22,44,.91),
-            rgba(10,10,23,.94));
-    border:1px solid rgba(255,255,255,.09);
-    box-shadow:
-        0 12px 40px rgba(0,0,0,.45),
-        inset 0 1px 0 rgba(255,255,255,.04);
-    backdrop-filter:blur(22px);
-    -webkit-backdrop-filter:blur(22px);
+.bottom{
+  position:fixed;
+  z-index:100;
+  left:50%;
+  bottom:calc(env(safe-area-inset-bottom) + 8px);
+  transform:translateX(-50%);
+  width:min(520px,calc(100% - 20px));
+  height:67px;
+  padding:5px;
+  border-radius:21px;
+  border:1px solid rgba(119,51,255,.5);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11,7,35,.94),
+      rgba(4,4,21,.97));
+  box-shadow:
+    0 0 30px rgba(86,20,190,.35),
+    inset 0 0 25px rgba(111,30,255,.08);
+  backdrop-filter:blur(20px);
+}
+
+.nav{
+  height:100%;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
 }
 
 .nav-btn{
-    background:transparent;
-    color:#676577;
-    border-radius:17px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:5px;
-    position:relative;
-    transition:.2s;
+  position:relative;
+  background:transparent;
+  color:#65647b;
+  border-radius:16px;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  transition:.2s ease;
 }
 
 .nav-icon{
-    font-size:17px;
-    line-height:1;
+  font-size:18px;
+  line-height:1;
 }
 
 .nav-label{
-    font-size:7px;
-    font-weight:800;
+  font-size:7px;
+  font-weight:800;
 }
 
 .nav-btn.active{
-    color:#bd91ff;
+  color:#c45cff;
+  text-shadow:0 0 10px #a52cff;
 }
 
 .nav-btn.active:after{
-    content:"";
-    position:absolute;
-    bottom:0;
-    width:22px;
-    height:2px;
-    border-radius:20px;
-    background:#a064ff;
-    box-shadow:0 0 10px #9555ff;
-}
-
-/* =========================================================
-   TOAST
-   ========================================================= */
-
-.toast{
-    position:fixed;
-    z-index:100;
-    left:50%;
-    top:22px;
-    transform:translate(-50%,-20px);
-    width:max-content;
-    max-width:calc(100% - 40px);
-    padding:12px 16px;
-    border-radius:14px;
-    background:rgba(25,23,46,.96);
-    border:1px solid rgba(165,112,255,.22);
-    box-shadow:0 12px 35px rgba(0,0,0,.4);
-    color:#ddd;
-    font-size:9px;
-    font-weight:800;
-    opacity:0;
-    pointer-events:none;
-    transition:.25s;
-}
-
-.toast.show{
-    opacity:1;
-    transform:translate(-50%,0);
+  content:"";
+  position:absolute;
+  bottom:0;
+  width:32px;
+  height:3px;
+  border-radius:99px;
+  background:#a738ff;
+  box-shadow:
+    0 0 7px #a738ff,
+    0 0 15px #8a22ff;
 }
 
 /* =========================================================
@@ -1319,66 +1126,85 @@ button{
    ========================================================= */
 
 .modal{
-    position:fixed;
-    z-index:80;
-    inset:0;
-    display:none;
-    align-items:flex-end;
-    justify-content:center;
-    background:rgba(0,0,0,.66);
-    backdrop-filter:blur(5px);
+  position:fixed;
+  z-index:300;
+  inset:0;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  background:rgba(0,0,0,.68);
+  backdrop-filter:blur(8px);
 }
 
 .modal.show{
-    display:flex;
+  display:flex;
 }
 
 .modal-box{
-    width:min(520px,100%);
-    border-radius:27px 27px 0 0;
-    padding:23px 18px 28px;
-    background:
-        radial-gradient(circle at 50% 0,rgba(126,69,255,.16),transparent 45%),
-        #0b0b1b;
-    border-top:1px solid rgba(170,115,255,.15);
+  width:min(540px,100%);
+  padding:20px 16px calc(env(safe-area-inset-bottom) + 20px);
+  border-radius:28px 28px 0 0;
+  border:1px solid rgba(126,53,255,.5);
+  background:
+    linear-gradient(180deg,#0d0929,#040417);
+  box-shadow:0 -20px 70px rgba(89,22,200,.3);
+  animation:sheet .25s ease;
 }
 
-.modal-handle{
-    width:38px;
-    height:4px;
-    border-radius:99px;
-    background:#38364b;
-    margin:0 auto 20px;
+@keyframes sheet{
+  from{transform:translateY(100%)}
+  to{transform:translateY(0)}
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .modal-title{
-    font-size:17px;
-    font-weight:950;
-    text-align:center;
+  font-size:16px;
+  font-weight:950;
+}
+
+.close{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#17102e;
+  color:#aaa;
+  cursor:pointer;
 }
 
 .modal-text{
-    color:#77758a;
-    font-size:9px;
-    line-height:1.7;
-    text-align:center;
-    margin-top:8px;
+  margin-top:12px;
+  color:#858298;
+  font-size:10px;
+  line-height:1.7;
 }
 
-.modal-btn{
-    width:100%;
-    height:48px;
-    margin-top:17px;
-    border-radius:14px;
-    background:linear-gradient(90deg,#713ddd,#9d5cff);
-    color:white;
-    font-size:10px;
-    font-weight:900;
+.toast{
+  position:fixed;
+  z-index:500;
+  left:50%;
+  top:calc(env(safe-area-inset-top) + 20px);
+  transform:translate(-50%,-20px);
+  opacity:0;
+  pointer-events:none;
+  padding:11px 16px;
+  border-radius:14px;
+  background:rgba(20,12,52,.96);
+  border:1px solid rgba(154,68,255,.5);
+  box-shadow:0 0 25px rgba(115,31,255,.25);
+  font-size:9px;
+  font-weight:900;
+  transition:.25s ease;
+  white-space:nowrap;
 }
 
-.modal-close{
-    background:#19182b;
-    color:#8d8a9d;
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
 }
 
 /* =========================================================
@@ -1387,1649 +1213,1026 @@ button{
 
 @media(max-width:370px){
 
-    .logo-name{
-        font-size:16px;
-    }
+  .shell{
+    padding-left:10px;
+    padding-right:10px;
+  }
 
-    .wallet-address{
-        max-width:58px;
-    }
+  .brand-name{
+    font-size:17px;
+  }
 
-    .planet{
-        width:210px;
-        height:210px;
-    }
+  .balance-value{
+    font-size:30px;
+  }
 
-    .orbit{
-        width:270px;
-    }
+  .hero-art{
+    height:240px;
+  }
 
-    .balance-value{
-        font-size:30px;
-    }
+  .stat-value{
+    font-size:13px;
+  }
 
-    .stat-card{
-        padding:11px 8px;
-    }
-
-    .stat-value{
-        font-size:12px;
-    }
+  .wallet-pill{
+    padding:7px;
+  }
 }
 
 @media(min-width:700px){
 
-    body{
-        background:#020207;
-    }
+  body{
+    background:#010108;
+  }
 
-    .app{
-        box-shadow:
-            0 0 100px rgba(80,50,150,.08);
-    }
+  #app{
+    max-width:540px;
+    margin:auto;
+    box-shadow:
+      0 0 100px rgba(70,20,180,.15);
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *:before,
+  *:after{
+    animation:none!important;
+    transition:none!important;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div id="app">
 
-    <div class="space">
-        <div class="stars"></div>
-    </div>
+  <!-- SPACE -->
+  <div class="space">
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+    <i class="star"></i>
+  </div>
 
-    <main class="main">
+  <main class="shell">
 
-        <!-- =================================================
-             HEADER
-             ================================================= -->
+    <!-- HEADER -->
+    <header class="header">
 
-        <header class="header">
+      <button class="pill wallet-pill" id="walletBtn">
+        <div class="wallet-top">
+          <span class="wallet-icon"></span>
+          <span id="walletStatus">WALLET CONNECTED</span>
+        </div>
+        <div class="wallet-address" id="walletAddress">
+          UQCN...iD7
+        </div>
+      </button>
 
-            <div class="wallet-pill">
-                <div class="wallet-icon">◈</div>
+      <div class="brand">
+        <div class="brand-row">
+          <div class="moon"></div>
+          <div class="brand-name">LUNARO</div>
+        </div>
+        <div class="brand-sub">AUTOMATIC MINING</div>
+      </div>
 
-                <div class="wallet-info">
-                    <div class="wallet-status">
-                        <i></i>
-                        WALLET CONNECTED
-                    </div>
+      <div class="pill level-pill">
+        <div class="level-title" id="levelText">LVL 3</div>
+        <div class="level-track">
+          <div class="level-fill" id="levelFill"></div>
+        </div>
+        <div class="level-meta">
+          <span id="xpCurrent">348</span>
+          <span id="xpMax">1,000</span>
+        </div>
+      </div>
 
-                    <div class="wallet-address" id="walletAddress">
-                        UQCN...iD7
-                    </div>
-                </div>
+    </header>
+
+
+    <!-- ===================================================
+         MINE PAGE
+         =================================================== -->
+
+    <section class="page active" id="page-mine">
+
+      <div class="hero">
+
+        <div class="hero-art">
+
+          <!--
+            The uploaded LUNARO image is used here.
+            Keep lunaro-bg.png next to index.html.
+          -->
+
+          <img
+            class="planet-source"
+            src="lunaro-bg.png"
+            alt="LUNARO Planet"
+          >
+
+          <div class="balance">
+
+            <div class="balance-label">
+              TOTAL BALANCE
             </div>
 
-            <div class="logo">
-                <div class="logo-name">LUNARO</div>
-                <div class="logo-sub">AUTOMATIC MINING</div>
+            <div class="balance-value" id="totalBalance">
+              25,000.00
             </div>
 
-            <div class="level-pill">
-
-                <div class="level-top">
-                    <span class="level-label" id="levelText">
-                        LVL 3
-                    </span>
-
-                    <span class="level-count" id="levelCount">
-                        348 / 1,000
-                    </span>
-                </div>
-
-                <div class="level-bar">
-                    <div class="level-fill" id="levelFill"></div>
-                </div>
-
+            <div class="balance-token">
+              <span class="token-dot"></span>
+              LNR
             </div>
 
-        </header>
-
-
-        <!-- =================================================
-             MINE PAGE
-             ================================================= -->
-
-        <section class="page active" id="page-mine">
-
-            <div class="hero">
-
-                <div class="hero-glow"></div>
-                <div class="orbit"></div>
-
-                <div class="planet">
-
-                    <div class="planet-shine"></div>
-
-                    <div class="planet-letter">
-                        LNR
-                    </div>
-
-                </div>
-
-                <div class="balance">
-
-                    <div class="balance-label">
-                        TOTAL BALANCE
-                    </div>
-
-                    <div class="balance-value" id="totalBalance">
-                        25,000.00
-                    </div>
-
-                    <div class="balance-unit">
-                        LNR
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- STATISTICS -->
-
-            <div class="stats">
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">◈</div>
-
-                    <div class="stat-title">
-                        WALLET BALANCE
-                    </div>
-
-                    <div class="stat-value" id="walletBalance">
-                        25,000.00
-                    </div>
-
-                    <div class="stat-unit">
-                        LNR
-                    </div>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">⛏</div>
-
-                    <div class="stat-title">
-                        MINED / NOT CLAIMED
-                    </div>
-
-                    <div class="stat-value" id="minedBalance">
-                        458.72
-                    </div>
-
-                    <div class="stat-unit">
-                        LNR
-                    </div>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">ϟ</div>
-
-                    <div class="stat-title">
-                        MINING SPEED
-                    </div>
-
-                    <div class="stat-value" id="miningSpeed">
-                        0.70
-                    </div>
-
-                    <div class="stat-unit">
-                        LNR / HOUR
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- CLAIM -->
-
-            <div class="claim-wrap">
-
-                <button class="claim-btn" id="claimBtn">
-                    ⚡ &nbsp; CLAIM
-                </button>
-
-                <div class="mining-active">
-                    <span class="active-dot"></span>
-                    AUTOMATIC MINING ACTIVE
-                </div>
-
-            </div>
-
-
-            <!-- INFO CARD -->
-
-            <div class="info-card">
-
-                <div class="info-stars"></div>
-
-                <div class="info-content">
-
-                    <div class="info-brand">
-
-                        <div class="info-logo">
-                            LNR
-                        </div>
-
-                        <div>
-                            <div class="info-small">
-                                LUNARO
-                            </div>
-
-                            <div class="info-title">
-                                Lunar Mining Network
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="info-desc">
-                        The future is yours.
-                    </div>
-
-                </div>
-
-                <div class="info-moon"></div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             TASKS
-             ================================================= -->
-
-        <section class="page" id="page-tasks">
-
-            <div class="page-head">
-                <div class="page-kicker">LUNARO MISSIONS</div>
-                <div class="page-title">Tasks</div>
-                <div class="page-subtitle">
-                    Complete missions and increase your LNR rewards.
-                </div>
-            </div>
-
-
-            <div class="task-card">
-
-                <div class="task-row">
-
-                    <div class="task-icon">◉</div>
-
-                    <div class="task-info">
-
-                        <div class="task-name">
-                            Daily Mission
-                        </div>
-
-                        <div class="task-desc">
-                            Complete today's mission.
-                        </div>
-
-                        <div class="task-reward">
-                            +25 LNR
-                        </div>
-
-                    </div>
-
-                    <button class="task-btn" data-task="daily">
-                        COMPLETE
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <div class="task-card">
-
-                <div class="task-row">
-
-                    <div class="task-icon">✦</div>
-
-                    <div class="task-info">
-
-                        <div class="task-name">
-                            Join LUNARO Community
-                        </div>
-
-                        <div class="task-desc">
-                            Follow the official community.
-                        </div>
-
-                        <div class="task-reward">
-                            +50 LNR
-                        </div>
-
-                    </div>
-
-                    <button class="task-btn" data-task="community">
-                        OPEN
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <div class="task-card">
-
-                <div class="task-row">
-
-                    <div class="task-icon">◇</div>
-
-                    <div class="task-info">
-
-                        <div class="task-name">
-                            Invite a Friend
-                        </div>
-
-                        <div class="task-desc">
-                            Bring a new miner to LUNARO.
-                        </div>
-
-                        <div class="task-reward">
-                            +100 LNR
-                        </div>
-
-                    </div>
-
-                    <button class="task-btn" data-task="invite">
-                        SHARE
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             MINERS
-             ================================================= -->
-
-        <section class="page" id="page-miners">
-
-            <div class="page-head">
-                <div class="page-kicker">MINING POWER</div>
-                <div class="page-title">Miner Store</div>
-                <div class="page-subtitle">
-                    Upgrade your automatic mining speed.
-                </div>
-            </div>
-
-
-            <div class="journey">
-
-                <div class="journey-top">
-
-                    <div class="journey-title">
-                        My Level Journey
-                    </div>
-
-                    <div class="journey-level">
-                        LVL 3
-                    </div>
-
-                </div>
-
-                <div class="journey-bar">
-                    <div class="journey-fill"></div>
-                </div>
-
-                <div class="journey-meta">
-
-                    <span>
-                        348 LNR
-                    </span>
-
-                    <span>
-                        1,000 LNR
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="miner-grid">
-
-                <div class="miner-card unlocked">
-
-                    <div class="miner-orb">
-                        ◈
-                    </div>
-
-                    <div class="miner-level">
-                        Miner Level 3
-                    </div>
-
-                    <div class="miner-speed">
-                        0.70 LNR / HOUR
-                    </div>
-
-                    <div class="miner-require">
-                        CURRENT MINER
-                    </div>
-
-                    <button class="miner-btn">
-                        ACTIVE
-                    </button>
-
-                </div>
-
-
-                <div class="miner-card">
-
-                    <div class="miner-orb">
-                        ◈
-                    </div>
-
-                    <div class="miner-level">
-                        Miner Level 4
-                    </div>
-
-                    <div class="miner-speed">
-                        1.10 LNR / HOUR
-                    </div>
-
-                    <div class="miner-require">
-                        HOLD 5,000 LNR
-                    </div>
-
-                    <button class="miner-btn">
-                        LOCKED
-                    </button>
-
-                </div>
-
-
-                <div class="miner-card">
-
-                    <div class="miner-orb">
-                        ◈
-                    </div>
-
-                    <div class="miner-level">
-                        Miner Level 5
-                    </div>
-
-                    <div class="miner-speed">
-                        1.65 LNR / HOUR
-                    </div>
-
-                    <div class="miner-require">
-                        HOLD 10,000 LNR
-                    </div>
-
-                    <button class="miner-btn">
-                        LOCKED
-                    </button>
-
-                </div>
-
-
-                <div class="miner-card">
-
-                    <div class="miner-orb">
-                        ◈
-                    </div>
-
-                    <div class="miner-level">
-                        Miner Level 6
-                    </div>
-
-                    <div class="miner-speed">
-                        2.40 LNR / HOUR
-                    </div>
-
-                    <div class="miner-require">
-                        HOLD 25,000 LNR
-                    </div>
-
-                    <button class="miner-btn">
-                        LOCKED
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- P&L / MINING CHART -->
-
-            <div class="chart-card">
-
-                <div class="chart-head">
-
-                    <div class="chart-title">
-                        Mining Performance
-                    </div>
-
-                    <div class="chart-value">
-                        +12.8%
-                    </div>
-
-                </div>
-
-                <div class="chart">
-
-                    <svg viewBox="0 0 400 130" preserveAspectRatio="none">
-
-                        <defs>
-
-                            <linearGradient id="chartGradient"
-                                            x1="0"
-                                            x2="0"
-                                            y1="0"
-                                            y2="1">
-
-                                <stop offset="0%"
-                                      stop-color="#9b64ff"
-                                      stop-opacity=".5"/>
-
-                                <stop offset="100%"
-                                      stop-color="#9b64ff"
-                                      stop-opacity="0"/>
-
-                            </linearGradient>
-
-                        </defs>
-
-                        <line class="chart-grid"
-                              x1="0"
-                              y1="30"
-                              x2="400"
-                              y2="30"/>
-
-                        <line class="chart-grid"
-                              x1="0"
-                              y1="65"
-                              x2="400"
-                              y2="65"/>
-
-                        <line class="chart-grid"
-                              x1="0"
-                              y1="100"
-                              x2="400"
-                              y2="100"/>
-
-                        <path class="chart-area"
-                              d="M0,108
-                                 L45,91
-                                 L90,96
-                                 L135,70
-                                 L180,79
-                                 L225,48
-                                 L270,61
-                                 L315,31
-                                 L355,43
-                                 L400,14
-                                 L400,130
-                                 L0,130 Z"/>
-
-                        <path class="chart-line"
-                              d="M0,108
-                                 L45,91
-                                 L90,96
-                                 L135,70
-                                 L180,79
-                                 L225,48
-                                 L270,61
-                                 L315,31
-                                 L355,43
-                                 L400,14"/>
-
-                    </svg>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             FRIENDS
-             ================================================= -->
-
-        <section class="page" id="page-friends">
-
-            <div class="page-head">
-                <div class="page-kicker">LUNARO NETWORK</div>
-                <div class="page-title">Friends</div>
-                <div class="page-subtitle">
-                    Invite friends and grow your mining network.
-                </div>
-            </div>
-
-
-            <div class="referral-box">
-
-                <div class="ref-label">
-                    YOUR REFERRAL CODE
-                </div>
-
-                <div class="ref-code" id="refCode">
-                    LNR7X4K9
-                </div>
-
-                <div class="ref-link" id="refLink">
-                    t.me/LunaroGameBot?start=LNR7X4K9
-                </div>
-
-                <div class="ref-actions">
-
-                    <button class="ref-btn" id="copyRef">
-                        COPY CODE
-                    </button>
-
-                    <button class="ref-btn primary" id="shareRef">
-                        SHARE LINK
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <div class="reward-card">
-
-                <div class="reward-top">
-
-                    <div class="reward-title">
-                        Referral Reward
-                    </div>
-
-                    <div class="reward-percent">
-                        10%
-                    </div>
-
-                </div>
-
-                <div class="reward-text">
-                    Earn 10% of your friend's claimed LNR rewards.
-                    Rewards are counted only after your friend claims.
-                </div>
-
-            </div>
-
-
-            <div class="reward-card">
-
-                <div class="reward-top">
-
-                    <div class="reward-title">
-                        Friends Joined
-                    </div>
-
-                    <div class="reward-percent" id="friendsCount">
-                        0
-                    </div>
-
-                </div>
-
-                <div class="reward-text">
-                    Your referral network will appear here.
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             PROFILE
-             ================================================= -->
-
-        <section class="page" id="page-profile">
-
-            <div class="page-head">
-                <div class="page-kicker">ACCOUNT</div>
-                <div class="page-title">Profile</div>
-                <div class="page-subtitle">
-                    Manage your connected wallet and account.
-                </div>
-            </div>
-
-
-            <div class="profile-card">
-
-                <div class="profile-wallet">
-
-                    <div class="profile-icon">
-                        ◈
-                    </div>
-
-                    <div>
-
-                        <div class="profile-label">
-                            CONNECTED WALLET
-                        </div>
-
-                        <div class="profile-address"
-                             id="profileWallet">
-                            UQCN...iD7
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="profile-section">
-
-                    <div class="profile-section-title">
-                        Withdraw LNR
-                    </div>
-
-                    <div class="input-wrap">
-
-                        <input
-                            id="withdrawAmount"
-                            class="amount-input"
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            placeholder="Enter amount"
-                        >
-
-                        <span class="input-unit">
-                            LNR
-                        </span>
-
-                    </div>
-
-                    <button class="withdraw-btn"
-                            id="withdrawBtn">
-                        REQUEST WITHDRAWAL
-                    </button>
-
-                </div>
-
-
-                <div class="history">
-
-                    <div class="profile-section-title">
-                        Withdrawal History
-                    </div>
-
-                    <div id="historyList">
-
-                        <div class="history-empty">
-                            No withdrawals yet.
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- =====================================================
-         BOTTOM NAVIGATION
-         ===================================================== -->
-
-    <nav class="bottom-nav">
-
-        <button class="nav-btn active"
-                data-page="mine">
-
-            <div class="nav-icon">⌂</div>
-            <div class="nav-label">MINE</div>
-
-        </button>
-
-        <button class="nav-btn"
-                data-page="tasks">
-
-            <div class="nav-icon">✦</div>
-            <div class="nav-label">TASKS</div>
-
-        </button>
-
-        <button class="nav-btn"
-                data-page="miners">
-
-            <div class="nav-icon">⛏</div>
-            <div class="nav-label">MINERS</div>
-
-        </button>
-
-        <button class="nav-btn"
-                data-page="friends">
-
-            <div class="nav-icon">♧</div>
-            <div class="nav-label">FRIENDS</div>
-
-        </button>
-
-        <button class="nav-btn"
-                data-page="profile">
-
-            <div class="nav-icon">◉</div>
-            <div class="nav-label">PROFILE</div>
-
-        </button>
-
-    </nav>
-
-
-    <!-- =====================================================
-         TOAST
-         ===================================================== -->
-
-    <div class="toast" id="toast"></div>
-
-
-    <!-- =====================================================
-         MODAL
-         ===================================================== -->
-
-    <div class="modal" id="modal">
-
-        <div class="modal-box">
-
-            <div class="modal-handle"></div>
-
-            <div class="modal-title" id="modalTitle">
-                LUNARO
-            </div>
-
-            <div class="modal-text" id="modalText">
-                Demo action.
-            </div>
-
-            <button class="modal-btn" id="modalOk">
-                CONTINUE
-            </button>
-
-            <button class="modal-btn modal-close" id="modalClose">
-                CLOSE
-            </button>
+          </div>
 
         </div>
 
+      </div>
+
+
+      <!-- STATS -->
+
+      <div class="stats">
+
+        <div class="stat">
+          <div class="stat-icon">◈</div>
+          <div class="stat-title">WALLET BALANCE</div>
+          <div class="stat-value" id="walletBalance">
+            25,000.00
+          </div>
+          <div class="stat-unit">LNR</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-icon">⌁</div>
+          <div class="stat-title">MINED NOT CLAIMED</div>
+          <div class="stat-value" id="minedBalance">
+            0.00
+          </div>
+          <div class="stat-unit">LNR</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-icon">ϟ</div>
+          <div class="stat-title">MINING SPEED</div>
+          <div class="stat-value" id="miningSpeed">
+            0.70
+          </div>
+          <div class="stat-unit">LNR / HOUR</div>
+        </div>
+
+      </div>
+
+
+      <!-- CLAIM -->
+
+      <button class="claim" id="claimBtn">
+
+        <span class="claim-inner">
+          <span class="bolt">ϟ</span>
+          <span>CLAIM</span>
+          <span class="bolt">ϟ</span>
+        </span>
+
+      </button>
+
+
+      <div class="active-mining">
+        <span class="active-dot"></span>
+        AUTOMATIC MINING ACTIVE
+      </div>
+
+
+      <!-- INFO -->
+
+      <div class="info-banner">
+
+        <div class="info-content">
+
+          <div class="info-logo">L</div>
+
+          <div class="info-title">
+            LUNARO MINING
+          </div>
+
+          <div class="info-text">
+            The Lunar Mining Network
+          </div>
+
+          <div class="info-tag">
+            THE FUTURE IS YOURS
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         TASKS
+         =================================================== -->
+
+    <section class="page" id="page-tasks">
+
+      <div class="section-card">
+
+        <div class="section-title">
+          <span>Daily Tasks</span>
+          <small>Earn LNR</small>
+        </div>
+
+        <div class="task">
+
+          <div class="task-icon">✈</div>
+
+          <div class="task-info">
+            <div class="task-name">
+              Join the community
+            </div>
+            <div class="task-reward">
+              +50 LNR
+            </div>
+          </div>
+
+          <button
+            class="task-btn"
+            data-task="community">
+            START
+          </button>
+
+        </div>
+
+
+        <div class="task">
+
+          <div class="task-icon">▶</div>
+
+          <div class="task-info">
+            <div class="task-name">
+              Watch LUNARO update
+            </div>
+            <div class="task-reward">
+              +75 LNR
+            </div>
+          </div>
+
+          <button
+            class="task-btn"
+            data-task="video">
+            START
+          </button>
+
+        </div>
+
+
+        <div class="task">
+
+          <div class="task-icon">★</div>
+
+          <div class="task-info">
+            <div class="task-name">
+              Daily check-in
+            </div>
+            <div class="task-reward">
+              +25 LNR
+            </div>
+          </div>
+
+          <button
+            class="task-btn"
+            data-task="daily">
+            CLAIM
+          </button>
+
+        </div>
+
+
+        <div class="task">
+
+          <div class="task-icon">☄</div>
+
+          <div class="task-info">
+            <div class="task-name">
+              Explore LUNARO
+            </div>
+            <div class="task-reward">
+              +100 LNR
+            </div>
+          </div>
+
+          <button
+            class="task-btn"
+            data-task="explore">
+            START
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         MINERS
+         =================================================== -->
+
+    <section class="page" id="page-miners">
+
+      <div class="section-card">
+
+        <div class="section-title">
+          <span>Miner Store</span>
+          <small>Automatic Mining</small>
+        </div>
+
+        <div class="miner-grid">
+
+          <div class="miner">
+            <div class="miner-level">LEVEL 1</div>
+            <div class="miner-name">MOON DUST</div>
+            <div class="miner-speed">0.30 LNR / H</div>
+            <div class="miner-require">
+              Requirement: 0 LNR
+            </div>
+            <div class="miner-bar">
+              <span style="width:100%"></span>
+            </div>
+          </div>
+
+
+          <div class="miner">
+            <div class="miner-level">LEVEL 2</div>
+            <div class="miner-name">LUNAR CORE</div>
+            <div class="miner-speed">0.50 LNR / H</div>
+            <div class="miner-require">
+              Requirement: 500 LNR
+            </div>
+            <div class="miner-bar">
+              <span style="width:70%"></span>
+            </div>
+          </div>
+
+
+          <div class="miner">
+            <div class="miner-level">LEVEL 3</div>
+            <div class="miner-name">NOVA MINER</div>
+            <div class="miner-speed">0.70 LNR / H</div>
+            <div class="miner-require">
+              Requirement: 2,500 LNR
+            </div>
+            <div class="miner-bar">
+              <span style="width:45%"></span>
+            </div>
+          </div>
+
+
+          <div class="miner locked">
+            <div class="miner-level">LEVEL 4</div>
+            <div class="miner-name">NEBULA X</div>
+            <div class="miner-speed">1.20 LNR / H</div>
+            <div class="miner-require">
+              Requirement: 10,000 LNR
+            </div>
+            <div class="miner-bar">
+              <span style="width:20%"></span>
+            </div>
+          </div>
+
+
+          <div class="miner locked">
+            <div class="miner-level">LEVEL 5</div>
+            <div class="miner-name">GALAXY CORE</div>
+            <div class="miner-speed">2.00 LNR / H</div>
+            <div class="miner-require">
+              Requirement: 50,000 LNR
+            </div>
+            <div class="miner-bar">
+              <span style="width:10%"></span>
+            </div>
+          </div>
+
+
+          <div class="miner locked">
+            <div class="miner-level">LEVEL 6</div>
+            <div class="miner-name">LUNARO PRIME</div>
+            <div class="miner-speed">3.50 LNR / H</div>
+            <div class="miner-require">
+              Requirement: 150,000 LNR
+            </div>
+            <div class="miner-bar">
+              <span style="width:4%"></span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="section-card journey">
+
+        <div class="section-title">
+          <span>My Level Journey</span>
+          <small id="journeyLevel">LEVEL 3</small>
+        </div>
+
+        <div class="journey-row">
+
+          <div class="journey-dot current">1</div>
+
+          <div class="journey-line done"></div>
+
+          <div class="journey-dot current">2</div>
+
+          <div class="journey-line done"></div>
+
+          <div class="journey-dot current">3</div>
+
+          <div class="journey-line"></div>
+
+          <div class="journey-dot">4</div>
+
+          <div class="journey-line"></div>
+
+          <div class="journey-dot">5</div>
+
+        </div>
+
+      </div>
+
+
+      <div class="section-card">
+
+        <div class="section-title">
+          <span>P&amp;L Overview</span>
+          <small>Mining performance</small>
+        </div>
+
+        <div style="
+          height:130px;
+          margin-top:14px;
+          border-radius:15px;
+          position:relative;
+          overflow:hidden;
+          background:
+            linear-gradient(180deg,
+              rgba(123,35,255,.10),
+              rgba(10,5,30,.15));
+        ">
+
+          <svg
+            viewBox="0 0 500 130"
+            preserveAspectRatio="none"
+            style="width:100%;height:100%;">
+
+            <defs>
+              <linearGradient id="chartGradient"
+                              x1="0"
+                              y1="0"
+                              x2="0"
+                              y2="1">
+                <stop offset="0"
+                      stop-color="#a438ff"
+                      stop-opacity=".35"/>
+                <stop offset="1"
+                      stop-color="#a438ff"
+                      stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+
+            <path
+              d="M0 105
+                 C45 100 60 85 95 92
+                 S145 74 180 80
+                 S225 52 260 63
+                 S310 42 350 55
+                 S405 28 445 39
+                 S480 20 500 25
+                 L500 130
+                 L0 130 Z"
+              fill="url(#chartGradient)"
+            />
+
+            <path
+              d="M0 105
+                 C45 100 60 85 95 92
+                 S145 74 180 80
+                 S225 52 260 63
+                 S310 42 350 55
+                 S405 28 445 39
+                 S480 20 500 25"
+              fill="none"
+              stroke="#b23cff"
+              stroke-width="3"
+              vector-effect="non-scaling-stroke"
+            />
+
+          </svg>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         FRIENDS
+         =================================================== -->
+
+    <section class="page" id="page-friends">
+
+      <div class="section-card ref-box">
+
+        <div class="section-title">
+          <span>Invite Friends</span>
+          <small>Earn together</small>
+        </div>
+
+        <div class="ref-code" id="refCode">
+          LNR7X9Q
+        </div>
+
+        <div class="ref-link" id="refLink">
+          https://t.me/LunaroGameBot?start=LNR7X9Q
+        </div>
+
+        <button class="primary" id="copyRef">
+          COPY REFERRAL LINK
+        </button>
+
+        <button class="primary" id="shareRef">
+          SHARE WITH FRIENDS
+        </button>
+
+      </div>
+
+
+      <div class="friend-stats">
+
+        <div class="friend-stat">
+          <span>FRIENDS</span>
+          <strong id="friendCount">0</strong>
+        </div>
+
+        <div class="friend-stat">
+          <span>REFERRAL REWARD</span>
+          <strong id="refReward">0.00</strong>
+        </div>
+
+      </div>
+
+
+      <div class="section-card">
+
+        <div class="section-title">
+          <span>Referral Rules</span>
+        </div>
+
+        <div style="
+          margin-top:10px;
+          color:#77758e;
+          font-size:9px;
+          line-height:1.8;
+        ">
+
+          Invite friends using your unique link.
+          Referral rewards are calculated after the invited
+          user performs an eligible claim.
+
+          <br><br>
+
+          <b style="color:#bd62ff">
+            Referral reward: 10%
+          </b>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         PROFILE
+         =================================================== -->
+
+    <section class="page" id="page-profile">
+
+      <div class="section-card">
+
+        <div class="section-title">
+          <span>Profile</span>
+          <small>LUNARO ACCOUNT</small>
+        </div>
+
+
+        <div class="profile-row">
+          <span class="profile-label">Wallet</span>
+          <span
+            class="profile-value"
+            id="profileWallet">
+            UQCN...iD7
+          </span>
+        </div>
+
+
+        <div class="profile-row">
+          <span class="profile-label">Level</span>
+          <span
+            class="profile-value"
+            id="profileLevel">
+            Level 3
+          </span>
+        </div>
+
+
+        <div class="profile-row">
+          <span class="profile-label">Mining Speed</span>
+          <span
+            class="profile-value"
+            id="profileSpeed">
+            0.70 LNR/hour
+          </span>
+        </div>
+
+
+        <div class="profile-row">
+          <span class="profile-label">Referral Code</span>
+          <span
+            class="profile-value"
+            id="profileRef">
+            LNR7X9Q
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="section-card withdraw">
+
+        <div class="section-title">
+          <span>Withdrawal</span>
+          <small>DEMO</small>
+        </div>
+
+        <div style="
+          color:#77758e;
+          font-size:8px;
+          line-height:1.7;
+          margin:10px 0;
+        ">
+          Withdrawal is currently a demo interface.
+          No real token transfer is performed by this version.
+        </div>
+
+        <input
+          class="input"
+          id="withdrawAmount"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          placeholder="Amount in LNR">
+
+        <button
+          class="primary"
+          id="withdrawBtn">
+          REQUEST WITHDRAWAL
+        </button>
+
+      </div>
+
+
+      <div class="section-card withdraw-history">
+
+        <div class="section-title">
+          <span>Withdrawal History</span>
+          <small id="historyCount">0</small>
+        </div>
+
+        <div id="historyList"></div>
+
+      </div>
+
+
+      <div class="section-card">
+
+        <button
+          class="primary"
+          style="
+            background:rgba(120,30,255,.08);
+            border:1px solid rgba(120,50,255,.3);
+          "
+          id="resetDemo">
+          RESET DEMO DATA
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       BOTTOM NAV
+       ===================================================== -->
+
+  <nav class="bottom">
+
+    <div class="nav">
+
+      <button
+        class="nav-btn active"
+        data-page="mine">
+
+        <span class="nav-icon">☾</span>
+        <span class="nav-label">Mine</span>
+
+      </button>
+
+
+      <button
+        class="nav-btn"
+        data-page="tasks">
+
+        <span class="nav-icon">▣</span>
+        <span class="nav-label">Tasks</span>
+
+      </button>
+
+
+      <button
+        class="nav-btn"
+        data-page="miners">
+
+        <span class="nav-icon">⌁</span>
+        <span class="nav-label">Miners</span>
+
+      </button>
+
+
+      <button
+        class="nav-btn"
+        data-page="friends">
+
+        <span class="nav-icon">♟</span>
+        <span class="nav-label">Friends</span>
+
+      </button>
+
+
+      <button
+        class="nav-btn"
+        data-page="profile">
+
+        <span class="nav-icon">♙</span>
+        <span class="nav-label">Profile</span>
+
+      </button>
+
     </div>
 
-</div>
+  </nav>
+
+
+  <!-- =====================================================
+       WALLET MODAL
+       ===================================================== -->
+
+  <div class="modal" id="walletModal">
+
+    <div class="modal-box">
+
+      <div class="modal-head">
+
+        <div class="modal-title">
+          Wallet
+        </div>
+
+        <button class="close" id="closeWallet">
+          ×
+        </button>
+
+      </div>
+
+      <div class="modal-text">
+
+        Wallet connection is represented by demo state in this
+        version. The app never asks for a seed phrase or private key.
+
+      </div>
+
+      <button
+        class="primary"
+        id="demoConnect">
+        CONNECT DEMO WALLET
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- TOAST -->
+
+  <div class="toast" id="toast"></div>
 
 
 <script>
 /* =========================================================
-   LUNARO APP LOGIC
+   LUNARO APP ENGINE
    ========================================================= */
 
-const STORAGE_KEY = "lunaro_demo_v3";
+(function(){
+
+"use strict";
 
 
-const defaultState = {
+/* =========================================================
+   DEFAULT DATA
+   ========================================================= */
 
-    wallet: "UQCN...iD7",
+const DEFAULT_STATE = {
 
-    balance: 25000,
+  wallet:{
+    connected:true,
+    address:"UQCN...iD7"
+  },
 
-    mined: 458.72,
+  balance:25000,
 
-    speed: 0.70,
+  mined:0,
 
-    level: 3,
+  miningSpeed:.70,
 
-    levelProgress: 348,
+  level:3,
 
-    referrals: 0,
+  xp:348,
 
-    referralCode: "LNR7X4K9",
+  xpMax:1000,
 
-    tasks: {
-        daily: false,
-        community: false,
-        invite: false
-    },
+  friends:0,
 
-    withdrawals: [],
+  referralReward:0,
 
-    lastMiningUpdate: Date.now()
+  referralCode:"LNR7X9Q",
+
+  tasks:{},
+
+  history:[],
+
+  lastMiningTime:Date.now()
+
 };
 
 
-let state = loadState();
+/* =========================================================
+   STORAGE
+   ========================================================= */
+
+const STORAGE_KEY="lunaro_demo_v3";
 
 
 function loadState(){
 
-    try{
+  try{
 
-        const saved =
-            JSON.parse(
-                localStorage.getItem(STORAGE_KEY)
-            );
+    const saved=localStorage.getItem(STORAGE_KEY);
 
-        if(saved){
+    if(!saved){
 
-            return {
-                ...defaultState,
-                ...saved,
-                tasks:{
-                    ...defaultState.tasks,
-                    ...(saved.tasks || {})
-                }
-            };
-
-        }
-
-    }catch(error){
-
-        console.warn(error);
+      return structuredClone(DEFAULT_STATE);
 
     }
 
-    return {
-        ...defaultState
-    };
+    const parsed=JSON.parse(saved);
+
+    return Object.assign(
+      structuredClone(DEFAULT_STATE),
+      parsed
+    );
+
+  }catch(error){
+
+    console.warn(error);
+
+    return structuredClone(DEFAULT_STATE);
+
+  }
+
 }
+
+
+let state=loadState();
 
 
 function saveState(){
 
+  try{
+
     localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(state)
+      STORAGE_KEY,
+      JSON.stringify(state)
     );
 
-}
+  }catch(error){
 
+    console.warn(error);
 
-/* =========================================================
-   NUMBER FORMAT
-   ========================================================= */
-
-function formatNumber(value){
-
-    return Number(value || 0).toLocaleString(
-        "en-US",
-        {
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        }
-    );
+  }
 
 }
 
 
 /* =========================================================
-   MINING ENGINE
+   ELEMENTS
    ========================================================= */
 
-/*
-   Mining speed:
-   0.70 LNR per hour
+const $=id=>document.getElementById(id);
 
-   Important:
-   mined amount is NOT included in total balance
-   until the user presses CLAIM.
-*/
 
-function updateMining(){
+const totalBalance=$("totalBalance");
+const walletBalance=$("walletBalance");
+const minedBalance=$("minedBalance");
+const miningSpeed=$("miningSpeed");
 
-    const now = Date.now();
+const claimBtn=$("claimBtn");
 
-    const elapsed =
-        Math.max(
-            0,
-            now - Number(state.lastMiningUpdate || now)
-        );
+const levelText=$("levelText");
+const levelFill=$("levelFill");
+const xpCurrent=$("xpCurrent");
+const xpMax=$("xpMax");
 
-    const hours =
-        elapsed / 3600000;
+const walletAddress=$("walletAddress");
+const walletStatus=$("walletStatus");
 
-    if(hours > 0){
+const profileWallet=$("profileWallet");
+const profileLevel=$("profileLevel");
+const profileSpeed=$("profileSpeed");
+const profileRef=$("profileRef");
 
-        state.mined +=
-            hours * state.speed;
+const refCode=$("refCode");
+const refLink=$("refLink");
 
-        state.lastMiningUpdate = now;
+const friendCount=$("friendCount");
+const refReward=$("refReward");
 
-        saveState();
+const historyList=$("historyList");
+const historyCount=$("historyCount");
 
-    }
-
-}
+const toast=$("toast");
 
 
 /* =========================================================
-   UI UPDATE
+   FORMAT
    ========================================================= */
 
-function updateUI(){
+function number(value){
 
-    updateMining();
-
-    document.getElementById("walletAddress")
-        .textContent = state.wallet;
-
-    document.getElementById("profileWallet")
-        .textContent = state.wallet;
-
-    /*
-       Total balance = claimed balance only.
-       Mined is kept separate until CLAIM.
-    */
-
-    document.getElementById("totalBalance")
-        .textContent = formatNumber(state.balance);
-
-    document.getElementById("walletBalance")
-        .textContent = formatNumber(state.balance);
-
-    document.getElementById("minedBalance")
-        .textContent = formatNumber(state.mined);
-
-    document.getElementById("miningSpeed")
-        .textContent = Number(state.speed).toFixed(2);
-
-    document.getElementById("levelText")
-        .textContent = "LVL " + state.level;
-
-    document.getElementById("levelCount")
-        .textContent =
-        Math.floor(state.levelProgress) +
-        " / 1,000";
-
-    document.getElementById("levelFill")
-        .style.width =
-        Math.min(
-            100,
-            state.levelProgress / 10
-        ) + "%";
-
-    document.getElementById("refCode")
-        .textContent = state.referralCode;
-
-    document.getElementById("refLink")
-        .textContent =
-        "t.me/LunaroGameBot?start=" +
-        state.referralCode;
-
-    document.getElementById("friendsCount")
-        .textContent = state.referrals;
-
-    renderTasks();
-
-    renderHistory();
-
-}
-
-
-/* =========================================================
-   CLAIM
-   ========================================================= */
-
-document.getElementById("claimBtn")
-    .addEventListener("click", function(){
-
-        updateMining();
-
-        const amount = state.mined;
-
-        if(amount <= 0){
-
-            showToast("Nothing to claim yet.");
-
-            return;
-
-        }
-
-        /*
-           Move mined -> claimed balance
-        */
-
-        state.balance += amount;
-
-        state.mined = 0;
-
-        /*
-           Progress is based on claimed rewards
-           for this demo.
-        */
-
-        state.levelProgress += amount;
-
-        while(state.levelProgress >= 1000){
-
-            state.levelProgress -= 1000;
-
-            state.level++;
-
-            state.speed += 0.10;
-
-        }
-
-        state.lastMiningUpdate = Date.now();
-
-        saveState();
-
-        updateUI();
-
-        showToast(
-            "+" +
-            formatNumber(amount) +
-            " LNR claimed"
-        );
-
+  return Number(value || 0)
+    .toLocaleString("en-US",{
+      minimumFractionDigits:2,
+      maximumFractionDigits:2
     });
 
-
-/* =========================================================
-   NAVIGATION
-   ========================================================= */
-
-const navButtons =
-    document.querySelectorAll(".nav-btn");
-
-const pages =
-    document.querySelectorAll(".page");
-
-
-navButtons.forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        const page =
-            button.dataset.page;
-
-        navButtons.forEach(btn => {
-
-            btn.classList.remove("active");
-
-        });
-
-        button.classList.add("active");
-
-        pages.forEach(section => {
-
-            section.classList.remove("active");
-
-        });
-
-        const target =
-            document.getElementById(
-                "page-" + page
-            );
-
-        if(target){
-
-            target.classList.add("active");
-
-        }
-
-        window.scrollTo({
-            top:0,
-            behavior:"smooth"
-        });
-
-    });
-
-});
-
-
-/* =========================================================
-   TASKS
-   ========================================================= */
-
-function renderTasks(){
-
-    document
-        .querySelectorAll("[data-task]")
-        .forEach(button => {
-
-            const task =
-                button.dataset.task;
-
-            if(state.tasks[task]){
-
-                button.textContent = "✓ DONE";
-
-                button.classList.add("done");
-
-            }else{
-
-                if(task === "community")
-                    button.textContent = "OPEN";
-
-                else if(task === "invite")
-                    button.textContent = "SHARE";
-
-                else
-                    button.textContent = "COMPLETE";
-
-                button.classList.remove("done");
-
-            }
-
-        });
-
 }
 
 
-document
-    .querySelectorAll("[data-task]")
-    .forEach(button => {
+function shortAddress(address){
 
-        button.addEventListener(
-            "click",
-            () => {
+  if(!address) return "Not connected";
 
-                const task =
-                    button.dataset.task;
+  if(address.length<14) return address;
 
-                if(state.tasks[task]){
-
-                    showToast(
-                        "This task is already completed."
-                    );
-
-                    return;
-
-                }
-
-
-                if(task === "community"){
-
-                    showModal(
-                        "LUNARO COMMUNITY",
-                        "Community links can be connected here later. This demo marks the task after confirmation.",
-                        "MARK AS COMPLETE",
-                        () => {
-
-                            completeTask(
-                                task,
-                                50
-                            );
-
-                        }
-                    );
-
-                    return;
-
-                }
-
-
-                if(task === "invite"){
-
-                    shareReferral();
-
-                    return;
-
-                }
-
-
-                completeTask(
-                    task,
-                    25
-                );
-
-            }
-        );
-
-    });
-
-
-function completeTask(task,reward){
-
-    state.tasks[task] = true;
-
-    state.balance += reward;
-
-    state.levelProgress += reward;
-
-    state.lastMiningUpdate = Date.now();
-
-    saveState();
-
-    updateUI();
-
-    showToast(
-        "+" + reward + " LNR reward added"
-    );
-
-}
-
-
-/* =========================================================
-   REFERRAL
-   ========================================================= */
-
-document
-    .getElementById("copyRef")
-    .addEventListener(
-        "click",
-        copyReferral
-    );
-
-
-document
-    .getElementById("shareRef")
-    .addEventListener(
-        "click",
-        shareReferral
-    );
-
-
-function referralUrl(){
-
-    return (
-        "https://t.me/LunaroGameBot?start=" +
-        state.referralCode
-    );
-
-}
-
-
-async function copyReferral(){
-
-    const text =
-        state.referralCode;
-
-    try{
-
-        await navigator.clipboard.writeText(text);
-
-        showToast(
-            "Referral code copied"
-        );
-
-    }catch(error){
-
-        showToast(
-            "Code: " + text
-        );
-
-    }
-
-}
-
-
-async function shareReferral(){
-
-    const url =
-        referralUrl();
-
-    const text =
-        "Join LUNARO and start automatic mining.";
-
-    if(navigator.share){
-
-        try{
-
-            await navigator.share({
-                title:"LUNARO",
-                text:text,
-                url:url
-            });
-
-        }catch(error){}
-
-    }else{
-
-        try{
-
-            await navigator.clipboard.writeText(url);
-
-            showToast(
-                "Referral link copied"
-            );
-
-        }catch(error){
-
-            showToast(url);
-
-        }
-
-    }
-
-}
-
-
-/* =========================================================
-   WITHDRAWAL — DEMO ONLY
-   ========================================================= */
-
-document
-    .getElementById("withdrawBtn")
-    .addEventListener(
-        "click",
-        requestWithdrawal
-    );
-
-
-function requestWithdrawal(){
-
-    const input =
-        document.getElementById(
-            "withdrawAmount"
-        );
-
-    const amount =
-        Number(input.value);
-
-    if(!amount || amount <= 0){
-
-        showToast(
-            "Enter a valid amount."
-        );
-
-        return;
-
-    }
-
-
-    if(amount > state.balance){
-
-        showToast(
-            "Amount is higher than your balance."
-        );
-
-        return;
-
-    }
-
-
-    /*
-       No real blockchain transfer happens here.
-       This only records a demo withdrawal request.
-    */
-
-    state.withdrawals.unshift({
-
-        amount: amount,
-
-        status: "Demo",
-
-        date: new Date()
-            .toLocaleString()
-
-    });
-
-
-    saveState();
-
-    input.value = "";
-
-    renderHistory();
-
-    showToast(
-        "Demo withdrawal request created."
-    );
-
-}
-
-
-function renderHistory(){
-
-    const box =
-        document.getElementById(
-            "historyList"
-        );
-
-    if(!state.withdrawals.length){
-
-        box.innerHTML = `
-            <div class="history-empty">
-                No withdrawals yet.
-            </div>
-        `;
-
-        return;
-
-    }
-
-
-    box.innerHTML =
-        state.withdrawals
-        .map(item => {
-
-            return `
-                <div class="history-item">
-
-                    <div class="history-left">
-
-                        <strong>
-                            ${formatNumber(item.amount)} LNR
-                        </strong>
-
-                        <span>
-                            ${item.date}
-                        </span>
-
-                    </div>
-
-                    <div class="history-status">
-                        ${item.status}
-                    </div>
-
-                </div>
-            `;
-
-        })
-        .join("");
-
-}
-
-
-/* =========================================================
-   MODAL
-   ========================================================= */
-
-let modalCallback = null;
-
-
-function showModal(
-    title,
-    text,
-    buttonText,
-    callback
-){
-
-    document.getElementById(
-        "modalTitle"
-    ).textContent = title;
-
-    document.getElementById(
-        "modalText"
-    ).textContent = text;
-
-    document.getElementById(
-        "modalOk"
-    ).textContent = buttonText;
-
-    modalCallback = callback;
-
-    document
-        .getElementById("modal")
-        .classList.add("show");
-
-}
-
-
-document
-    .getElementById("modalClose")
-    .addEventListener(
-        "click",
-        closeModal
-    );
-
-
-document
-    .getElementById("modalOk")
-    .addEventListener(
-        "click",
-        function(){
-
-            if(
-                typeof modalCallback ===
-                "function"
-            ){
-
-                const cb =
-                    modalCallback;
-
-                modalCallback = null;
-
-                closeModal();
-
-                cb();
-
-            }else{
-
-                closeModal();
-
-            }
-
-        }
-    );
-
-
-document
-    .getElementById("modal")
-    .addEventListener(
-        "click",
-        function(event){
-
-            if(event.target === this){
-
-                closeModal();
-
-            }
-
-        }
-    );
-
-
-function closeModal(){
-
-    document
-        .getElementById("modal")
-        .classList.remove("show");
-
-    modalCallback = null;
+  return address.slice(0,6)
+    +"..."
+    +address.slice(-4);
 
 }
 
@@ -3038,84 +2241,851 @@ function closeModal(){
    TOAST
    ========================================================= */
 
-let toastTimer;
+let toastTimer=null;
 
 
 function showToast(message){
 
-    const toast =
-        document.getElementById(
-            "toast"
-        );
+  toast.textContent=message;
 
-    toast.textContent = message;
+  toast.classList.add("show");
 
-    toast.classList.add("show");
+  clearTimeout(toastTimer);
 
-    clearTimeout(toastTimer);
-
-    toastTimer =
-        setTimeout(() => {
-
-            toast.classList.remove("show");
-
-        },2600);
+  toastTimer=setTimeout(()=>{
+    toast.classList.remove("show");
+  },2200);
 
 }
 
 
 /* =========================================================
-   MINING TICK
+   MINING
    ========================================================= */
 
-setInterval(() => {
+/*
+  Important:
+  mined is separate from balance.
+  It is NOT added to balance until Claim.
+*/
 
-    updateUI();
+function calculateMining(){
 
-},1000);
+  const now=Date.now();
+
+  const last=Number(
+    state.lastMiningTime || now
+  );
+
+  const elapsed=Math.max(
+    0,
+    now-last
+  );
+
+  const earned=
+    elapsed/3600000*
+    state.miningSpeed;
+
+  if(earned>0){
+
+    state.mined+=earned;
+
+    state.lastMiningTime=now;
+
+    saveState();
+
+  }
+
+}
+
+
+function startMiningLoop(){
+
+  calculateMining();
+
+  render();
+
+  setInterval(()=>{
+
+    calculateMining();
+
+    renderMiningOnly();
+
+  },1000);
+
+}
 
 
 /* =========================================================
-   SAVE WHEN LEAVING
+   CLAIM
    ========================================================= */
 
-document.addEventListener(
-    "visibilitychange",
-    () => {
+function claim(){
 
-        if(
-            document.visibilityState ===
-            "hidden"
-        ){
+  calculateMining();
 
-            updateMining();
+  if(state.mined<=0.0001){
 
-            saveState();
+    showToast("Nothing to claim yet");
 
-        }
+    return;
+
+  }
+
+  const amount=state.mined;
+
+  /*
+    Mined becomes claimed balance only now.
+  */
+
+  state.balance+=amount;
+
+  state.mined=0;
+
+  state.xp+=Math.floor(amount*2);
+
+  updateLevel();
+
+  saveState();
+
+  render();
+
+  showToast(
+    "+"+number(amount)+" LNR claimed"
+  );
+
+}
+
+
+/* =========================================================
+   LEVEL
+   ========================================================= */
+
+function updateLevel(){
+
+  while(
+    state.xp>=state.xpMax &&
+    state.level<20
+  ){
+
+    state.xp-=state.xpMax;
+
+    state.level++;
+
+    state.xpMax=
+      Math.floor(
+        state.xpMax*1.25
+      );
+
+    /*
+      Demo progression:
+      speed increases slightly with level.
+    */
+
+    state.miningSpeed=
+      Number(
+        (0.70+(state.level-3)*0.15)
+        .toFixed(2)
+      );
+
+  }
+
+}
+
+
+function renderLevel(){
+
+  levelText.textContent=
+    "LVL "+state.level;
+
+  xpCurrent.textContent=
+    Math.floor(state.xp)
+      .toLocaleString();
+
+  xpMax.textContent=
+    state.xpMax
+      .toLocaleString();
+
+  const percent=Math.min(
+    100,
+    (state.xp/state.xpMax)*100
+  );
+
+  levelFill.style.width=
+    percent+"%";
+
+}
+
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+
+function renderMiningOnly(){
+
+  totalBalance.textContent=
+    number(state.balance);
+
+  walletBalance.textContent=
+    number(state.balance);
+
+  minedBalance.textContent=
+    number(state.mined);
+
+  miningSpeed.textContent=
+    Number(state.miningSpeed)
+      .toFixed(2);
+
+}
+
+
+function render(){
+
+  calculateMining();
+
+  renderMiningOnly();
+
+  renderLevel();
+
+
+  walletStatus.textContent=
+    state.wallet.connected
+      ? "WALLET CONNECTED"
+      : "WALLET DISCONNECTED";
+
+  walletAddress.textContent=
+    state.wallet.connected
+      ? shortAddress(state.wallet.address)
+      : "Connect wallet";
+
+
+  profileWallet.textContent=
+    state.wallet.connected
+      ? shortAddress(state.wallet.address)
+      : "Not connected";
+
+  profileLevel.textContent=
+    "Level "+state.level;
+
+  profileSpeed.textContent=
+    Number(state.miningSpeed)
+      .toFixed(2)
+      +" LNR/hour";
+
+
+  refCode.textContent=
+    state.referralCode;
+
+  profileRef.textContent=
+    state.referralCode;
+
+  refLink.textContent=
+    "https://t.me/LunaroGameBot?start="
+    +state.referralCode;
+
+
+  friendCount.textContent=
+    state.friends;
+
+  refReward.textContent=
+    number(state.referralReward);
+
+
+  renderHistory();
+
+  renderTasks();
+
+}
+
+
+/* =========================================================
+   TASKS
+   ========================================================= */
+
+const TASKS={
+
+  community:{
+    reward:50,
+    label:"JOINED"
+  },
+
+  video:{
+    reward:75,
+    label:"COMPLETED"
+  },
+
+  daily:{
+    reward:25,
+    label:"CLAIMED"
+  },
+
+  explore:{
+    reward:100,
+    label:"COMPLETED"
+  }
+
+};
+
+
+function renderTasks(){
+
+  document.querySelectorAll(
+    ".task-btn"
+  ).forEach(button=>{
+
+    const id=button.dataset.task;
+
+    if(!TASKS[id]) return;
+
+    if(state.tasks[id]){
+
+      button.textContent=
+        TASKS[id].label;
+
+      button.classList.add("done");
+
+    }else{
+
+      button.textContent=
+        id==="daily"
+          ? "CLAIM"
+          : "START";
+
+      button.classList.remove("done");
 
     }
+
+  });
+
+}
+
+
+function completeTask(id){
+
+  if(!TASKS[id]) return;
+
+  if(state.tasks[id]){
+
+    showToast("Task already completed");
+
+    return;
+
+  }
+
+  /*
+    Demo task completion.
+    Real social verification must be handled server-side.
+  */
+
+  state.tasks[id]=true;
+
+  state.balance+=TASKS[id].reward;
+
+  state.xp+=TASKS[id].reward;
+
+  updateLevel();
+
+  saveState();
+
+  render();
+
+  showToast(
+    "+"+
+    TASKS[id].reward+
+    " LNR reward"
+  );
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function openPage(page){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(section=>{
+
+      section.classList.remove("active");
+
+    });
+
+
+  const target=$("page-"+page);
+
+  if(target){
+
+    target.classList.add("active");
+
+  }
+
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(button=>{
+
+      button.classList.toggle(
+        "active",
+        button.dataset.page===page
+      );
+
+    });
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* =========================================================
+   REFERRAL
+   ========================================================= */
+
+function getReferralLink(){
+
+  return (
+    "https://t.me/LunaroGameBot?start="
+    +state.referralCode
+  );
+
+}
+
+
+async function copyReferral(){
+
+  const link=getReferralLink();
+
+  try{
+
+    await navigator.clipboard.writeText(link);
+
+    showToast("Referral link copied");
+
+  }catch(error){
+
+    showToast("Copy not available");
+
+  }
+
+}
+
+
+async function shareReferral(){
+
+  const link=getReferralLink();
+
+  if(
+    navigator.share
+  ){
+
+    try{
+
+      await navigator.share({
+        title:"LUNARO",
+        text:"Join LUNARO and start automatic mining.",
+        url:link
+      });
+
+    }catch(error){}
+
+  }else{
+
+    await copyReferral();
+
+  }
+
+}
+
+
+/* =========================================================
+   WITHDRAWAL DEMO
+   ========================================================= */
+
+function requestWithdrawal(){
+
+  const input=$("withdrawAmount");
+
+  const amount=
+    Number(input.value);
+
+
+  if(!amount || amount<=0){
+
+    showToast("Enter an amount");
+
+    return;
+
+  }
+
+
+  if(amount>state.balance){
+
+    showToast("Insufficient demo balance");
+
+    return;
+
+  }
+
+
+  state.history.unshift({
+
+    amount,
+
+    status:"Pending",
+
+    date:new Date().toLocaleString()
+
+  });
+
+
+  /*
+    Demo only:
+    balance is not actually transferred.
+  */
+
+  saveState();
+
+  render();
+
+  input.value="";
+
+  showToast(
+    "Demo withdrawal request created"
+  );
+
+}
+
+
+function renderHistory(){
+
+  historyCount.textContent=
+    state.history.length;
+
+
+  if(!state.history.length){
+
+    historyList.innerHTML=`
+      <div style="
+        padding:18px 0;
+        text-align:center;
+        color:#65637a;
+        font-size:8px;
+      ">
+        No withdrawal history
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  historyList.innerHTML=
+    state.history
+      .map(item=>`
+
+        <div class="history-item">
+
+          <div class="history-left">
+
+            <div class="history-icon">
+              ↗
+            </div>
+
+            <div>
+
+              <div class="history-title">
+                Withdrawal
+              </div>
+
+              <div class="history-date">
+                ${item.date}
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="history-amount">
+            ${number(item.amount)} LNR
+          </div>
+
+        </div>
+
+      `)
+      .join("");
+
+}
+
+
+/* =========================================================
+   WALLET DEMO
+   ========================================================= */
+
+const walletModal=$("walletModal");
+
+
+function openWallet(){
+
+  walletModal.classList.add("show");
+
+}
+
+
+function closeWallet(){
+
+  walletModal.classList.remove("show");
+
+}
+
+
+function connectDemoWallet(){
+
+  state.wallet.connected=true;
+
+  state.wallet.address=
+    "UQCN...iD7";
+
+  saveState();
+
+  render();
+
+  closeWallet();
+
+  showToast("Demo wallet connected");
+
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetDemo(){
+
+  const ok=
+    confirm(
+      "Reset all LUNARO demo data?"
+    );
+
+  if(!ok) return;
+
+  state=
+    structuredClone(DEFAULT_STATE);
+
+  state.lastMiningTime=
+    Date.now();
+
+  saveState();
+
+  render();
+
+  showToast("Demo reset");
+
+}
+
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
+
+
+/* Navigation */
+
+document
+  .querySelectorAll(".nav-btn")
+  .forEach(button=>{
+
+    button.addEventListener(
+      "click",
+      ()=>openPage(
+        button.dataset.page
+      )
+    );
+
+  });
+
+
+/* Claim */
+
+claimBtn.addEventListener(
+  "click",
+  claim
 );
 
 
-window.addEventListener(
-    "beforeunload",
-    () => {
+/* Wallet */
 
-        updateMining();
+$("walletBtn").addEventListener(
+  "click",
+  openWallet
+);
 
-        saveState();
+
+$("closeWallet").addEventListener(
+  "click",
+  closeWallet
+);
+
+
+$("demoConnect").addEventListener(
+  "click",
+  connectDemoWallet
+);
+
+
+/* Tasks */
+
+document
+  .querySelectorAll(".task-btn")
+  .forEach(button=>{
+
+    button.addEventListener(
+      "click",
+      ()=>{
+        completeTask(
+          button.dataset.task
+        );
+      }
+    );
+
+  });
+
+
+/* Referral */
+
+$("copyRef").addEventListener(
+  "click",
+  copyReferral
+);
+
+
+$("shareRef").addEventListener(
+  "click",
+  shareReferral
+);
+
+
+/* Withdrawal */
+
+$("withdrawBtn").addEventListener(
+  "click",
+  requestWithdrawal
+);
+
+
+/* Reset */
+
+$("resetDemo").addEventListener(
+  "click",
+  resetDemo
+);
+
+
+/* Modal background */
+
+walletModal.addEventListener(
+  "click",
+  event=>{
+
+    if(
+      event.target===
+      walletModal
+    ){
+
+      closeWallet();
 
     }
+
+  }
 );
 
 
 /* =========================================================
-   INITIALIZE
+   TELEGRAM MINI APP SUPPORT
    ========================================================= */
 
-updateUI();
+try{
 
+  if(
+    window.Telegram &&
+    window.Telegram.WebApp
+  ){
+
+    const tg=
+      window.Telegram.WebApp;
+
+    tg.ready();
+
+    tg.expand();
+
+    if(
+      tg.setHeaderColor
+    ){
+
+      tg.setHeaderColor(
+        "#03020d"
+      );
+
+    }
+
+    if(
+      tg.setBackgroundColor
+    ){
+
+      tg.setBackgroundColor(
+        "#03020d"
+      );
+
+    }
+
+  }
+
+}catch(error){
+
+  console.warn(
+    "Telegram WebApp API unavailable"
+  );
+
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+render();
+
+startMiningLoop();
+
+
+/* =========================================================
+   DEBUG HELPERS
+   ========================================================= */
+
+window.LUNARO={
+
+  getState(){
+    return state;
+  },
+
+  claim,
+
+  reset(){
+    localStorage.removeItem(
+      STORAGE_KEY
+    );
+    location.reload();
+  }
+
+};
+
+})();
 </script>
 
 </body>
