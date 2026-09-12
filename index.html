@@ -1,12 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+      maximum-scale=1.0, user-scalable=no">
 
 <title>LUNARO — Automatic Mining</title>
 
 <style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -14,28 +23,14 @@
     -webkit-tap-highlight-color:transparent;
 }
 
-:root{
-    --bg:#02010a;
-    --purple:#8b35ff;
-    --purple2:#c85cff;
-    --blue:#4c3cff;
-    --cyan:#25eaff;
-    --gold:#ffd85a;
-    --text:#f5f1ff;
-    --muted:#aaa5d9;
-}
-
 html,body{
     width:100%;
     min-height:100%;
     background:#02010a;
-    color:white;
+    color:#fff;
     font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
+        Arial,
+        Helvetica,
         sans-serif;
 }
 
@@ -43,609 +38,1030 @@ body{
     overflow-x:hidden;
 }
 
-/* =========================
-   SPACE BACKGROUND
-========================= */
-
-.app{
-    min-height:100vh;
-    position:relative;
-    overflow:hidden;
-    background:
-        radial-gradient(circle at 50% 20%,rgba(102,25,255,.24),transparent 30%),
-        radial-gradient(circle at 10% 45%,rgba(64,0,255,.14),transparent 25%),
-        radial-gradient(circle at 90% 50%,rgba(115,0,255,.14),transparent 25%),
-        linear-gradient(180deg,#02010b 0%,#050018 48%,#02010b 100%);
+button{
+    font-family:inherit;
+    border:0;
+    cursor:pointer;
 }
 
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root{
+
+    --bg:#02010a;
+
+    --purple:#8f33ff;
+    --purple2:#c75aff;
+
+    --blue:#277cff;
+    --cyan:#2be9ff;
+
+    --gold:#ffd45c;
+
+    --white:#ffffff;
+
+    --muted:#aca5dc;
+
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app{
+
+    position:relative;
+
+    width:100%;
+    max-width:620px;
+
+    min-height:100vh;
+
+    margin:auto;
+
+    overflow:hidden;
+
+    background:
+
+        radial-gradient(
+            circle at 50% 22%,
+            rgba(120,30,255,.38),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 4% 38%,
+            rgba(32,69,255,.20),
+            transparent 25%
+        ),
+
+        radial-gradient(
+            circle at 96% 45%,
+            rgba(118,32,255,.20),
+            transparent 25%
+        ),
+
+        linear-gradient(
+            180deg,
+            #02010a 0%,
+            #060016 48%,
+            #020108 100%
+        );
+
+}
+
+
+/* stars */
+
 .app::before{
+
     content:"";
+
     position:absolute;
+
     inset:0;
+
     pointer-events:none;
+
     opacity:.65;
 
     background-image:
-        radial-gradient(circle,#fff 0 1px,transparent 1.5px),
-        radial-gradient(circle,#a86cff 0 1px,transparent 1.5px),
-        radial-gradient(circle,#fff 0 1px,transparent 1.5px);
 
-    background-size:
-        140px 160px,
-        210px 230px,
-        280px 300px;
-
-    background-position:
-        20px 30px,
-        90px 100px,
-        40px 20px;
-}
-
-/* =========================
-   MAIN CONTENT
-========================= */
-
-.screen{
-    position:relative;
-    z-index:2;
-    width:100%;
-    max-width:620px;
-    margin:auto;
-    padding:
-        22px
-        18px
-        150px;
-}
-
-/* =========================
-   TOP BAR
-========================= */
-
-.topbar{
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-}
-
-.wallet-box,
-.level-box{
-    height:84px;
-    min-width:210px;
-
-    border:1px solid rgba(126,61,255,.75);
-    border-radius:27px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(27,13,69,.85),
-            rgba(5,3,25,.82)
-        );
-
-    box-shadow:
-        0 0 20px rgba(105,32,255,.12),
-        inset 0 0 20px rgba(125,40,255,.08);
-
-    backdrop-filter:blur(18px);
-}
-
-.wallet-box{
-    display:flex;
-    align-items:center;
-    padding:10px 14px;
-    gap:12px;
-}
-
-.wallet-icon{
-    width:45px;
-    height:45px;
-    border-radius:14px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:25px;
-    color:#27eaff;
-
-    background:rgba(21,225,255,.08);
-    box-shadow:
-        0 0 15px rgba(0,229,255,.25);
-}
-
-.wallet-info{
-    flex:1;
-}
-
-.wallet-title{
-    font-size:13px;
-    color:#22eddf;
-    margin-bottom:5px;
-}
-
-.wallet-address{
-    font-size:16px;
-    color:white;
-}
-
-.wallet-arrow{
-    color:#b9a7ff;
-    font-size:25px;
-}
-
-.level-box{
-    width:205px;
-    padding:10px 18px;
-    text-align:center;
-}
-
-.level-title{
-    font-size:22px;
-    font-weight:800;
-    color:#dba9ff;
-
-    text-shadow:
-        0 0 15px rgba(190,70,255,.7);
-}
-
-.level-progress{
-    width:100%;
-    height:16px;
-    margin-top:8px;
-
-    border-radius:20px;
-    overflow:hidden;
-
-    background:#171048;
-    box-shadow:inset 0 0 8px #000;
-}
-
-.level-progress span{
-    display:block;
-    height:100%;
-    width:35%;
-
-    border-radius:20px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #7429ff,
-            #d65cff
-        );
-
-    box-shadow:
-        0 0 14px #a33cff;
-}
-
-.level-number{
-    font-size:12px;
-    color:#c5bdf4;
-    margin-top:4px;
-}
-
-/* =========================
-   LUNARO BRAND
-========================= */
-
-.brand{
-    text-align:center;
-    margin-top:-4px;
-    position:relative;
-    z-index:5;
-}
-
-.brand-logo{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:13px;
-}
-
-.moon{
-    width:56px;
-    height:56px;
-    border-radius:50%;
-
-    background:
-        radial-gradient(
-            circle at 30% 30%,
-            #fff,
-            #bd5cff 28%,
-            #6323ff 65%,
-            #170052 100%
-        );
-
-    box-shadow:
-        0 0 20px #b640ff,
-        0 0 50px rgba(134,50,255,.7);
-
-    position:relative;
-}
-
-.moon::after{
-    content:"";
-    position:absolute;
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#060316;
-    top:-4px;
-    right:-7px;
-}
-
-.brand-name{
-    font-size:40px;
-    letter-spacing:7px;
-    font-weight:900;
-
-    color:#fff;
-
-    text-shadow:
-        0 0 10px rgba(255,255,255,.5),
-        0 0 30px rgba(161,58,255,.55);
-}
-
-.brand-sub{
-    font-size:12px;
-    letter-spacing:6px;
-    color:#aaa2df;
-    margin-top:1px;
-}
-
-/* =========================
-   HERO PLANET
-========================= */
-
-.hero{
-    position:relative;
-    height:430px;
-    margin-top:8px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.hero-glow{
-    position:absolute;
-    width:370px;
-    height:370px;
-    border-radius:50%;
-
-    background:
         radial-gradient(
             circle,
-            rgba(159,55,255,.35),
-            rgba(81,20,255,.16) 42%,
-            transparent 72%
-        );
+            rgba(255,255,255,.9) 0 1px,
+            transparent 1.5px
+        ),
 
-    filter:blur(18px);
-}
-
-.planet{
-    position:absolute;
-    width:340px;
-    height:340px;
-    border-radius:50%;
-
-    background:
         radial-gradient(
-            circle at 35% 25%,
-            #6d43a8,
-            #24114a 35%,
-            #0a061a 72%,
-            #02010a 100%
+            circle,
+            rgba(180,120,255,.9) 0 1px,
+            transparent 1.5px
         );
 
-    box-shadow:
-        0 0 25px #b33cff,
-        0 0 60px rgba(131,30,255,.8),
-        inset -30px -20px 60px #000;
+    background-size:
+        130px 140px,
+        210px 230px;
 
-    overflow:visible;
+    background-position:
+        20px 20px,
+        70px 50px;
+
 }
 
-/* crater texture */
-.planet::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    border-radius:50%;
 
-    opacity:.65;
+/* =========================================================
+   SCREEN
+========================================================= */
 
-    background:
-        radial-gradient(circle at 20% 30%,#05000e 0 9px,transparent 10px),
-        radial-gradient(circle at 70% 20%,#130727 0 13px,transparent 14px),
-        radial-gradient(circle at 55% 65%,#05000d 0 16px,transparent 17px),
-        radial-gradient(circle at 30% 70%,#18072e 0 12px,transparent 13px),
-        radial-gradient(circle at 78% 62%,#06000f 0 10px,transparent 11px);
-}
+.screen{
 
-.planet::after{
-    content:"";
-    position:absolute;
-    inset:-9px;
-    border-radius:50%;
-
-    border:2px solid rgba(224,113,255,.8);
-
-    box-shadow:
-        0 0 15px #ff55ff,
-        0 0 35px #8d32ff,
-        inset 0 0 25px #7a26ff;
-}
-
-/* =========================
-   ORBIT
-========================= */
-
-.orbit{
-    position:absolute;
-    width:440px;
-    height:135px;
-
-    border:4px solid rgba(208,81,255,.9);
-    border-radius:50%;
-
-    transform:rotate(-17deg);
-
-    box-shadow:
-        0 0 10px #ff52ff,
-        0 0 30px #8e24ff;
-
-    z-index:4;
-}
-
-.orbit::after{
-    content:"";
-    position:absolute;
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    border-top:2px solid #fff;
-    opacity:.7;
-}
-
-/* =========================
-   LNR TEXT
-========================= */
-
-.lnr{
     position:relative;
-    z-index:6;
 
-    font-size:108px;
-    font-weight:1000;
-    letter-spacing:-5px;
+    z-index:2;
 
-    color:#e8c9ff;
+    padding:
+        18px
+        14px
+        125px;
 
-    transform:skew(-7deg);
-
-    text-shadow:
-        2px 2px 0 #7d27d9,
-        5px 5px 0 #4a1590,
-        0 0 12px #fff,
-        0 0 35px #b340ff,
-        0 0 70px #6c20ff;
 }
 
-/* =========================
-   BALANCE
-========================= */
 
-.balance{
-    text-align:center;
-    margin-top:-8px;
-}
+/* =========================================================
+   TOP
+========================================================= */
 
-.balance-title{
-    font-size:26px;
-    letter-spacing:2px;
-    color:#c9c0f2;
-}
-
-.balance-title span{
-    color:#d36aff;
-}
-
-.balance-value{
-    margin-top:6px;
-
-    font-size:68px;
-    line-height:1;
-    font-weight:900;
-
-    color:#fff;
-
-    text-shadow:
-        0 0 10px #fff,
-        0 0 30px rgba(165,70,255,.65);
-}
-
-.balance-token{
-    margin-top:8px;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:9px;
-
-    color:#ffd768;
-    font-size:23px;
-    font-weight:800;
-}
-
-.token-icon{
-    width:31px;
-    height:31px;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    border-radius:50%;
-
-    background:#32115c;
-    border:1px solid #a849ff;
-
-    color:#d85cff;
-
-    box-shadow:0 0 12px #8e35ff;
-}
-
-/* =========================
-   STATS
-========================= */
-
-.stats{
-    margin-top:42px;
+.topbar{
 
     display:grid;
-    grid-template-columns:repeat(3,1fr);
 
-    border:1px solid rgba(129,51,255,.65);
-    border-radius:28px;
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:10px;
+
+}
+
+
+/* wallet */
+
+.wallet{
+
+    min-height:72px;
+
+    border:
+        1px solid
+        rgba(118,57,234,.75);
+
+    border-radius:22px;
 
     background:
         linear-gradient(
             145deg,
-            rgba(17,9,42,.8),
-            rgba(4,3,20,.88)
+            rgba(22,11,54,.95),
+            rgba(5,3,18,.95)
+        );
+
+    display:flex;
+
+    align-items:center;
+
+    padding:
+        9px 10px;
+
+    gap:9px;
+
+    box-shadow:
+        0 0 22px
+        rgba(111,40,255,.16),
+
+        inset 0 0 20px
+        rgba(150,60,255,.06);
+
+}
+
+
+.wallet-icon{
+
+    width:40px;
+    height:40px;
+
+    border-radius:13px;
+
+    display:grid;
+
+    place-items:center;
+
+    color:#29e6ff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #5cdfff,
+            #667dff
+        );
+
+    color:#10102c;
+
+    font-size:22px;
+
+    box-shadow:
+        0 0 16px
+        rgba(55,210,255,.35);
+
+}
+
+
+.wallet-info{
+
+    flex:1;
+
+    min-width:0;
+
+}
+
+
+.wallet-title{
+
+    color:#22e7df;
+
+    font-size:10px;
+
+    font-weight:800;
+
+    white-space:nowrap;
+
+}
+
+
+.wallet-address{
+
+    margin-top:5px;
+
+    font-size:13px;
+
+    color:#fff;
+
+}
+
+
+.wallet-arrow{
+
+    color:#d19aff;
+
+    font-size:25px;
+
+}
+
+
+/* level */
+
+.level{
+
+    min-height:72px;
+
+    border:
+        1px solid
+        rgba(126,60,235,.8);
+
+    border-radius:22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20,9,49,.95),
+            rgba(5,3,18,.95)
+        );
+
+    padding:
+        8px 13px;
+
+    text-align:center;
+
+    box-shadow:
+        0 0 22px
+        rgba(111,40,255,.14);
+
+}
+
+
+.level-title{
+
+    font-size:20px;
+
+    font-weight:900;
+
+    color:#d89dff;
+
+    text-shadow:
+        0 0 15px
+        rgba(197,82,255,.6);
+
+}
+
+
+.level-bar{
+
+    width:100%;
+
+    height:12px;
+
+    margin-top:7px;
+
+    background:#20144b;
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+}
+
+
+.level-bar-fill{
+
+    width:34.8%;
+
+    height:100%;
+
+    border-radius:999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #842dff,
+            #db65ff
         );
 
     box-shadow:
-        0 0 25px rgba(93,27,255,.1),
-        inset 0 0 30px rgba(100,40,255,.05);
+        0 0 13px #a945ff;
 
-    overflow:hidden;
 }
 
-.stat{
-    min-height:170px;
-    padding:20px 8px;
 
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
+.level-count{
+
+    margin-top:3px;
+
+    font-size:9px;
+
+    color:#c5b9eb;
+
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.brand{
 
     text-align:center;
+
+    margin:
+        14px 0 0;
+
 }
 
-.stat + .stat{
-    border-left:1px solid rgba(111,81,188,.3);
-}
 
-.stat-icon{
-    width:52px;
-    height:52px;
+.brand-row{
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
+
+    gap:11px;
+
+}
+
+
+.brand-moon{
+
+    width:45px;
+    height:45px;
 
     border-radius:50%;
 
-    font-size:27px;
+    position:relative;
+
+    background:
+        radial-gradient(
+            circle at 30% 28%,
+            #ffffff,
+            #d66aff 28%,
+            #7130ff 63%,
+            #18004b 100%
+        );
+
+    box-shadow:
+        0 0 20px #aa42ff,
+        0 0 45px
+        rgba(138,43,255,.5);
+
+}
+
+
+.brand-moon::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:35px;
+    height:35px;
+
+    top:-3px;
+    right:-7px;
+
+    border-radius:50%;
+
+    background:#05020e;
+
+}
+
+
+.brand-name{
+
+    font-size:34px;
+
+    line-height:1;
+
+    font-weight:900;
+
+    letter-spacing:4px;
+
+    color:#fff;
+
+    text-shadow:
+        0 0 12px #ffffff66,
+        0 0 30px #a43aff99;
+
+}
+
+
+.brand-sub{
+
+    margin-top:4px;
+
+    font-size:9px;
+
+    letter-spacing:5px;
+
+    color:#aaa2d7;
+
+}
+
+
+/* =========================================================
+   HERO PLANET
+========================================================= */
+
+.hero{
+
+    position:relative;
+
+    height:345px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+
+/* glow */
+
+.hero-glow{
+
+    position:absolute;
+
+    width:315px;
+    height:315px;
+
+    border-radius:50%;
 
     background:
         radial-gradient(
             circle,
-            rgba(137,51,255,.4),
-            rgba(23,5,59,.6)
+            rgba(178,60,255,.37),
+            rgba(86,25,255,.15) 50%,
+            transparent 72%
         );
 
-    border:1px solid rgba(170,75,255,.5);
+    filter:blur(16px);
+
+}
+
+
+/* back ring */
+
+.back-ring{
+
+    position:absolute;
+
+    width:355px;
+    height:115px;
+
+    border:
+        2px solid
+        rgba(135,62,255,.45);
+
+    border-radius:50%;
+
+    transform:
+        rotate(8deg);
+
+}
+
+
+/* planet */
+
+.planet{
+
+    position:relative;
+
+    width:245px;
+    height:245px;
+
+    border-radius:50%;
+
+    background:
+
+        radial-gradient(
+            circle at 31% 27%,
+            #8850b7 0%,
+            #4b1c75 27%,
+            #1c092f 60%,
+            #05020b 100%
+        );
 
     box-shadow:
-        0 0 20px rgba(140,46,255,.35);
+
+        0 0 22px #d15cff,
+
+        0 0 60px
+        rgba(137,29,255,.78),
+
+        inset
+        -27px -24px 50px
+        rgba(0,0,0,.9);
+
 }
+
+
+/* crater texture */
+
+.planet::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:50%;
+
+    opacity:.7;
+
+    background:
+
+        radial-gradient(
+            circle at 19% 31%,
+            #0b0312 0 9px,
+            transparent 10px
+        ),
+
+        radial-gradient(
+            circle at 52% 19%,
+            #26083d 0 12px,
+            transparent 13px
+        ),
+
+        radial-gradient(
+            circle at 69% 32%,
+            #09020f 0 8px,
+            transparent 9px
+        ),
+
+        radial-gradient(
+            circle at 34% 68%,
+            #25073b 0 14px,
+            transparent 15px
+        ),
+
+        radial-gradient(
+            circle at 70% 63%,
+            #06010d 0 11px,
+            transparent 12px
+        );
+
+}
+
+
+/* outer glow */
+
+.planet::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:-6px;
+
+    border-radius:50%;
+
+    border:
+        2px solid
+        #d766ff;
+
+    box-shadow:
+
+        0 0 13px #ff6dff,
+
+        0 0 34px #8e2fff;
+
+}
+
+
+/* orbit */
+
+.orbit{
+
+    position:absolute;
+
+    z-index:4;
+
+    width:330px;
+    height:102px;
+
+    border:
+        4px solid
+        #b84dff;
+
+    border-radius:50%;
+
+    transform:
+        rotate(-13deg);
+
+    box-shadow:
+
+        0 0 10px #ff53ff,
+        0 0 32px #8129ff;
+
+}
+
+
+/* orbit highlight */
+
+.orbit::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:50%;
+
+    border-top:
+        2px solid
+        #fff;
+
+    opacity:.55;
+
+}
+
+
+/* LNR */
+
+.hero-lnr{
+
+    position:absolute;
+
+    z-index:6;
+
+    font-size:81px;
+
+    font-weight:1000;
+
+    letter-spacing:-5px;
+
+    color:#e9d6ff;
+
+    transform:
+        skew(-7deg);
+
+    text-shadow:
+
+        2px 2px 0 #7c24c2,
+
+        4px 4px 0 #4a117d,
+
+        0 0 10px #ffffff,
+
+        0 0 25px #d263ff,
+
+        0 0 55px #7625ff;
+
+}
+
+
+/* =========================================================
+   TOTAL BALANCE
+========================================================= */
+
+.total{
+
+    text-align:center;
+
+    margin-top:-4px;
+
+}
+
+
+.total-title{
+
+    font-size:21px;
+
+    color:#c5bce9;
+
+    letter-spacing:2px;
+
+}
+
+
+.total-number{
+
+    margin-top:4px;
+
+    font-size:52px;
+
+    line-height:1;
+
+    font-weight:900;
+
+    color:#fff;
+
+    text-shadow:
+
+        0 0 10px #ffffff,
+
+        0 0 28px
+        rgba(177,72,255,.75);
+
+}
+
+
+.total-token{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    margin-top:7px;
+
+    color:#ffd867;
+
+    font-size:19px;
+
+    font-weight:900;
+
+}
+
+
+.token-icon{
+
+    width:28px;
+    height:28px;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:50%;
+
+    background:#35125e;
+
+    border:
+        1px solid
+        #b04fff;
+
+    color:#d968ff;
+
+    box-shadow:
+        0 0 12px
+        rgba(162,66,255,.45);
+
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats{
+
+    margin-top:30px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    border:
+        1px solid
+        rgba(101,52,210,.7);
+
+    border-radius:25px;
+
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(10,5,29,.93),
+            rgba(3,2,12,.96)
+        );
+
+    box-shadow:
+        0 0 25px
+        rgba(92,31,220,.12);
+
+}
+
+
+.stat{
+
+    min-height:140px;
+
+    padding:
+        15px 5px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+}
+
+
+.stat + .stat{
+
+    border-left:
+        1px solid
+        rgba(55,32,90,.8);
+
+}
+
+
+.stat-icon{
+
+    width:46px;
+    height:46px;
+
+    border-radius:50%;
+
+    display:grid;
+
+    place-items:center;
+
+    font-size:24px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(137,48,255,.45),
+            rgba(13,4,33,.9)
+        );
+
+    border:
+        1px solid
+        rgba(177,76,255,.55);
+
+    box-shadow:
+        0 0 16px
+        rgba(128,43,255,.32);
+
+}
+
 
 .stat:nth-child(2) .stat-icon{
-    color:#ffd85a;
+
+    color:#ffd85b;
+
 }
+
 
 .stat:nth-child(3) .stat-icon{
-    color:#cf64ff;
+
+    color:#d05cff;
+
 }
+
 
 .stat-name{
-    margin-top:13px;
-    color:#aaa5dc;
-    font-size:14px;
+
+    margin-top:10px;
+
+    font-size:10px;
+
+    color:#aea8dc;
+
 }
+
 
 .stat-value{
-    margin-top:8px;
-    font-size:31px;
-    font-weight:850;
-    color:#f8f5ff;
+
+    margin-top:7px;
+
+    font-size:23px;
+
+    font-weight:900;
+
 }
+
 
 .stat:nth-child(2) .stat-value{
-    color:#ffd85a;
+
+    color:#ffd65c;
+
 }
+
 
 .stat-unit{
-    font-size:14px;
-    color:#b5a9e7;
+
     margin-top:2px;
+
+    font-size:10px;
+
+    color:#aaa4d2;
+
 }
 
-/* =========================
+
+/* =========================================================
    CLAIM
-========================= */
+========================================================= */
+
+.claim-wrap{
+
+    margin-top:27px;
+
+}
+
 
 .claim{
-    margin:40px 10px 0;
 
-    height:105px;
+    position:relative;
 
-    border-radius:55px;
+    width:100%;
 
-    border:2px solid #a938ff;
+    height:72px;
+
+    border-radius:40px;
+
+    border:
+        2px solid
+        #ae46ff;
 
     background:
         linear-gradient(
             100deg,
-            #3510b7,
-            #8b26ff 50%,
-            #3915b8
+            #3a12a7,
+            #8424ef 48%,
+            #4315ac
         );
 
-    box-shadow:
-        0 0 15px #8b27ff,
-        0 0 40px rgba(147,38,255,.55),
-        inset 0 0 25px rgba(255,255,255,.2);
+    color:#fff;
 
     display:flex;
+
     align-items:center;
 
-    position:relative;
+    box-shadow:
+
+        0 0 13px #8c2aff,
+
+        0 0 35px
+        rgba(143,38,255,.48),
+
+        inset 0 0 22px
+        rgba(255,255,255,.13);
 
     overflow:hidden;
 
-    cursor:pointer;
-
-    transition:.2s;
 }
 
-.claim:active{
-    transform:scale(.98);
-}
 
-.claim::before{
+.claim::after{
+
     content:"";
+
     position:absolute;
+
     top:0;
-    left:-100%;
-    width:70%;
+
+    left:-70%;
+
+    width:55%;
+
     height:100%;
 
     background:
@@ -656,659 +1072,923 @@ body{
             transparent
         );
 
-    transform:skewX(-20deg);
-    animation:shine 4s infinite;
+    transform:
+        skewX(-20deg);
+
+    animation:
+        claimShine 4s infinite;
+
 }
 
-@keyframes shine{
-    0%{left:-100%}
-    35%,100%{left:150%}
+
+@keyframes claimShine{
+
+    0%,30%{
+        left:-70%;
+    }
+
+    60%,100%{
+        left:150%;
+    }
+
 }
+
 
 .claim-icon{
-    margin-left:25px;
 
-    width:65px;
-    height:65px;
+    margin-left:16px;
+
+    width:49px;
+    height:49px;
 
     border-radius:50%;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display:grid;
 
-    font-size:32px;
+    place-items:center;
 
-    border:1px solid rgba(255,255,255,.45);
-    background:rgba(20,0,60,.25);
+    border:
+        1px solid
+        rgba(255,255,255,.4);
 
-    box-shadow:
-        0 0 20px rgba(255,255,255,.15);
+    background:
+        rgba(35,0,90,.3);
+
+    font-size:26px;
+
 }
+
 
 .claim-text{
+
     flex:1;
+
     text-align:center;
 
-    font-size:34px;
+    font-size:27px;
+
     font-weight:900;
+
     letter-spacing:2px;
 
-    text-shadow:
-        0 0 12px #fff;
 }
+
 
 .claim-arrow{
-    margin-right:27px;
-    font-size:40px;
-    color:#d6a9ff;
+
+    margin-right:18px;
+
+    font-size:35px;
+
+    color:#dfb4ff;
+
 }
 
-/* =========================
-   ACTIVE MINING
-========================= */
 
-.mining-status{
-    margin:38px auto 25px;
+/* =========================================================
+   AUTO STATUS
+========================================================= */
+
+.auto{
+
+    margin:18px 0 22px;
 
     display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:14px;
 
-    color:#27eaff;
-    font-size:15px;
-    letter-spacing:1px;
+    align-items:center;
+
+    justify-content:center;
+
+    gap:9px;
+
+    color:#25e8ff;
+
+    font-size:11px;
+
+    letter-spacing:.5px;
+
 }
 
-.status-line{
-    width:140px;
+
+.auto::before,
+.auto::after{
+
+    content:"";
+
+    width:95px;
+
     height:1px;
 
     background:
         linear-gradient(
             90deg,
             transparent,
-            #36ddff
+            #25e8ff
         );
+
 }
 
-.status-line.right{
+
+.auto::after{
+
     transform:rotate(180deg);
+
 }
 
-.status-dot{
-    width:15px;
-    height:15px;
+
+.auto-dot{
+
+    width:10px;
+    height:10px;
+
     border-radius:50%;
 
-    background:#25eaff;
+    background:#25e8ff;
 
     box-shadow:
-        0 0 8px #25eaff,
-        0 0 20px #25eaff;
+        0 0 10px #25e8ff;
 
-    animation:pulse 1.5s infinite;
 }
 
-@keyframes pulse{
-    50%{
-        transform:scale(1.3);
-        opacity:.6;
-    }
-}
 
-/* =========================
-   LUNARO INFO CARD
-========================= */
+/* =========================================================
+   INFO
+========================================================= */
 
 .info-card{
-    min-height:108px;
 
-    border-radius:28px;
+    min-height:90px;
 
-    border:1px solid rgba(106,44,255,.65);
+    border-radius:22px;
+
+    border:
+        1px solid
+        rgba(88,42,172,.7);
 
     background:
+
         radial-gradient(
             circle at 75% 50%,
-            rgba(94,20,255,.25),
-            transparent 35%
+            rgba(106,27,255,.22),
+            transparent 32%
         ),
+
         linear-gradient(
             110deg,
-            rgba(11,5,31,.92),
-            rgba(4,3,20,.8)
+            rgba(8,3,24,.96),
+            rgba(6,3,21,.88)
         );
 
     display:flex;
+
     align-items:center;
 
-    padding:18px 25px;
+    padding:
+        13px 17px;
 
     position:relative;
+
     overflow:hidden;
+
 }
 
-.info-card::after{
-    content:"";
-    position:absolute;
-    width:180px;
-    height:70px;
-    right:60px;
-    bottom:-20px;
-
-    background:#38117a;
-
-    filter:blur(25px);
-    opacity:.7;
-}
 
 .info-logo{
-    width:65px;
-    height:65px;
+
+    width:55px;
+    height:55px;
 
     border-radius:50%;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display:grid;
 
-    border:1px solid #b84dff;
+    place-items:center;
 
-    color:#e2a2ff;
-    font-size:23px;
+    border:
+        1px solid
+        #ba5aff;
+
+    color:#e4acff;
+
     font-weight:900;
 
+    font-size:18px;
+
     box-shadow:
-        0 0 20px rgba(174,60,255,.45);
+        0 0 18px
+        rgba(188,76,255,.4);
+
 }
+
 
 .info-text{
-    margin-left:20px;
+
+    margin-left:13px;
+
 }
+
 
 .info-title{
-    font-size:22px;
-    font-weight:800;
+
+    font-size:18px;
+
+    font-weight:900;
+
 }
+
 
 .info-sub{
-    color:#8d75d0;
-    margin-top:4px;
-    font-size:13px;
+
+    margin-top:3px;
+
+    color:#8f79d6;
+
+    font-size:10px;
+
 }
 
-.info-right{
+
+.future{
+
     margin-left:auto;
-    color:#a864ff;
-    font-size:13px;
+
+    color:#a56aff;
+
+    font-size:10px;
+
     text-align:right;
+
 }
 
-/* =========================
+
+/* =========================================================
    BOTTOM NAV
-========================= */
+========================================================= */
 
 .bottom-nav{
+
     position:fixed;
 
-    z-index:100;
+    z-index:20;
 
     left:50%;
+
     bottom:0;
 
-    transform:translateX(-50%);
+    transform:
+        translateX(-50%);
 
     width:100%;
+
     max-width:620px;
 
-    height:112px;
+    height:92px;
 
     display:grid;
-    grid-template-columns:repeat(5,1fr);
 
-    padding:12px 10px 17px;
+    grid-template-columns:
+        repeat(5,1fr);
+
+    padding:
+        8px
+        8px
+        14px;
 
     background:
-        linear-gradient(
-            180deg,
-            rgba(5,3,21,.72),
-            #02010b 70%
-        );
+        rgba(3,2,12,.97);
 
-    border-top:1px solid rgba(101,54,200,.25);
+    border-top:
+        1px solid
+        rgba(77,42,130,.35);
 
-    backdrop-filter:blur(22px);
+    backdrop-filter:
+        blur(18px);
+
 }
 
+
 .nav-item{
+
     position:relative;
 
     display:flex;
+
     flex-direction:column;
+
     align-items:center;
+
     justify-content:center;
 
-    gap:8px;
+    gap:5px;
 
-    color:#aaa6dc;
+    color:#a5a1d6;
 
-    cursor:pointer;
+    background:none;
 
-    transition:.2s;
+    font-size:11px;
+
 }
+
 
 .nav-icon{
-    font-size:31px;
-    filter:drop-shadow(0 0 5px rgba(144,75,255,.4));
+
+    font-size:26px;
+
 }
 
-.nav-label{
-    font-size:15px;
-}
 
 .nav-item.active{
-    color:#eee4ff;
+
+    color:#f4eaff;
+
+    text-shadow:
+        0 0 10px #ad50ff;
+
 }
+
 
 .nav-item.active .nav-icon{
-    color:#c75aff;
+
+    color:#c95bff;
 
     filter:
-        drop-shadow(0 0 7px #b63cff)
-        drop-shadow(0 0 18px #7b20ff);
+        drop-shadow(
+            0 0 8px #bc43ff
+        );
+
 }
 
+
 .nav-item.active::after{
+
     content:"";
 
     position:absolute;
 
     bottom:0;
 
-    width:108px;
-    max-width:85%;
+    width:75%;
 
     height:3px;
 
     border-radius:10px;
 
-    background:#bb45ff;
+    background:#c04bff;
 
     box-shadow:
-        0 0 10px #c13dff,
-        0 0 22px #8d27ff;
+        0 0 10px #c04bff,
+        0 0 20px #8e2cff;
+
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
 
-@media(max-width:520px){
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:430px){
 
     .screen{
-        padding-left:12px;
-        padding-right:12px;
-        padding-top:15px;
+
+        padding:
+            13px
+            11px
+            115px;
+
     }
 
-    .wallet-box{
-        min-width:0;
-        width:48%;
-        height:70px;
-        border-radius:22px;
+
+    .wallet,
+    .level{
+
+        min-height:63px;
+
     }
+
 
     .wallet-icon{
-        width:38px;
-        height:38px;
-        font-size:21px;
+
+        width:34px;
+        height:34px;
+
+        font-size:18px;
+
     }
+
 
     .wallet-title{
-        font-size:11px;
+
+        font-size:8px;
+
     }
+
 
     .wallet-address{
-        font-size:14px;
+
+        font-size:11px;
+
     }
 
-    .level-box{
-        width:48%;
-        height:70px;
-        border-radius:22px;
-        padding:7px 12px;
-    }
 
     .level-title{
-        font-size:19px;
+
+        font-size:17px;
+
     }
+
 
     .brand{
-        margin-top:20px;
+
+        margin-top:16px;
+
     }
+
+
+    .brand-moon{
+
+        width:41px;
+        height:41px;
+
+    }
+
 
     .brand-name{
-        font-size:31px;
+
+        font-size:28px;
+
         letter-spacing:4px;
+
     }
 
-    .moon{
-        width:45px;
-        height:45px;
-    }
 
     .brand-sub{
-        font-size:9px;
-        letter-spacing:4px;
+
+        font-size:7px;
+
     }
+
 
     .hero{
-        height:350px;
+
+        height:295px;
+
     }
+
 
     .planet{
-        width:285px;
-        height:285px;
+
+        width:210px;
+        height:210px;
+
     }
+
 
     .hero-glow{
-        width:320px;
-        height:320px;
+
+        width:280px;
+        height:280px;
+
     }
+
 
     .orbit{
-        width:365px;
-        height:115px;
+
+        width:285px;
+        height:89px;
+
     }
 
-    .lnr{
-        font-size:83px;
+
+    .back-ring{
+
+        width:320px;
+        height:105px;
+
     }
 
-    .balance-title{
-        font-size:21px;
+
+    .hero-lnr{
+
+        font-size:68px;
+
     }
 
-    .balance-value{
-        font-size:53px;
+
+    .total-title{
+
+        font-size:18px;
+
     }
 
-    .balance-token{
-        font-size:20px;
+
+    .total-number{
+
+        font-size:45px;
+
     }
+
+
+    .total-token{
+
+        font-size:18px;
+
+    }
+
 
     .stats{
-        margin-top:30px;
+
+        margin-top:25px;
+
+        border-radius:20px;
+
     }
+
 
     .stat{
-        min-height:140px;
-        padding:12px 4px;
+
+        min-height:122px;
+
     }
+
 
     .stat-icon{
-        width:44px;
-        height:44px;
-        font-size:22px;
+
+        width:40px;
+        height:40px;
+
+        font-size:20px;
+
     }
+
 
     .stat-name{
-        font-size:11px;
+
+        font-size:8px;
+
     }
+
 
     .stat-value{
-        font-size:23px;
+
+        font-size:19px;
+
     }
+
 
     .stat-unit{
-        font-size:12px;
+
+        font-size:9px;
+
     }
+
 
     .claim{
-        height:86px;
-        margin-top:30px;
+
+        height:65px;
+
     }
+
 
     .claim-icon{
-        width:53px;
-        height:53px;
-        margin-left:15px;
+
+        width:43px;
+        height:43px;
+
+        margin-left:11px;
+
+        font-size:22px;
+
     }
+
 
     .claim-text{
-        font-size:27px;
+
+        font-size:23px;
+
     }
+
 
     .claim-arrow{
-        margin-right:17px;
-        font-size:31px;
+
+        margin-right:12px;
+
+        font-size:29px;
+
     }
+
+
+    .auto{
+
+        font-size:9px;
+
+    }
+
+
+    .auto::before,
+    .auto::after{
+
+        width:70px;
+
+    }
+
+
+    .future{
+
+        display:none;
+
+    }
+
 
     .info-card{
-        min-height:90px;
-        padding:14px;
+
+        min-height:75px;
+
     }
+
 
     .info-logo{
-        width:54px;
-        height:54px;
-        font-size:19px;
+
+        width:48px;
+        height:48px;
+
     }
 
-    .info-text{
-        margin-left:13px;
-    }
 
     .info-title{
-        font-size:18px;
+
+        font-size:16px;
+
     }
 
-    .info-sub{
-        font-size:11px;
+
+    .nav{
+
+        height:82px;
+
     }
 
-    .info-right{
-        display:none;
-    }
 
     .nav-icon{
-        font-size:26px;
+
+        font-size:23px;
+
     }
 
-    .nav-label{
-        font-size:12px;
-    }
-
-    .bottom-nav{
-        height:96px;
-    }
 }
+
 </style>
+
 </head>
 
 <body>
 
+
 <div class="app">
+
 
 <main class="screen">
 
-    <!-- TOP -->
-    <div class="topbar">
 
-        <div class="wallet-box">
+<!-- ======================================================
+     TOP
+======================================================= -->
 
-            <div class="wallet-icon">▣</div>
+<div class="topbar">
 
-            <div class="wallet-info">
-                <div class="wallet-title">
-                    ● Wallet Connected
-                </div>
 
-                <div class="wallet-address">
-                    UQCN...iD7
-                </div>
+    <!-- WALLET -->
+
+    <div class="wallet">
+
+        <div class="wallet-icon">
+            ◈
+        </div>
+
+        <div class="wallet-info">
+
+            <div class="wallet-title">
+                ● Wallet Connected
             </div>
 
-            <div class="wallet-arrow">›</div>
+            <div class="wallet-address">
+                UQCN...iD7
+            </div>
 
         </div>
 
-        <div class="level-box">
+        <div class="wallet-arrow">
+            ›
+        </div>
 
-            <div class="level-title">
-                LVL 3
+    </div>
+
+
+    <!-- LEVEL -->
+
+    <div class="level">
+
+        <div class="level-title">
+            LVL 3
+        </div>
+
+        <div class="level-bar">
+
+            <div class="level-bar-fill"></div>
+
+        </div>
+
+        <div class="level-count">
+            348 / 1,000
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ======================================================
+     BRAND
+======================================================= -->
+
+<div class="brand">
+
+    <div class="brand-row">
+
+        <div class="brand-moon"></div>
+
+        <div>
+
+            <div class="brand-name">
+                LUNARO
             </div>
 
-            <div class="level-progress">
-                <span></span>
-            </div>
-
-            <div class="level-number">
-                348 / 1,000
+            <div class="brand-sub">
+                AUTOMATIC MINING
             </div>
 
         </div>
 
     </div>
 
+</div>
 
-    <!-- BRAND -->
-    <div class="brand">
 
-        <div class="brand-logo">
 
-            <div class="moon"></div>
+<!-- ======================================================
+     HERO
+======================================================= -->
 
-            <div>
-                <div class="brand-name">
-                    LUNARO
-                </div>
+<section class="hero">
 
-                <div class="brand-sub">
-                    AUTOMATIC MINING
-                </div>
-            </div>
+    <div class="hero-glow"></div>
 
+    <div class="back-ring"></div>
+
+    <div class="planet"></div>
+
+    <div class="orbit"></div>
+
+    <div class="hero-lnr">
+        LNR
+    </div>
+
+</section>
+
+
+
+<!-- ======================================================
+     TOTAL BALANCE
+======================================================= -->
+
+<section class="total">
+
+    <div class="total-title">
+        TOTAL BALANCE ⓘ
+    </div>
+
+    <div
+        id="totalBalance"
+        class="total-number">
+        25,000.00
+    </div>
+
+    <div class="total-token">
+
+        <span class="token-icon">
+            L
+        </span>
+
+        LNR
+
+    </div>
+
+</section>
+
+
+
+<!-- ======================================================
+     STATS
+======================================================= -->
+
+<section class="stats">
+
+
+    <!-- WALLET -->
+
+    <div class="stat">
+
+        <div class="stat-icon">
+            ◈
+        </div>
+
+        <div class="stat-name">
+            WALLET BALANCE
+        </div>
+
+        <div
+            id="walletBalance"
+            class="stat-value">
+            25,000.00
+        </div>
+
+        <div class="stat-unit">
+            LNR
         </div>
 
     </div>
 
 
-    <!-- PLANET -->
-    <section class="hero">
+    <!-- MINED -->
 
-        <div class="hero-glow"></div>
+    <div class="stat">
 
-        <div class="planet"></div>
+        <div class="stat-icon">
+            ⛏
+        </div>
 
-        <div class="orbit"></div>
+        <div class="stat-name">
+            MINED
+            <span style="color:#ffd45a">
+                (NOT CLAIMED)
+            </span>
+        </div>
 
-        <div class="lnr">
+        <div
+            id="minedBalance"
+            class="stat-value">
+            458.72
+        </div>
+
+        <div class="stat-unit">
             LNR
         </div>
 
-    </section>
+    </div>
 
 
-    <!-- BALANCE -->
-    <section class="balance">
+    <!-- SPEED -->
 
-        <div class="balance-title">
-            TOTAL BALANCE <span>ⓘ</span>
+    <div class="stat">
+
+        <div class="stat-icon">
+            ϟ
         </div>
 
-        <div class="balance-value" id="totalBalance">
-            25,458.72
+        <div class="stat-name">
+            MINING SPEED
         </div>
 
-        <div class="balance-token">
-
-            <div class="token-icon">
-                L
-            </div>
-
-            LNR
-
+        <div
+            id="speed"
+            class="stat-value">
+            0.70
         </div>
 
-    </section>
-
-
-    <!-- STATS -->
-    <section class="stats">
-
-        <div class="stat">
-
-            <div class="stat-icon">
-                ▣
-            </div>
-
-            <div class="stat-name">
-                WALLET BALANCE
-            </div>
-
-            <div class="stat-value">
-                25,000.00
-            </div>
-
-            <div class="stat-unit">
-                LNR
-            </div>
-
+        <div class="stat-unit">
+            LNR / hour
         </div>
 
-
-        <div class="stat">
-
-            <div class="stat-icon">
-                ⛏
-            </div>
-
-            <div class="stat-name">
-                MINED <span style="color:#ffd85a">(NOT CLAIMED)</span>
-            </div>
-
-            <div class="stat-value" id="mined">
-                458.72
-            </div>
-
-            <div class="stat-unit">
-                LNR
-            </div>
-
-        </div>
+    </div>
 
 
-        <div class="stat">
-
-            <div class="stat-icon">
-                ⚡
-            </div>
-
-            <div class="stat-name">
-                MINING SPEED
-            </div>
-
-            <div class="stat-value">
-                0.70
-            </div>
-
-            <div class="stat-unit">
-                LNR / hour
-            </div>
-
-        </div>
-
-    </section>
+</section>
 
 
-    <!-- CLAIM -->
-    <button class="claim" id="claimButton">
+
+<!-- ======================================================
+     CLAIM
+======================================================= -->
+
+<div class="claim-wrap">
+
+    <button
+        class="claim"
+        id="claimButton">
 
         <div class="claim-icon">
-            ⚡
+            ϟ
         </div>
 
         <div class="claim-text">
@@ -1321,177 +2001,347 @@ body{
 
     </button>
 
-
-    <!-- STATUS -->
-    <div class="mining-status">
-
-        <div class="status-line"></div>
-
-        <div class="status-dot"></div>
-
-        <div>
-            AUTOMATIC MINING ACTIVE
-        </div>
-
-        <div class="status-line right"></div>
-
-    </div>
+</div>
 
 
-    <!-- INFO -->
-    <section class="info-card">
 
-        <div class="info-logo">
-            LNR
-        </div>
+<!-- ======================================================
+     AUTO MINING
+======================================================= -->
 
-        <div class="info-text">
+<div class="auto">
 
-            <div class="info-title">
-                LUNARO
-            </div>
+    <span class="auto-dot"></span>
 
-            <div class="info-sub">
-                Lunar Mining Network
-            </div>
-
-        </div>
-
-        <div class="info-right">
-            The future is yours<br>
-            ◐
-        </div>
-
-    </section>
-
-</main>
-
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-
-    <div class="nav-item active">
-        <div class="nav-icon">◐</div>
-        <div class="nav-label">Mine</div>
-    </div>
-
-    <div class="nav-item">
-        <div class="nav-icon">☑</div>
-        <div class="nav-label">Tasks</div>
-    </div>
-
-    <div class="nav-item">
-        <div class="nav-icon">⛏</div>
-        <div class="nav-label">Miners</div>
-    </div>
-
-    <div class="nav-item">
-        <div class="nav-icon">♟</div>
-        <div class="nav-label">Friends</div>
-    </div>
-
-    <div class="nav-item">
-        <div class="nav-icon">●</div>
-        <div class="nav-label">Profile</div>
-    </div>
-
-</nav>
+    AUTOMATIC MINING ACTIVE
 
 </div>
 
 
+
+<!-- ======================================================
+     LUNARO INFO
+======================================================= -->
+
+<section class="info-card">
+
+    <div class="info-logo">
+        LNR
+    </div>
+
+
+    <div class="info-text">
+
+        <div class="info-title">
+            LUNARO
+        </div>
+
+        <div class="info-sub">
+            Lunar Mining Network
+        </div>
+
+    </div>
+
+
+    <div class="future">
+        The future is yours<br>
+        ◐
+    </div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- ======================================================
+     BOTTOM NAVIGATION
+======================================================= -->
+
+<nav class="bottom-nav">
+
+
+    <button class="nav-item active">
+
+        <span class="nav-icon">
+            ◐
+        </span>
+
+        <span>
+            Mine
+        </span>
+
+    </button>
+
+
+    <button class="nav-item">
+
+        <span class="nav-icon">
+            ☑
+        </span>
+
+        <span>
+            Tasks
+        </span>
+
+    </button>
+
+
+    <button class="nav-item">
+
+        <span class="nav-icon">
+            ⛏
+        </span>
+
+        <span>
+            Miners
+        </span>
+
+    </button>
+
+
+    <button class="nav-item">
+
+        <span class="nav-icon">
+            ♟
+        </span>
+
+        <span>
+            Friends
+        </span>
+
+    </button>
+
+
+    <button class="nav-item">
+
+        <span class="nav-icon">
+            ●
+        </span>
+
+        <span>
+            Profile
+        </span>
+
+    </button>
+
+
+</nav>
+
+
+</div>
+
+
+
 <script>
 
-/* =========================
-   DEMO AUTOMATIC MINING
-========================= */
+/* =========================================================
+   LUNARO DEMO ENGINE
+========================================================= */
+
+
+/* ---------------------------------------------------------
+   INITIAL DATA
+--------------------------------------------------------- */
 
 let walletBalance = 25000;
-let mined = 458.72;
+
+let minedBalance = 458.72;
+
+
+/*
+    0.70 LNR per hour
+*/
 
 const miningSpeed = 0.70;
 
-/*
-   سرعت فعلی:
-   0.70 LNR در ساعت
-*/
+let lastMiningUpdate = Date.now();
 
-let lastTime = Date.now();
+
+/* ---------------------------------------------------------
+   FORMAT
+--------------------------------------------------------- */
+
+function formatNumber(value){
+
+    return Number(value).toLocaleString(
+        "en-US",
+        {
+            minimumFractionDigits:2,
+            maximumFractionDigits:4
+        }
+    );
+
+}
+
+
+/* ---------------------------------------------------------
+   UPDATE SCREEN
+--------------------------------------------------------- */
+
+function updateScreen(){
+
+    /*
+       IMPORTANT:
+
+       Mined balance is NOT included
+       in Total Balance until Claim.
+    */
+
+    document.getElementById(
+        "walletBalance"
+    ).textContent =
+        formatNumber(walletBalance);
+
+
+    document.getElementById(
+        "minedBalance"
+    ).textContent =
+        formatNumber(minedBalance);
+
+
+    document.getElementById(
+        "totalBalance"
+    ).textContent =
+        formatNumber(walletBalance);
+
+
+    document.getElementById(
+        "speed"
+    ).textContent =
+        miningSpeed.toFixed(2);
+
+}
+
+
+/* ---------------------------------------------------------
+   AUTOMATIC MINING
+--------------------------------------------------------- */
 
 function updateMining(){
 
     const now = Date.now();
 
-    const elapsedHours =
-        (now - lastTime) / 3600000;
+    const elapsed =
+        (now - lastMiningUpdate)
+        / 3600000;
 
-    mined += miningSpeed * elapsedHours;
 
-    lastTime = now;
+    if(elapsed > 0){
 
-    document.getElementById("mined").textContent =
-        mined.toLocaleString(
-            "en-US",
-            {
-                minimumFractionDigits:2,
-                maximumFractionDigits:2
-            }
-        );
+        minedBalance +=
+            miningSpeed * elapsed;
+
+    }
+
+
+    lastMiningUpdate = now;
+
+    updateScreen();
+
 }
 
-setInterval(updateMining,1000);
 
-
-/* =========================
+/* ---------------------------------------------------------
    CLAIM
-========================= */
+--------------------------------------------------------- */
 
 document
 .getElementById("claimButton")
-.addEventListener("click",function(){
+.addEventListener(
+    "click",
+    function(){
 
-    if(mined <= 0){
-        return;
+        updateMining();
+
+
+        if(minedBalance <= 0){
+
+            return;
+
+        }
+
+
+        /*
+            CLAIM LOGIC
+
+            mined -> wallet
+
+            after claim:
+
+            Wallet Balance increases
+            Mined becomes zero
+            Total increases
+        */
+
+        walletBalance += minedBalance;
+
+        minedBalance = 0;
+
+        lastMiningUpdate = Date.now();
+
+
+        updateScreen();
+
     }
-
-    walletBalance += mined;
-
-    mined = 0;
-
-    document.getElementById("mined").textContent =
-        "0.00";
-
-    document.getElementById("totalBalance").textContent =
-        walletBalance.toLocaleString(
-            "en-US",
-            {
-                minimumFractionDigits:2,
-                maximumFractionDigits:2
-            }
-        );
-
-});
+);
 
 
-/* =========================
-   NAVIGATION VISUAL
-========================= */
+/* ---------------------------------------------------------
+   NAVIGATION
+--------------------------------------------------------- */
 
 document
 .querySelectorAll(".nav-item")
-.forEach(item=>{
+.forEach(
+    function(item){
 
-    item.addEventListener("click",()=>{
+        item.addEventListener(
+            "click",
+            function(){
 
-        document
-        .querySelectorAll(".nav-item")
-        .forEach(x=>x.classList.remove("active"));
+                document
+                .querySelectorAll(
+                    ".nav-item"
+                )
+                .forEach(
+                    function(nav){
 
-        item.classList.add("active");
+                        nav.classList.remove(
+                            "active"
+                        );
 
-    });
+                    }
+                );
 
-});
+
+                item.classList.add(
+                    "active"
+                );
+
+            }
+        );
+
+    }
+);
+
+
+/* ---------------------------------------------------------
+   INITIAL
+--------------------------------------------------------- */
+
+updateScreen();
+
+
+/* ---------------------------------------------------------
+   LIVE MINING
+--------------------------------------------------------- */
+
+setInterval(
+    updateMining,
+    1000
+);
 
 </script>
 
