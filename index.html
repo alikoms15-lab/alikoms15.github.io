@@ -2,1251 +2,532 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<meta name="theme-color" content="#05020f">
-<title>LUNARO — Automatic Mining</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUNARO — LNR</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 *{
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
-}
-
-html,body{
     margin:0;
     padding:0;
-    width:100%;
-    min-height:100%;
-    background:#03020b;
-    color:white;
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#05060b;
+    --card:rgba(16,18,30,.72);
+    --card2:rgba(21,24,40,.82);
+    --line:rgba(255,255,255,.08);
+    --text:#fff;
+    --muted:#8f95a8;
+    --blue:#637cff;
+    --purple:#9b5cff;
+    --cyan:#42d9ff;
+    --green:#62e6a6;
 }
 
 body{
+    font-family:Inter,Arial,sans-serif;
+    background:
+        radial-gradient(circle at 50% -10%,rgba(98,75,255,.25),transparent 35%),
+        radial-gradient(circle at 0% 50%,rgba(50,130,255,.08),transparent 30%),
+        #05060b;
+    color:var(--text);
+    min-height:100vh;
     overflow-x:hidden;
 }
 
-button{
-    font-family:inherit;
+/* BACKGROUND */
+
+.stars{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.45;
+    background-image:
+        radial-gradient(#fff 1px,transparent 1px),
+        radial-gradient(#fff 1px,transparent 1px);
+    background-size:80px 80px,130px 130px;
+    background-position:0 0,40px 70px;
 }
 
-/* =========================
-   MAIN SPACE
-========================= */
+/* APP */
 
 .app{
-    position:relative;
     width:100%;
     max-width:520px;
     min-height:100vh;
     margin:auto;
-    overflow:hidden;
-    background:
-        radial-gradient(circle at 50% 25%,
-            rgba(104,24,255,.35) 0%,
-            rgba(50,8,130,.22) 18%,
-            transparent 43%),
-        radial-gradient(circle at 15% 40%,
-            rgba(77,18,180,.22),
-            transparent 35%),
-        radial-gradient(circle at 90% 50%,
-            rgba(110,20,255,.2),
-            transparent 35%),
-        linear-gradient(
-            180deg,
-            #03020d 0%,
-            #07031a 32%,
-            #08021b 65%,
-            #020109 100%
-        );
-}
-
-/* stars */
-
-.app::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    opacity:.8;
-    background-image:
-        radial-gradient(circle,rgba(255,255,255,.9) 1px,transparent 1.5px),
-        radial-gradient(circle,rgba(174,94,255,.8) 1px,transparent 1.5px),
-        radial-gradient(circle,rgba(255,255,255,.55) 1px,transparent 1.5px);
-    background-size:
-        87px 91px,
-        137px 143px,
-        191px 173px;
-    background-position:
-        10px 20px,
-        40px 80px,
-        80px 30px;
-    mask-image:linear-gradient(to bottom,#fff 0%,#fff 80%,transparent 100%);
-}
-
-/* galaxy glow */
-
-.galaxy{
-    position:absolute;
-    width:700px;
-    height:420px;
-    left:50%;
-    top:250px;
-    transform:translateX(-50%);
-    background:
-        radial-gradient(
-            ellipse,
-            rgba(122,30,255,.5) 0%,
-            rgba(72,13,190,.2) 30%,
-            transparent 70%
-        );
-    filter:blur(25px);
-    pointer-events:none;
-}
-
-/* =========================
-   TOP
-========================= */
-
-.top{
+    padding:22px 18px 105px;
     position:relative;
-    z-index:10;
-    padding:28px 26px 0;
+    z-index:2;
+}
+
+/* HEADER */
+
+.header{
     display:flex;
     justify-content:space-between;
-    align-items:flex-start;
-}
-
-/* wallet */
-
-.wallet-card{
-    width:220px;
-    min-height:82px;
-    border-radius:28px;
-    border:1px solid rgba(119,55,255,.8);
-    background:
-        linear-gradient(
-            145deg,
-            rgba(17,11,52,.95),
-            rgba(8,4,26,.92)
-        );
-    box-shadow:
-        inset 0 0 20px rgba(85,26,255,.12),
-        0 0 25px rgba(79,24,255,.14);
-    padding:12px 14px;
-    display:flex;
     align-items:center;
-    gap:12px;
+    margin-bottom:24px;
 }
-
-.wallet-icon{
-    width:40px;
-    height:40px;
-    border-radius:10px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#26f4ff;
-    font-size:25px;
-    filter:drop-shadow(0 0 8px #12dfff);
-}
-
-.wallet-info{
-    flex:1;
-    min-width:0;
-}
-
-.wallet-title{
-    font-size:13px;
-    color:#19e6d6;
-    margin-bottom:7px;
-    white-space:nowrap;
-}
-
-.wallet-address{
-    font-size:17px;
-    color:#f5f3ff;
-    white-space:nowrap;
-}
-
-.wallet-arrow{
-    color:#c4aaff;
-    font-size:28px;
-}
-
-/* logo */
 
 .brand{
-    position:absolute;
-    left:50%;
-    top:38px;
-    transform:translateX(-50%);
-    text-align:center;
-    width:260px;
+    display:flex;
+    align-items:center;
+    gap:11px;
 }
 
-.brand-row{
+.logo{
+    width:43px;
+    height:43px;
+    border-radius:15px;
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:12px;
-}
-
-.moon{
-    width:47px;
-    height:47px;
-    border-radius:50%;
-    position:relative;
+    font-size:22px;
+    font-weight:800;
     background:
-        radial-gradient(circle at 35% 30%,
-        #ffffff 0%,
-        #d993ff 18%,
-        #7929ff 48%,
-        #22005c 100%);
+        linear-gradient(145deg,#151a38,#0a0d18);
+    border:1px solid rgba(130,120,255,.35);
     box-shadow:
-        0 0 13px #b44aff,
-        0 0 32px rgba(137,36,255,.7);
-}
-
-.moon::after{
-    content:"";
-    position:absolute;
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    background:#05020f;
-    top:-5px;
-    left:13px;
+        0 0 30px rgba(99,124,255,.18),
+        inset 0 0 20px rgba(130,100,255,.1);
 }
 
 .brand-name{
-    font-size:34px;
-    line-height:1;
+    font-size:19px;
     font-weight:800;
-    letter-spacing:4px;
-    color:#f8f5ff;
-    text-shadow:
-        0 0 8px rgba(255,255,255,.3),
-        0 0 20px rgba(144,67,255,.3);
+    letter-spacing:.5px;
 }
 
-.brand-sub{
-    margin-top:7px;
-    letter-spacing:6px;
-    font-size:10px;
-    color:#c8b9ed;
+.brand-name span{
+    color:#8c8fff;
 }
 
-/* level */
+.wallet-btn{
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.045);
+    color:#fff;
+    border-radius:13px;
+    padding:11px 14px;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    backdrop-filter:blur(15px);
+}
 
-.level-card{
-    width:190px;
-    min-height:82px;
-    border-radius:27px;
-    border:1px solid rgba(141,47,255,.85);
+/* BALANCE */
+
+.balance-card{
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--line);
     background:
-        linear-gradient(
-            145deg,
-            rgba(20,8,56,.96),
-            rgba(7,4,27,.94)
-        );
+        linear-gradient(145deg,rgba(24,27,49,.9),rgba(10,12,21,.8));
+    border-radius:28px;
+    padding:24px;
     box-shadow:
-        inset 0 0 20px rgba(91,25,255,.12),
-        0 0 25px rgba(113,30,255,.13);
-    padding:10px 18px;
-    text-align:center;
+        0 20px 60px rgba(0,0,0,.3),
+        inset 0 1px rgba(255,255,255,.04);
+}
+
+.balance-card:before{
+    content:"";
+    position:absolute;
+    width:190px;
+    height:190px;
+    right:-80px;
+    top:-100px;
+    border-radius:50%;
+    background:#665cff;
+    filter:blur(80px);
+    opacity:.3;
+}
+
+.balance-label{
+    color:var(--muted);
+    font-size:12px;
+    font-weight:600;
+}
+
+.balance{
+    margin-top:7px;
+    font-size:38px;
+    font-weight:800;
+    letter-spacing:-1.5px;
+}
+
+.balance span{
+    font-size:16px;
+    color:#969cff;
+    margin-left:6px;
+}
+
+.balance-bottom{
+    margin-top:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
 .level{
-    font-size:23px;
-    font-weight:800;
-    color:#d9b7ff;
-    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    color:#aeb4c7;
 }
 
-.level-bar{
-    height:14px;
-    border-radius:20px;
-    background:#1d1042;
-    overflow:hidden;
-    box-shadow:inset 0 0 8px rgba(0,0,0,.7);
+.level-badge{
+    padding:6px 9px;
+    border-radius:8px;
+    color:#aeb5ff;
+    background:rgba(110,100,255,.13);
+    border:1px solid rgba(120,110,255,.18);
 }
 
-.level-fill{
-    height:100%;
-    width:34.8%;
-    border-radius:20px;
+.speed{
+    font-size:12px;
+    color:var(--green);
+}
+
+/* MINING */
+
+.mining{
+    margin-top:18px;
+    border-radius:30px;
+    padding:28px 20px;
+    text-align:center;
+    border:1px solid rgba(255,255,255,.07);
     background:
-        linear-gradient(
-            90deg,
-            #7c1cff,
-            #df7cff,
-            #7e25ff
-        );
-    box-shadow:0 0 13px #9b39ff;
+        radial-gradient(circle at 50% 35%,rgba(91,82,255,.12),transparent 35%),
+        rgba(12,14,24,.78);
+    backdrop-filter:blur(20px);
 }
 
-.level-number{
-    margin-top:5px;
-    font-size:11px;
-    color:#ddd4f3;
+.mining-title{
+    font-size:13px;
+    color:#a0a6ba;
+    margin-bottom:12px;
 }
 
-/* =========================
-   HERO PLANET
-========================= */
-
-.hero{
+.moon-wrap{
+    height:235px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
     position:relative;
-    height:485px;
-    margin-top:75px;
 }
 
 .orbit{
     position:absolute;
-    width:520px;
-    height:155px;
-    border:2px solid rgba(198,69,255,.95);
+    width:210px;
+    height:210px;
     border-radius:50%;
-    left:50%;
-    top:185px;
-    transform:
-        translateX(-50%)
-        rotate(-13deg);
+    border:1px solid rgba(115,111,255,.18);
     box-shadow:
-        0 0 9px #b429ff,
-        0 0 24px rgba(145,36,255,.7);
-    z-index:4;
+        0 0 40px rgba(91,86,255,.08);
+    animation:rotate 14s linear infinite;
 }
 
-.orbit::after{
+.orbit:after{
     content:"";
     position:absolute;
-    inset:-8px;
-    border:1px solid rgba(126,46,255,.5);
+    width:6px;
+    height:6px;
     border-radius:50%;
-    filter:blur(3px);
-}
-
-.planet{
-    position:absolute;
-    width:350px;
-    height:350px;
+    background:#77e5ff;
+    top:17px;
     left:50%;
-    top:25px;
-    transform:translateX(-50%);
-    border-radius:50%;
-    z-index:3;
-
-    background:
-        radial-gradient(
-            circle at 38% 28%,
-            #b96aff 0%,
-            #6822a6 17%,
-            #16072b 48%,
-            #030108 78%
-        );
-
-    box-shadow:
-        inset -25px -20px 60px rgba(0,0,0,.9),
-        inset 20px 15px 45px rgba(200,80,255,.35),
-        0 0 15px #b82fff,
-        0 0 55px rgba(132,28,255,.9),
-        0 0 110px rgba(92,19,255,.55);
+    box-shadow:0 0 15px #77e5ff;
 }
 
-.planet::before{
+.moon{
+    width:145px;
+    height:145px;
+    border-radius:50%;
+    position:relative;
+    background:
+        radial-gradient(circle at 35% 28%,#b9b9ff,#6d72e8 42%,#272c78 75%,#111431);
+    box-shadow:
+        0 0 30px rgba(110,110,255,.45),
+        0 0 90px rgba(95,80,255,.18);
+    animation:pulse 3s ease-in-out infinite;
+}
+
+.moon:before,
+.moon:after{
     content:"";
     position:absolute;
-    inset:-5px;
     border-radius:50%;
-    border:3px solid rgba(225,100,255,.9);
-    box-shadow:
-        0 0 15px #c337ff,
-        0 0 35px #7e1cff;
+    background:rgba(20,23,60,.28);
 }
 
-.planet::after{
-    content:"";
-    position:absolute;
-    inset:12px;
-    border-radius:50%;
-    opacity:.65;
-    background-image:
-        radial-gradient(circle at 20% 25%,#08020f 0 7px,transparent 8px),
-        radial-gradient(circle at 65% 20%,#10021c 0 10px,transparent 11px),
-        radial-gradient(circle at 45% 68%,#020006 0 13px,transparent 14px),
-        radial-gradient(circle at 75% 55%,#1d0532 0 9px,transparent 10px),
-        radial-gradient(circle at 28% 75%,#160329 0 12px,transparent 13px);
-    filter:blur(.4px);
+.moon:before{
+    width:28px;
+    height:28px;
+    top:30px;
+    left:32px;
 }
 
-.planet-light{
-    position:absolute;
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    background:
-        radial-gradient(
-            ellipse at 40% 10%,
-            rgba(255,255,255,.45),
-            transparent 20%
-        );
-    z-index:2;
-    pointer-events:none;
+.moon:after{
+    width:18px;
+    height:18px;
+    bottom:30px;
+    right:31px;
 }
 
-/* LNR */
-
-.lnr{
-    position:absolute;
-    z-index:7;
-    left:50%;
-    top:125px;
-    transform:
-        translateX(-50%)
-        rotate(-1deg);
-    font-size:105px;
-    line-height:1;
-    font-weight:950;
-    letter-spacing:-7px;
-
-    background:
-        linear-gradient(
-            180deg,
-            #ffffff 0%,
-            #e8b8ff 22%,
-            #9a3cff 53%,
-            #49109a 100%
-        );
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-
-    -webkit-text-stroke:2px rgba(255,196,255,.65);
-
-    text-shadow:
-        3px 4px 0 #3d087d,
-        0 0 9px #e18aff,
-        0 0 24px #a326ff,
-        0 0 50px rgba(156,34,255,.9);
-
-    filter:drop-shadow(0 8px 3px rgba(0,0,0,.7));
-}
-
-.lnr::after{
-    content:"LNR";
-    position:absolute;
-    inset:0;
-    color:transparent;
-    -webkit-text-stroke:1px rgba(255,255,255,.8);
-    filter:blur(1px);
-}
-
-/* =========================
-   BALANCE
-========================= */
-
-.balance{
-    position:absolute;
-    left:0;
-    right:0;
-    top:395px;
-    text-align:center;
-    z-index:8;
-}
-
-.balance-title{
-    font-size:25px;
-    letter-spacing:3px;
-    color:#c7b9ee;
-    font-weight:500;
-}
-
-.info{
+.mining-status{
     display:inline-flex;
     align-items:center;
-    justify-content:center;
-    width:24px;
-    height:24px;
-    border:1px solid #bc8aff;
-    border-radius:50%;
-    font-size:13px;
-    margin-left:7px;
-    color:#d6b8ff;
-}
-
-.balance-number{
-    margin-top:8px;
-    font-size:66px;
-    line-height:1;
-    font-weight:800;
-    letter-spacing:1px;
-    color:#fff;
-    text-shadow:
-        0 0 8px rgba(255,255,255,.6),
-        0 0 25px rgba(155,55,255,.65);
-}
-
-.balance-unit{
-    margin-top:8px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:8px;
-    font-size:25px;
+    gap:7px;
+    padding:8px 12px;
+    border-radius:30px;
+    background:rgba(83,224,166,.07);
+    border:1px solid rgba(83,224,166,.14);
+    color:#70e6ad;
+    font-size:11px;
     font-weight:700;
-    color:#ffd879;
 }
 
-.coin{
-    width:29px;
-    height:29px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+.status-dot{
+    width:6px;
+    height:6px;
     border-radius:50%;
-    border:2px solid #c75cff;
-    color:#e6c4ff;
-    font-size:13px;
-    box-shadow:
-        0 0 9px #9f2cff,
-        inset 0 0 8px #7018ff;
+    background:#5ee7a6;
+    box-shadow:0 0 10px #5ee7a6;
 }
 
-/* =========================
-   STATS
-========================= */
+/* CLAIM */
+
+.claim-btn{
+    width:100%;
+    margin-top:18px;
+    border:none;
+    border-radius:17px;
+    padding:17px;
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+    letter-spacing:.3px;
+    cursor:pointer;
+    background:linear-gradient(100deg,#596dff,#965cff);
+    box-shadow:
+        0 12px 35px rgba(98,91,255,.25);
+    transition:.2s;
+}
+
+.claim-btn:active{
+    transform:scale(.98);
+}
+
+.claim-btn:hover{
+    filter:brightness(1.08);
+}
+
+/* STATS */
 
 .stats{
-    position:relative;
-    z-index:9;
-    margin:0 42px;
-    min-height:205px;
-    border-radius:30px;
-    border:1px solid rgba(107,41,255,.8);
-    background:
-        linear-gradient(
-            145deg,
-            rgba(15,9,42,.92),
-            rgba(5,3,21,.96)
-        );
-    box-shadow:
-        inset 0 0 30px rgba(72,19,177,.12),
-        0 0 25px rgba(68,13,175,.12);
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    overflow:hidden;
+    gap:10px;
+    margin-top:18px;
 }
 
 .stat{
-    position:relative;
+    padding:15px 10px;
     text-align:center;
-    padding:24px 7px 16px;
-}
-
-.stat:not(:last-child)::after{
-    content:"";
-    position:absolute;
-    right:0;
-    top:28px;
-    bottom:28px;
-    width:1px;
-    background:
-        linear-gradient(
-            transparent,
-            rgba(157,88,255,.65),
-            transparent
-        );
-}
-
-.stat-icon{
-    width:48px;
-    height:48px;
-    margin:0 auto 12px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:27px;
-    border-radius:50%;
-    color:#d6a2ff;
-    text-shadow:0 0 13px #a635ff;
-}
-
-.stat:nth-child(2) .stat-icon{
-    color:#ffd36c;
-    text-shadow:0 0 12px #ffb52f;
-}
-
-.stat:nth-child(3) .stat-icon{
-    color:#cf9bff;
-}
-
-.stat-label{
-    font-size:14px;
-    line-height:1.25;
-    min-height:38px;
-    color:#bdb2df;
-}
-
-.stat-label span{
-    color:#ffd96e;
+    border-radius:17px;
+    border:1px solid var(--line);
+    background:rgba(14,16,27,.72);
 }
 
 .stat-value{
-    font-size:30px;
-    font-weight:800;
-    margin-top:4px;
-    color:#f8f6ff;
-    white-space:nowrap;
-}
-
-.stat:nth-child(2) .stat-value{
-    color:#ffd96e;
-}
-
-.stat-unit{
-    margin-top:5px;
-    color:#c4b9e9;
     font-size:15px;
-}
-
-/* =========================
-   CLAIM
-========================= */
-
-.claim-wrap{
-    position:relative;
-    z-index:10;
-    margin:30px 38px 0;
-}
-
-.claim{
-    position:relative;
-    width:100%;
-    height:105px;
-    border:2px solid #a83dff;
-    border-radius:55px;
-    background:
-        linear-gradient(
-            180deg,
-            #7524ed 0%,
-            #4e13c8 48%,
-            #35108f 100%
-        );
-    box-shadow:
-        0 0 8px #c15aff,
-        0 0 25px rgba(147,29,255,.85),
-        inset 0 2px 8px rgba(255,255,255,.35),
-        inset 0 -10px 25px rgba(0,0,0,.22);
-    color:white;
-    font-size:34px;
     font-weight:800;
-    letter-spacing:2px;
+}
+
+.stat-label{
+    margin-top:5px;
+    color:#777e94;
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+/* PROGRESS */
+
+.progress-card{
+    margin-top:18px;
+    padding:19px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    background:rgba(15,17,29,.7);
+}
+
+.progress-top{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:11px;
+}
+
+.progress-top span{
+    font-size:11px;
+    color:#8f95a8;
+}
+
+.progress-top strong{
+    font-size:11px;
+}
+
+.progress{
+    width:100%;
+    height:7px;
+    border-radius:20px;
+    background:#202333;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:68%;
+    height:100%;
+    border-radius:20px;
+    background:linear-gradient(90deg,#6175ff,#a05eff);
+    box-shadow:0 0 15px rgba(100,90,255,.5);
+}
+
+/* QUICK MENU */
+
+.section-title{
+    margin:26px 3px 12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.section-title h3{
+    font-size:14px;
+}
+
+.section-title span{
+    font-size:10px;
+    color:#777d90;
+}
+
+.quick{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:11px;
+}
+
+.quick-card{
+    padding:18px;
+    border-radius:20px;
+    background:rgba(15,17,29,.72);
+    border:1px solid var(--line);
     cursor:pointer;
     transition:.2s;
 }
 
-.claim::before{
-    content:"";
-    position:absolute;
-    inset:7px;
-    border:1px solid rgba(231,180,255,.38);
-    border-radius:48px;
+.quick-card:hover{
+    transform:translateY(-2px);
+    border-color:rgba(130,120,255,.25);
 }
 
-.claim:active{
-    transform:scale(.98);
-}
-
-.claim-icon{
-    position:absolute;
-    left:45px;
-    top:50%;
-    transform:translateY(-50%);
-    width:58px;
-    height:58px;
+.icon{
+    width:36px;
+    height:36px;
+    border-radius:12px;
     display:flex;
     align-items:center;
     justify-content:center;
-    border-radius:50%;
-    border:1px solid rgba(218,150,255,.8);
-    font-size:28px;
-    color:white;
-    text-shadow:0 0 15px white;
+    background:rgba(99,112,255,.11);
+    margin-bottom:12px;
+    font-size:17px;
 }
 
-.claim-arrow{
-    position:absolute;
-    right:55px;
-    top:50%;
-    transform:translateY(-50%);
-    color:#cfadff;
-    font-size:45px;
-    font-weight:300;
-}
-
-/* =========================
-   ACTIVE
-========================= */
-
-.active{
-    position:relative;
-    z-index:9;
-    margin:25px 0 18px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:14px;
-    color:#48e7ef;
-    font-size:14px;
-    letter-spacing:.6px;
-}
-
-.active::before,
-.active::after{
-    content:"";
-    width:105px;
-    height:1px;
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(66,211,255,.8)
-        );
-}
-
-.active::after{
-    background:
-        linear-gradient(
-            90deg,
-            rgba(66,211,255,.8),
-            transparent
-        );
-}
-
-.active-dot{
-    width:15px;
-    height:15px;
-    border-radius:50%;
-    background:#19e5d4;
-    box-shadow:0 0 14px #14e8dc;
-}
-
-/* =========================
-   LUNARO BANNER
-========================= */
-
-.banner{
-    position:relative;
-    z-index:8;
-    margin:0 38px 25px;
-    height:105px;
-    border-radius:25px;
-    border:1px solid rgba(91,39,230,.75);
-    overflow:hidden;
-    background:
-        radial-gradient(
-            ellipse at 65% 100%,
-            rgba(83,16,190,.65),
-            transparent 55%
-        ),
-        linear-gradient(
-            180deg,
-            rgba(15,7,42,.96),
-            rgba(5,3,21,.98)
-        );
-}
-
-.banner::after{
-    content:"";
-    position:absolute;
-    width:230px;
-    height:100px;
-    right:100px;
-    bottom:-60px;
-    background:
-        linear-gradient(
-            135deg,
-            transparent 30%,
-            rgba(88,25,199,.7) 31%,
-            rgba(30,5,75,.9) 55%,
-            transparent 56%
-        );
-    transform:skewX(-20deg);
-}
-
-.banner-logo{
-    position:absolute;
-    left:20px;
-    top:50%;
-    transform:translateY(-50%);
-    width:65px;
-    height:65px;
-    border-radius:50%;
-    border:1px solid #a849ff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#d89aff;
-    font-size:20px;
-    font-weight:800;
-    box-shadow:
-        0 0 18px rgba(161,52,255,.6),
-        inset 0 0 15px rgba(123,24,255,.25);
-}
-
-.banner-text{
-    position:absolute;
-    left:105px;
-    top:27px;
-}
-
-.banner-title{
-    font-size:20px;
-    font-weight:800;
-}
-
-.banner-sub{
-    margin-top:5px;
-    color:#a894d8;
-    font-size:13px;
-}
-
-.banner-right{
-    position:absolute;
-    right:20px;
-    top:50%;
-    transform:translateY(-50%);
-    color:#a867ff;
+.quick-card h4{
     font-size:12px;
-    z-index:3;
+    margin-bottom:5px;
 }
 
-.banner-moon{
-    font-size:25px;
-    margin-left:8px;
+.quick-card p{
+    font-size:10px;
+    color:#777e92;
 }
 
-/* =========================
-   BOTTOM NAV
-========================= */
+/* NAV */
 
-.nav{
-    position:relative;
-    z-index:20;
-    min-height:145px;
-    border-top:1px solid rgba(96,47,220,.7);
-    border-radius:40px 40px 0 0;
-    background:
-        linear-gradient(
-            180deg,
-            rgba(9,5,30,.96),
-            rgba(3,2,13,1)
-        );
-    box-shadow:
-        0 -10px 35px rgba(71,19,177,.1);
+.bottom-nav{
+    position:fixed;
+    bottom:12px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(485px,calc(100% - 24px));
+    padding:10px;
+    border:1px solid rgba(255,255,255,.09);
+    background:rgba(10,12,20,.84);
+    backdrop-filter:blur(22px);
+    border-radius:23px;
     display:grid;
-    grid-template-columns:repeat(5,1fr);
-    padding:18px 10px 20px;
+    grid-template-columns:repeat(4,1fr);
+    z-index:10;
+    box-shadow:0 15px 50px rgba(0,0,0,.45);
 }
 
 .nav-item{
-    border:0;
-    background:none;
-    color:#b5aae2;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    font-size:15px;
+    text-align:center;
+    color:#6e7488;
+    font-size:9px;
+    font-weight:600;
+    padding:8px 0;
     cursor:pointer;
-    position:relative;
 }
 
 .nav-icon{
-    height:43px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:31px;
-    filter:drop-shadow(0 0 4px rgba(158,86,255,.4));
-}
-
-.nav-item.active-nav{
-    color:#eee5ff;
-}
-
-.nav-item.active-nav .nav-icon{
-    color:#cf85ff;
-    filter:
-        drop-shadow(0 0 7px #ad37ff)
-        drop-shadow(0 0 15px #7720ff);
-}
-
-.nav-item.active-nav::after{
-    content:"";
-    position:absolute;
-    bottom:2px;
-    width:105px;
-    max-width:80%;
-    height:3px;
-    border-radius:10px;
-    background:#b735ff;
-    box-shadow:
-        0 0 10px #b735ff,
-        0 0 20px #8d1cff;
-}
-
-/* =========================
-   OTHER PAGES
-========================= */
-
-.page{
-    display:none;
-    position:relative;
-    z-index:30;
-    min-height:100vh;
-    padding:35px 25px 150px;
-    background:
-        radial-gradient(
-            circle at 50% 10%,
-            rgba(93,25,200,.3),
-            transparent 40%
-        ),
-        #05020e;
-}
-
-.page.show{
     display:block;
-}
-
-.page h1{
-    text-align:center;
-    font-size:30px;
-    margin:20px 0 30px;
-    text-shadow:0 0 20px #8f30ff;
-}
-
-.panel{
-    border:1px solid rgba(114,48,240,.7);
-    border-radius:25px;
-    background:rgba(12,6,35,.9);
-    padding:22px;
-    margin-bottom:18px;
-    box-shadow:
-        inset 0 0 25px rgba(93,28,200,.1),
-        0 0 20px rgba(72,20,170,.1);
-}
-
-.panel-title{
     font-size:18px;
-    font-weight:700;
-    color:#e4d9ff;
-    margin-bottom:14px;
+    margin-bottom:4px;
 }
 
-.ref-code{
-    font-size:26px;
-    color:#d78aff;
-    text-align:center;
-    letter-spacing:3px;
-    padding:15px;
+.nav-item.active{
+    color:#8c91ff;
 }
 
-.action-btn{
-    width:100%;
-    border:1px solid #a347ff;
-    border-radius:18px;
-    padding:15px;
-    color:white;
-    background:linear-gradient(90deg,#4510a8,#791eea);
-    box-shadow:0 0 15px rgba(138,40,255,.35);
-    font-size:16px;
-    font-weight:700;
-    cursor:pointer;
+@keyframes rotate{
+    to{transform:rotate(360deg);}
 }
 
-.input{
-    width:100%;
-    border:1px solid rgba(131,67,255,.7);
-    border-radius:15px;
-    background:#09051d;
-    color:white;
-    padding:15px;
-    outline:none;
-    font-size:15px;
+@keyframes pulse{
+    0%,100%{
+        transform:scale(1);
+        box-shadow:0 0 30px rgba(110,110,255,.45),
+                   0 0 90px rgba(95,80,255,.18);
+    }
+    50%{
+        transform:scale(1.035);
+        box-shadow:0 0 45px rgba(110,110,255,.6),
+                   0 0 110px rgba(95,80,255,.25);
+    }
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:600px){
-
-    .top{
-        padding:18px 14px 0;
-    }
-
-    .wallet-card{
-        width:150px;
-        min-height:70px;
-        border-radius:22px;
-        padding:9px;
-        gap:5px;
-    }
-
-    .wallet-icon{
-        width:32px;
-        font-size:20px;
-    }
-
-    .wallet-title{
-        font-size:10px;
-        margin-bottom:4px;
-    }
-
-    .wallet-address{
-        font-size:13px;
-    }
-
-    .wallet-arrow{
-        font-size:21px;
-    }
-
-    .level-card{
-        width:135px;
-        min-height:70px;
-        border-radius:22px;
-        padding:8px 12px;
-    }
-
-    .level{
-        font-size:18px;
-        margin-bottom:7px;
-    }
-
-    .level-bar{
-        height:11px;
-    }
-
-    .level-number{
-        font-size:9px;
-    }
-
-    .brand{
-        top:25px;
-        width:150px;
+@media(max-width:380px){
+    .balance{
+        font-size:32px;
     }
 
     .moon{
-        width:32px;
-        height:32px;
-    }
-
-    .moon::after{
-        width:26px;
-        height:26px;
-        left:9px;
-        top:-4px;
-    }
-
-    .brand-name{
-        font-size:19px;
-        letter-spacing:2px;
-    }
-
-    .brand-sub{
-        font-size:6px;
-        letter-spacing:3px;
-    }
-
-    .hero{
-        height:455px;
-        margin-top:65px;
-    }
-
-    .planet{
-        width:295px;
-        height:295px;
-        top:25px;
+        width:125px;
+        height:125px;
     }
 
     .orbit{
-        width:430px;
-        height:135px;
-        top:165px;
-    }
-
-    .lnr{
-        font-size:84px;
-        top:110px;
-    }
-
-    .balance{
-        top:365px;
-    }
-
-    .balance-title{
-        font-size:19px;
-    }
-
-    .balance-number{
-        font-size:51px;
-    }
-
-    .balance-unit{
-        font-size:21px;
-    }
-
-    .stats{
-        margin:0 16px;
-        min-height:170px;
-        border-radius:25px;
-    }
-
-    .stat{
-        padding:18px 3px 12px;
-    }
-
-    .stat-icon{
-        width:40px;
-        height:40px;
-        font-size:22px;
-        margin-bottom:8px;
-    }
-
-    .stat-label{
-        font-size:10px;
-        min-height:31px;
-    }
-
-    .stat-value{
-        font-size:20px;
-    }
-
-    .stat-unit{
-        font-size:11px;
-    }
-
-    .claim-wrap{
-        margin:25px 20px 0;
-    }
-
-    .claim{
-        height:83px;
-        font-size:27px;
-    }
-
-    .claim-icon{
-        left:27px;
-        width:47px;
-        height:47px;
-        font-size:22px;
-    }
-
-    .claim-arrow{
-        right:30px;
-        font-size:36px;
-    }
-
-    .active{
-        font-size:11px;
-        gap:8px;
-    }
-
-    .active::before,
-    .active::after{
-        width:55px;
-    }
-
-    .banner{
-        margin:0 16px 18px;
-        height:90px;
-    }
-
-    .banner-logo{
-        left:14px;
-        width:54px;
-        height:54px;
-        font-size:16px;
-    }
-
-    .banner-text{
-        left:82px;
-        top:23px;
-    }
-
-    .banner-title{
-        font-size:16px;
-    }
-
-    .banner-sub{
-        font-size:10px;
-    }
-
-    .banner-right{
-        display:none;
-    }
-
-    .nav{
-        min-height:110px;
-        padding:10px 5px 14px;
-        border-radius:30px 30px 0 0;
-    }
-
-    .nav-item{
-        font-size:11px;
-        gap:4px;
-    }
-
-    .nav-icon{
-        height:32px;
-        font-size:25px;
-    }
-
-    .nav-item.active-nav::after{
-        width:70px;
-    }
-}
-
-@media(max-width:390px){
-
-    .wallet-card{
-        width:135px;
-    }
-
-    .level-card{
-        width:120px;
-    }
-
-    .brand-name{
-        font-size:17px;
-    }
-
-    .planet{
-        width:270px;
-        height:270px;
-    }
-
-    .lnr{
-        font-size:75px;
-    }
-
-    .balance-number{
-        font-size:45px;
-    }
-
-    .stat-value{
-        font-size:17px;
+        width:185px;
+        height:185px;
     }
 }
 </style>
@@ -1254,101 +535,49 @@ button{
 
 <body>
 
+<div class="stars"></div>
+
 <div class="app">
 
-    <div class="galaxy"></div>
-
-    <!-- ================= TOP ================= -->
-
-    <header class="top">
-
-        <div class="wallet-card">
-            <div class="wallet-icon">👛</div>
-
-            <div class="wallet-info">
-                <div class="wallet-title">
-                    ● Wallet Connected
-                </div>
-
-                <div class="wallet-address" id="walletAddress">
-                    UQCN...iD7
-                </div>
-            </div>
-
-            <div class="wallet-arrow">›</div>
-        </div>
+    <!-- HEADER -->
+    <header class="header">
 
         <div class="brand">
+            <div class="logo">L</div>
 
-            <div class="brand-row">
-                <div class="moon"></div>
-
-                <div class="brand-name">
-                    LUNARO
-                </div>
+            <div class="brand-name">
+                LUNA<span>RO</span>
             </div>
-
-            <div class="brand-sub">
-                AUTOMATIC MINING
-            </div>
-
         </div>
 
-        <div class="level-card">
-
-            <div class="level">
-                LVL <span id="level">3</span>
-            </div>
-
-            <div class="level-bar">
-                <div
-                    class="level-fill"
-                    id="levelFill">
-                </div>
-            </div>
-
-            <div class="level-number">
-                <span id="levelProgress">348</span> / 1,000
-            </div>
-
-        </div>
+        <button class="wallet-btn" onclick="connectWallet()">
+            Connect Wallet
+        </button>
 
     </header>
 
 
-    <!-- ================= HERO ================= -->
+    <!-- BALANCE -->
+    <section class="balance-card">
 
-    <section class="hero">
-
-        <div class="orbit"></div>
-
-        <div class="planet">
-            <div class="planet-light"></div>
-        </div>
-
-        <div class="lnr">
-            LNR
+        <div class="balance-label">
+            Total Balance
         </div>
 
         <div class="balance">
+            <span id="balance">25,000.00</span>
+            <span>LNR</span>
+        </div>
 
-            <div class="balance-title">
-                TOTAL BALANCE
-                <span class="info">i</span>
+        <div class="balance-bottom">
+
+            <div class="level">
+                <span class="level-badge">LVL 3</span>
+                <span>Miner Level</span>
             </div>
 
-            <div
-                class="balance-number"
-                id="totalBalance">
-                25,000.00
-            </div>
-
-            <div class="balance-unit">
-
-                <span class="coin">L</span>
-
-                LNR
-
+            <div class="speed">
+                +0.70 LNR / hour
             </div>
 
         </div>
@@ -1356,387 +585,117 @@ button{
     </section>
 
 
-    <!-- ================= STATS ================= -->
+    <!-- MINING -->
+    <section class="mining">
 
-    <section class="stats">
+        <div class="mining-title">
+            LUNARO MINING
+        </div>
 
-        <div class="stat">
+        <div class="moon-wrap">
 
-            <div class="stat-icon">
-                👛
-            </div>
+            <div class="orbit"></div>
 
-            <div class="stat-label">
-                WALLET BALANCE
-            </div>
-
-            <div
-                class="stat-value"
-                id="walletBalance">
-                25,000.00
-            </div>
-
-            <div class="stat-unit">
-                LNR
-            </div>
+            <div class="moon"></div>
 
         </div>
 
-
-        <div class="stat">
-
-            <div class="stat-icon">
-                ⛏
-            </div>
-
-            <div class="stat-label">
-                MINED <span>(NOT CLAIMED)</span>
-            </div>
-
-            <div
-                class="stat-value"
-                id="minedBalance">
-                458.72
-            </div>
-
-            <div class="stat-unit">
-                LNR
-            </div>
-
+        <div class="mining-status">
+            <span class="status-dot"></span>
+            Mining Active
         </div>
 
-
-        <div class="stat">
-
-            <div class="stat-icon">
-                ⚡
-            </div>
-
-            <div class="stat-label">
-                MINING SPEED
-            </div>
-
-            <div
-                class="stat-value"
-                id="miningSpeed">
-                0.70
-            </div>
-
-            <div class="stat-unit">
-                LNR / hour
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= CLAIM ================= -->
-
-    <div class="claim-wrap">
-
-        <button
-            class="claim"
-            onclick="claimMining()">
-
-            <span class="claim-icon">
-                ⚡
-            </span>
-
-            CLAIM
-
-            <span class="claim-arrow">
-                ›
-            </span>
-
+        <button class="claim-btn" onclick="claimMining()">
+            CLAIM LNR
         </button>
 
-    </div>
+    </section>
 
 
-    <!-- ================= ACTIVE ================= -->
+    <!-- STATS -->
+    <div class="stats">
 
-    <div class="active">
-
-        <span class="active-dot"></span>
-
-        <span>
-            AUTOMATIC <b>MINING ACTIVE</b>
-        </span>
-
-    </div>
-
-
-    <!-- ================= BANNER ================= -->
-
-    <div class="banner">
-
-        <div class="banner-logo">
-            LNR
+        <div class="stat">
+            <div class="stat-value">0.70</div>
+            <div class="stat-label">LNR / Hour</div>
         </div>
 
-        <div class="banner-text">
-
-            <div class="banner-title">
-                LUNARO
-            </div>
-
-            <div class="banner-sub">
-                Lunar Mining Network
-            </div>
-
+        <div class="stat">
+            <div class="stat-value">LVL 3</div>
+            <div class="stat-label">Miner</div>
         </div>
 
-        <div class="banner-right">
-            The future is yours
-            <span class="banner-moon">☾</span>
+        <div class="stat">
+            <div class="stat-value">24/7</div>
+            <div class="stat-label">Mining</div>
         </div>
 
     </div>
 
 
-    <!-- ================= NAV ================= -->
+    <!-- PROGRESS -->
+    <section class="progress-card">
 
-    <nav class="nav">
-
-        <button
-            class="nav-item active-nav"
-            onclick="showPage('mine',this)">
-
-            <div class="nav-icon">☾</div>
-            <div>Mine</div>
-
-        </button>
-
-
-        <button
-            class="nav-item"
-            onclick="showPage('tasks',this)">
-
-            <div class="nav-icon">☑</div>
-            <div>Tasks</div>
-
-        </button>
-
-
-        <button
-            class="nav-item"
-            onclick="showPage('miners',this)">
-
-            <div class="nav-icon">⛏</div>
-            <div>Miners</div>
-
-        </button>
-
-
-        <button
-            class="nav-item"
-            onclick="showPage('friends',this)">
-
-            <div class="nav-icon">♟</div>
-            <div>Friends</div>
-
-        </button>
-
-
-        <button
-            class="nav-item"
-            onclick="showPage('profile',this)">
-
-            <div class="nav-icon">●</div>
-            <div>Profile</div>
-
-        </button>
-
-    </nav>
-
-
-    <!-- ================= TASKS ================= -->
-
-    <section
-        class="page"
-        id="tasks">
-
-        <h1>Tasks</h1>
-
-        <div class="panel">
-
-            <div class="panel-title">
-                Daily Mission
-            </div>
-
-            <p>
-                Complete tasks to increase your LNR rewards.
-            </p>
-
-            <button class="action-btn">
-                COMPLETE TASK
-            </button>
-
+        <div class="progress-top">
+            <span>Mining Progress</span>
+            <strong>68%</strong>
         </div>
 
-        <div class="panel">
-
-            <div class="panel-title">
-                Join LUNARO Community
-            </div>
-
-            <p>
-                Community task
-            </p>
-
-            <button class="action-btn">
-                OPEN
-            </button>
-
+        <div class="progress">
+            <div class="progress-bar"></div>
         </div>
 
     </section>
 
 
-    <!-- ================= MINERS ================= -->
+    <!-- QUICK ACTIONS -->
+    <div class="section-title">
+        <h3>Quick Actions</h3>
+        <span>LUNARO ECOSYSTEM</span>
+    </div>
 
-    <section
-        class="page"
-        id="miners">
+    <section class="quick">
 
-        <h1>Miner Store</h1>
+        <div class="quick-card" onclick="openStore()">
 
-        <div class="panel">
+            <div class="icon">⛏</div>
 
-            <div class="panel-title">
-                My Level Journey
-            </div>
+            <h4>Miner Store</h4>
 
-            <p>
-                Current Level:
-                <b>LVL 3</b>
-            </p>
-
-            <p>
-                Mining Speed:
-                <b>0.70 LNR / hour</b>
-            </p>
+            <p>Upgrade your mining power</p>
 
         </div>
 
-        <div class="panel">
 
-            <div class="panel-title">
-                Miner Level 4
-            </div>
+        <div class="quick-card" onclick="openMissions()">
 
-            <p>
-                Holding Requirement:
-                5,000 LNR
-            </p>
+            <div class="icon">🎯</div>
 
-            <button class="action-btn">
-                LOCKED
-            </button>
+            <h4>Missions</h4>
+
+            <p>Complete tasks & earn LNR</p>
 
         </div>
 
-    </section>
 
+        <div class="quick-card" onclick="openFriends()">
 
-    <!-- ================= FRIENDS ================= -->
+            <div class="icon">👥</div>
 
-    <section
-        class="page"
-        id="friends">
+            <h4>Referral</h4>
 
-        <h1>Friends</h1>
-
-        <div class="panel">
-
-            <div class="panel-title">
-                Your Referral Code
-            </div>
-
-            <div class="ref-code">
-                LNR7X4K9
-            </div>
-
-            <button
-                class="action-btn"
-                onclick="copyReferral()">
-
-                COPY CODE
-
-            </button>
+            <p>Invite friends & earn</p>
 
         </div>
 
-        <div class="panel">
 
-            <div class="panel-title">
-                Referral Reward
-            </div>
+        <div class="quick-card" onclick="openWithdraw()">
 
-            <p>
-                Earn <b>10%</b> of your friend's
-                claimed LNR rewards.
-            </p>
+            <div class="icon">↗</div>
 
-        </div>
+            <h4>Withdraw</h4>
 
-    </section>
-
-
-    <!-- ================= PROFILE ================= -->
-
-    <section
-        class="page"
-        id="profile">
-
-        <h1>Profile</h1>
-
-        <div class="panel">
-
-            <div class="panel-title">
-                Connected Wallet
-            </div>
-
-            <p id="profileWallet">
-                UQCN...iD7
-            </p>
-
-        </div>
-
-        <div class="panel">
-
-            <div class="panel-title">
-                Withdraw LNR
-            </div>
-
-            <input
-                class="input"
-                id="withdrawAmount"
-                type="number"
-                placeholder="Amount">
-
-            <br><br>
-
-            <button
-                class="action-btn"
-                onclick="withdraw()">
-
-                WITHDRAW
-
-            </button>
-
-        </div>
-
-        <div class="panel">
-
-            <div class="panel-title">
-                Withdrawal History
-            </div>
-
-            <p>
-                No withdrawals yet.
-            </p>
+            <p>Send your LNR tokens</p>
 
         </div>
 
@@ -1745,230 +704,82 @@ button{
 </div>
 
 
+<!-- BOTTOM NAV -->
+
+<nav class="bottom-nav">
+
+    <div class="nav-item active">
+        <span class="nav-icon">⌂</span>
+        Home
+    </div>
+
+    <div class="nav-item">
+        <span class="nav-icon">◉</span>
+        Mining
+    </div>
+
+    <div class="nav-item">
+        <span class="nav-icon">▣</span>
+        Store
+    </div>
+
+    <div class="nav-item">
+        <span class="nav-icon">♧</span>
+        Friends
+    </div>
+
+</nav>
+
+
 <script>
 
-/* ==========================================
-   LUNARO DEMO DATA
-========================================== */
+let balance = 25000;
 
-let walletBalance = 25000.00;
+function connectWallet(){
 
-let minedBalance = 458.72;
-
-let miningSpeed = 0.70;
-
-let lastUpdate = Date.now();
-
-
-/* ==========================================
-   FORMAT NUMBER
-========================================== */
-
-function formatNumber(number){
-
-    return Number(number).toLocaleString(
-        "en-US",
-        {
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        }
-    );
+    alert("Wallet connection will be connected to TON Connect.");
 
 }
-
-
-/* ==========================================
-   UPDATE UI
-========================================== */
-
-function updateUI(){
-
-    document.getElementById("walletBalance")
-        .textContent =
-        formatNumber(walletBalance);
-
-    document.getElementById("minedBalance")
-        .textContent =
-        formatNumber(minedBalance);
-
-    document.getElementById("totalBalance")
-        .textContent =
-        formatNumber(walletBalance);
-
-}
-
-
-/* ==========================================
-   AUTOMATIC MINING
-========================================== */
-
-function automaticMining(){
-
-    const now = Date.now();
-
-    const seconds =
-        (now - lastUpdate) / 1000;
-
-    lastUpdate = now;
-
-    const earned =
-        miningSpeed * seconds / 3600;
-
-    minedBalance += earned;
-
-    updateUI();
-
-}
-
-
-/* ==========================================
-   CLAIM
-========================================== */
 
 function claimMining(){
 
-    if(minedBalance <= 0){
+    const amount = 0.70;
 
-        alert("Nothing to claim.");
+    balance += amount;
 
-        return;
-
-    }
-
-    walletBalance += minedBalance;
-
-    minedBalance = 0;
-
-    updateUI();
-
-    alert(
-        "Claim successful!\n\n" +
-        "LNR has been added to your balance."
-    );
-
-}
-
-
-/* ==========================================
-   NAVIGATION
-========================================== */
-
-function showPage(pageId,button){
-
-    document.querySelectorAll(".page")
-        .forEach(page => {
-
-            page.classList.remove("show");
-
+    document.getElementById("balance").innerText =
+        balance.toLocaleString("en-US",{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
         });
 
-
-    if(pageId !== "mine"){
-
-        document
-            .getElementById(pageId)
-            .classList.add("show");
-
-    }
-
-
-    document.querySelectorAll(".nav-item")
-        .forEach(item => {
-
-            item.classList.remove("active-nav");
-
-        });
-
-
-    button.classList.add("active-nav");
-
-
-    if(pageId !== "mine"){
-
-        document
-            .getElementById(pageId)
-            .scrollIntoView({
-                behavior:"smooth"
-            });
-
-    }
+    alert("Mining reward claimed successfully!");
 
 }
 
+function openStore(){
 
-/* ==========================================
-   REFERRAL COPY
-========================================== */
-
-function copyReferral(){
-
-    navigator.clipboard
-        .writeText("LNR7X4K9")
-        .then(() => {
-
-            alert(
-                "Referral code copied!"
-            );
-
-        });
+    alert("Miner Store");
 
 }
 
+function openMissions(){
 
-/* ==========================================
-   WITHDRAW
-========================================== */
-
-function withdraw(){
-
-    const amount =
-        Number(
-            document.getElementById(
-                "withdrawAmount"
-            ).value
-        );
-
-    if(!amount || amount <= 0){
-
-        alert("Enter a valid amount.");
-
-        return;
-
-    }
-
-    if(amount > walletBalance){
-
-        alert(
-            "Insufficient LNR balance."
-        );
-
-        return;
-
-    }
-
-    alert(
-        "Withdrawal request created.\n\n" +
-        "Real blockchain withdrawal will be connected through the backend."
-    );
+    alert("Missions");
 
 }
 
+function openFriends(){
 
-/* ==========================================
-   RUN MINER
-========================================== */
+    alert("Referral");
 
-setInterval(
-    automaticMining,
-    1000
-);
+}
 
+function openWithdraw(){
 
-/* ==========================================
-   INITIAL UI
-========================================== */
+    alert("Withdraw");
 
-updateUI();
+}
 
 </script>
 
