@@ -2,28 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-      maximum-scale=1.0,user-scalable=no">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>LUNARO</title>
 
 <style>
-:root{
-  --green:#10b981;
-  --green2:#00d084;
-  --green3:#34d399;
-  --dark:#10202a;
-  --text:#17232d;
-  --muted:#71808b;
-  --line:#dceee8;
-  --bg:#ffffff;
-  --card:#ffffff;
-  --soft:#f5faf8;
-  --gold:#f5c84c;
-  --gold2:#e5ad25;
-}
-
 *{
   box-sizing:border-box;
   margin:0;
@@ -31,288 +13,243 @@
   -webkit-tap-highlight-color:transparent;
 }
 
+:root{
+  --green:#08b97d;
+  --green2:#12d99a;
+  --dark:#12232c;
+  --gray:#71808b;
+  --line:#d9eee7;
+  --soft:#f4fbf8;
+}
+
 html,body{
   width:100%;
-  min-height:100%;
+  height:100%;
+  overflow:hidden;
   background:#fff;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Arial,
-    sans-serif;
-  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--dark);
 }
 
 body{
-  overflow-x:hidden;
-}
-
-button{
-  font-family:inherit;
+  display:flex;
+  justify-content:center;
 }
 
 .app{
   width:100%;
   max-width:520px;
-  min-height:100vh;
-  margin:auto;
+  height:100vh;
+  overflow:hidden;
   background:#fff;
-  padding-bottom:105px;
+  position:relative;
 }
 
 /* ================= HEADER ================= */
 
 .header{
-  display:flex;
+  height:82px;
+  display:grid;
+  grid-template-columns:1fr 1.25fr 1fr;
   align-items:center;
-  justify-content:space-between;
-  padding:22px 18px 8px;
-  gap:10px;
+  gap:7px;
+  padding:10px 13px 4px;
 }
 
-.wallet-box,
-.level-box{
-  min-width:104px;
-  height:70px;
+.wallet{
+  height:57px;
   border:1px solid #d9eee7;
-  border-radius:22px;
-  background:rgba(255,255,255,.98);
-  box-shadow:
-    0 8px 24px rgba(16,185,129,.07);
+  border-radius:19px;
   display:flex;
   align-items:center;
-  justify-content:center;
-}
-
-.wallet-box{
-  gap:8px;
-  padding:8px 12px;
+  padding:7px 9px;
+  box-shadow:0 5px 18px rgba(0,150,110,.06);
+  min-width:0;
 }
 
 .wallet-icon{
-  width:31px;
-  height:31px;
+  width:29px;
+  height:29px;
   border-radius:9px;
-  background:#dff8ef;
+  background:#ddf8ef;
   color:var(--green);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:17px;
-  font-weight:900;
+  font-size:15px;
+  margin-right:7px;
 }
 
-.wallet-info{
+.wallet-text{
   min-width:0;
 }
 
 .wallet-title{
-  color:var(--green);
-  font-size:11px;
+  font-size:9px;
   font-weight:700;
-  margin-bottom:4px;
+  color:var(--green);
   white-space:nowrap;
 }
 
 .wallet-address{
-  color:#14232b;
-  font-size:14px;
-  font-weight:600;
+  margin-top:4px;
+  font-size:12px;
+  font-weight:700;
   white-space:nowrap;
 }
 
 .logo{
-  flex:1;
   text-align:center;
-  line-height:1;
 }
 
 .logo-main{
-  font-size:28px;
+  font-size:25px;
   font-weight:900;
-  letter-spacing:4px;
-  color:#12212a;
+  letter-spacing:3px;
+  color:#10222b;
 }
 
 .logo-sub{
-  margin-top:7px;
-  font-size:8px;
-  letter-spacing:4px;
-  color:#89959c;
+  font-size:7px;
+  letter-spacing:3px;
+  color:#87949b;
+  margin-top:5px;
 }
 
-.level-box{
-  flex-direction:column;
-  padding:9px 12px;
+.level{
+  height:57px;
+  border:1px solid #d9eee7;
+  border-radius:19px;
+  padding:7px 10px;
+  text-align:center;
+  box-shadow:0 5px 18px rgba(0,150,110,.06);
 }
 
 .level-title{
-  font-size:18px;
+  font-size:17px;
   font-weight:900;
-  color:#12212a;
 }
 
 .level-bar{
-  width:86px;
-  height:9px;
-  margin-top:6px;
+  height:7px;
   background:#dfe9e7;
   border-radius:20px;
+  margin:5px auto 3px;
   overflow:hidden;
+  max-width:78px;
 }
 
-.level-progress{
+.level-fill{
   width:35%;
   height:100%;
-  background:linear-gradient(
-    90deg,
-    #0bb879,
-    #27d49b
-  );
+  background:linear-gradient(90deg,#08b879,#28d69e);
   border-radius:20px;
 }
 
 .level-xp{
-  margin-top:4px;
-  font-size:9px;
-  color:#52626c;
+  font-size:8px;
 }
 
 /* ================= MAIN ================= */
 
-.page{
-  display:none;
-  padding:0 18px;
-}
-
-.page.active{
-  display:block;
-}
-
-/* ================= COIN STAGE ================= */
-
-.coin-stage{
-  position:relative;
-  height:325px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.home{
+  height:calc(100vh - 82px);
+  padding:0 14px 77px;
   overflow:hidden;
-  margin-top:0;
 }
 
-/* soft light behind coin */
+/* ================= CENTER DESIGN ================= */
 
-.coin-glow{
-  position:absolute;
-  width:280px;
-  height:190px;
-  border-radius:50%;
-  background:
-    radial-gradient(
-      ellipse,
-      rgba(16,185,129,.16) 0%,
-      rgba(16,185,129,.07) 38%,
-      rgba(16,185,129,0) 72%
-    );
-  filter:blur(8px);
-}
-
-/* SVG COIN */
-
-.coin-svg{
+.hero{
+  height:265px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   position:relative;
-  z-index:3;
-  width:315px;
-  max-width:82%;
-  height:295px;
-  overflow:visible;
-  filter:
-    drop-shadow(0 15px 18px rgba(16,185,129,.10));
-  animation:coinFloat 4.5s ease-in-out infinite;
 }
 
-@keyframes coinFloat{
-  0%,100%{
-    transform:translateY(0);
-  }
-  50%{
-    transform:translateY(-5px);
-  }
+.hero-glow{
+  position:absolute;
+  width:245px;
+  height:170px;
+  background:radial-gradient(
+    ellipse,
+    rgba(16,210,155,.17),
+    rgba(16,210,155,0) 70%
+  );
+  filter:blur(5px);
+}
+
+.hero svg{
+  width:245px;
+  height:245px;
+  position:relative;
+  z-index:2;
+  overflow:visible;
 }
 
 /* ================= BALANCE ================= */
 
 .balance{
   text-align:center;
-  margin-top:-2px;
+  margin-top:-3px;
 }
 
 .balance-title{
-  font-size:24px;
+  color:#687984;
+  font-size:18px;
   font-weight:700;
-  letter-spacing:1px;
-  color:#657580;
+  letter-spacing:.6px;
 }
 
 .balance-number{
-  margin-top:8px;
-  font-size:58px;
+  color:#10232d;
+  font-size:48px;
   line-height:1;
+  margin-top:5px;
   font-weight:900;
   letter-spacing:-2px;
-  color:#13232c;
 }
 
 .balance-token{
-  margin-top:12px;
+  margin-top:7px;
   display:flex;
-  align-items:center;
   justify-content:center;
-  gap:9px;
+  align-items:center;
+  gap:7px;
   color:var(--green);
-  font-size:25px;
+  font-size:20px;
   font-weight:900;
-  letter-spacing:2px;
 }
 
-.token-dot{
-  width:30px;
-  height:30px;
+.token{
+  width:25px;
+  height:25px;
   border-radius:50%;
-  background:linear-gradient(
-    145deg,
-    #28d99f,
-    #08a972
-  );
+  background:linear-gradient(145deg,#2add9f,#08aa73);
   color:#fff;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   font-size:12px;
-  box-shadow:
-    0 5px 12px rgba(16,185,129,.18);
 }
 
 /* ================= STATS ================= */
 
 .stats{
-  margin-top:28px;
-  border:1px solid #d8eee7;
-  border-radius:25px;
-  background:#fff;
+  height:116px;
+  margin-top:15px;
+  border:1px solid var(--line);
+  border-radius:21px;
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  padding:22px 6px;
-  box-shadow:
-    0 10px 28px rgba(24,70,57,.04);
+  background:#fff;
+  box-shadow:0 7px 22px rgba(25,75,60,.045);
+  padding:11px 4px;
 }
 
 .stat{
   text-align:center;
-  padding:0 8px;
   position:relative;
 }
 
@@ -320,345 +257,256 @@ button{
   content:"";
   position:absolute;
   right:0;
-  top:4px;
+  top:7px;
+  height:80px;
   width:1px;
-  height:95px;
-  background:#dcebe7;
+  background:#e1eeea;
 }
 
 .stat-icon{
-  width:47px;
-  height:47px;
-  border-radius:15px;
-  margin:0 auto 10px;
-  background:#e6f8f1;
-  color:#0ab47d;
+  width:36px;
+  height:36px;
+  margin:auto;
+  border-radius:12px;
   display:flex;
-  align-items:center;
   justify-content:center;
-  font-size:23px;
+  align-items:center;
+  color:#0bb57b;
+  background:#e5f9f2;
+  font-size:18px;
 }
 
 .stat-title{
-  color:#677781;
-  font-size:12px;
+  margin-top:6px;
+  color:#6e7d86;
+  font-size:9px;
   font-weight:700;
   white-space:nowrap;
 }
 
-.stat-number{
-  margin-top:9px;
-  color:#10212a;
-  font-size:26px;
-  line-height:1;
+.stat-value{
+  margin-top:5px;
+  font-size:21px;
   font-weight:900;
 }
 
 .stat-unit{
-  margin-top:7px;
-  color:#74838d;
-  font-size:14px;
+  margin-top:3px;
+  color:#75838b;
+  font-size:11px;
 }
 
 /* ================= CLAIM ================= */
 
 .claim{
-  margin-top:24px;
+  height:59px;
   width:100%;
-  height:76px;
   border:0;
-  border-radius:40px;
-  background:
-    linear-gradient(
-      90deg,
-      #09b879,
-      #0bd394,
-      #0dbd83
-    );
-  color:#fff;
-  font-size:31px;
-  font-weight:900;
-  letter-spacing:2px;
-  box-shadow:
-    0 12px 28px rgba(16,185,129,.28),
-    inset 0 2px 3px rgba(255,255,255,.25);
-  cursor:pointer;
-  position:relative;
-  overflow:hidden;
-}
-
-.claim::before{
-  content:"";
-  position:absolute;
-  left:-30%;
-  top:0;
-  width:30%;
-  height:100%;
+  border-radius:32px;
+  margin-top:13px;
+  color:white;
   background:linear-gradient(
     90deg,
-    transparent,
-    rgba(255,255,255,.25),
-    transparent
+    #08b978,
+    #0bd294,
+    #09bd83
   );
-  transform:skewX(-20deg);
-  animation:shine 3.5s infinite;
-}
-
-@keyframes shine{
-  0%{left:-30%}
-  35%{left:120%}
-  100%{left:120%}
-}
-
-.claim-content{
+  box-shadow:
+    0 9px 23px rgba(8,190,130,.27),
+    inset 0 2px 3px rgba(255,255,255,.3);
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:2px;
   position:relative;
-  z-index:2;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:14px;
 }
 
-.claim-icon{
-  font-size:27px;
+.claim-left{
+  position:absolute;
+  left:22px;
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.4);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:19px;
 }
 
 .claim-arrow{
   position:absolute;
-  right:25px;
-  font-size:33px;
-  font-weight:400;
+  right:23px;
+  font-size:30px;
+  font-weight:300;
 }
 
-/* ================= ACTIVE ================= */
+/* ================= STATUS ================= */
 
-.mining-active{
-  margin:25px auto 0;
+.status{
+  height:31px;
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:12px;
-  color:#13ad7c;
-  font-size:13px;
+  gap:9px;
+  color:#0aac76;
+  font-size:10px;
   font-weight:800;
-  letter-spacing:.4px;
+  margin-top:7px;
 }
 
-.mining-line{
-  width:75px;
+.status-line{
+  width:47px;
   height:1px;
-  background:#8fdcc5;
+  background:#8edbc5;
 }
 
-.mining-dot{
-  width:14px;
-  height:14px;
+.dot{
+  width:10px;
+  height:10px;
   border-radius:50%;
-  background:#18d39a;
-  box-shadow:0 0 0 6px rgba(24,211,154,.08);
-  animation:pulse 1.7s infinite;
-}
-
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.2)}
+  background:#14cf95;
 }
 
 /* ================= INFO ================= */
 
-.info-card{
-  margin-top:25px;
-  min-height:104px;
-  border:1px solid #d9eee8;
-  border-radius:24px;
-  background:
-    linear-gradient(
-      100deg,
-      #ffffff,
-      #f5fcfa
-    );
+.info{
+  height:65px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:#f8fdfb;
   display:flex;
   align-items:center;
-  padding:16px;
-  position:relative;
-  overflow:hidden;
+  padding:8px 13px;
+  margin-top:4px;
 }
 
 .info-logo{
-  width:65px;
-  height:65px;
-  flex:none;
+  width:47px;
+  height:47px;
+  border:1px solid #8ce1c5;
   border-radius:50%;
-  border:1px solid #8ee5c9;
-  background:#edfbf6;
   display:flex;
   align-items:center;
   justify-content:center;
-  color:#10ae7a;
-  font-size:21px;
+  color:#0caf78;
   font-weight:900;
+  font-size:16px;
+  background:#ecfbf6;
 }
 
 .info-text{
-  margin-left:15px;
+  margin-left:11px;
 }
 
 .info-title{
-  font-size:19px;
+  font-size:15px;
   font-weight:900;
-  color:#15252e;
 }
 
 .info-sub{
-  margin-top:5px;
-  color:#74838d;
-  font-size:12px;
+  color:#788790;
+  font-size:9px;
+  margin-top:3px;
 }
 
 .info-right{
   margin-left:auto;
-  color:#16ad7c;
-  font-size:12px;
-  font-weight:700;
+  color:#10af7a;
+  font-size:9px;
 }
 
-/* ================= SECTION ================= */
+/* ================= BOTTOM ================= */
 
-.section{
-  margin-top:27px;
-}
-
-.section-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:14px;
-}
-
-.section-title{
-  font-size:21px;
-  font-weight:900;
-}
-
-.section-more{
-  color:var(--green);
-  font-size:12px;
-  font-weight:700;
-}
-
-/* ================= JOURNEY ================= */
-
-.journey{
+.nav{
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:9px;
+  height:67px;
   border:1px solid #dcece7;
-  border-radius:22px;
-  padding:20px;
-  background:#fff;
+  border-radius:23px;
+  background:rgba(255,255,255,.97);
+  box-shadow:0 8px 28px rgba(30,70,60,.10);
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  z-index:20;
 }
 
-.journey-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.journey-level{
-  font-size:18px;
-  font-weight:900;
-}
-
-.journey-xp{
-  font-size:12px;
+.nav button{
+  border:0;
+  background:none;
   color:#71808a;
-}
-
-.journey-track{
-  margin-top:15px;
-  height:10px;
-  border-radius:20px;
-  background:#e5efec;
-  overflow:hidden;
-}
-
-.journey-fill{
-  width:35%;
-  height:100%;
-  background:linear-gradient(
-    90deg,
-    #0ab778,
-    #35d8a3
-  );
-  border-radius:20px;
-}
-
-/* ================= ACTIVITY ================= */
-
-.activity{
   display:flex;
-  align-items:center;
-  gap:13px;
-  padding:14px 0;
-  border-bottom:1px solid #edf3f1;
-}
-
-.activity:last-child{
-  border-bottom:0;
-}
-
-.activity-icon{
-  width:43px;
-  height:43px;
-  border-radius:14px;
-  background:#eaf9f4;
-  display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
-  color:#0cae78;
+  gap:4px;
+  font-size:9px;
+  font-weight:700;
+  position:relative;
 }
 
-.activity-main{
-  flex:1;
+.nav-icon{
+  font-size:21px;
 }
 
-.activity-name{
-  font-size:14px;
-  font-weight:800;
+.nav button.active{
+  color:#08ae77;
 }
 
-.activity-time{
-  margin-top:3px;
-  color:#89969d;
-  font-size:11px;
+.nav button.active::after{
+  content:"";
+  position:absolute;
+  bottom:5px;
+  width:48px;
+  height:3px;
+  border-radius:5px;
+  background:#0abb80;
 }
 
-.activity-value{
-  color:#0baa75;
-  font-size:14px;
+/* ================= OTHER PAGES ================= */
+
+.page{
+  display:none;
+  height:calc(100vh - 82px);
+  padding:12px 16px 90px;
+  overflow:auto;
+}
+
+.page.active{
+  display:block;
+}
+
+.page-title{
+  font-size:24px;
   font-weight:900;
+  margin-bottom:15px;
 }
 
-/* ================= TASKS ================= */
+.card{
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:12px;
+  background:#fff;
+}
 
 .task{
   display:flex;
   align-items:center;
-  gap:13px;
-  padding:17px;
-  margin-bottom:12px;
-  border:1px solid #dcece7;
-  border-radius:20px;
-  background:#fff;
+  gap:12px;
 }
 
 .task-icon{
-  width:47px;
-  height:47px;
-  border-radius:15px;
-  background:#e9f9f4;
+  width:43px;
+  height:43px;
+  border-radius:13px;
+  background:#e7f9f2;
   color:#0bad77;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:22px;
+  font-size:19px;
 }
 
 .task-main{
@@ -666,193 +514,110 @@ button{
 }
 
 .task-title{
-  font-size:15px;
-  font-weight:900;
+  font-weight:800;
+  font-size:14px;
 }
 
 .task-reward{
-  color:#0bac77;
-  font-size:12px;
-  margin-top:5px;
-  font-weight:700;
+  margin-top:4px;
+  color:#0aae77;
+  font-size:11px;
 }
 
 .task-btn{
   border:0;
-  padding:10px 13px;
-  border-radius:13px;
-  background:#0dbd83;
-  color:white;
-  font-size:11px;
+  border-radius:10px;
+  padding:8px 10px;
+  background:#0bbd82;
+  color:#fff;
+  font-size:9px;
   font-weight:800;
 }
 
-/* ================= MINERS ================= */
-
-.chart-card{
-  border:1px solid #dcece7;
-  border-radius:22px;
-  padding:20px;
-  background:#fff;
-}
-
-.chart{
-  height:145px;
-  position:relative;
-  margin-top:10px;
-  overflow:hidden;
-}
-
-.chart svg{
-  width:100%;
-  height:100%;
-}
-
-.miners-grid{
-  margin-top:15px;
+.miner-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
+  gap:10px;
 }
 
 .miner{
-  border:1px solid #dcece7;
-  border-radius:20px;
-  padding:16px;
-  background:#fff;
-  position:relative;
-}
-
-.miner-top{
-  display:flex;
-  justify-content:space-between;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:15px;
 }
 
 .miner-icon{
-  width:43px;
-  height:43px;
-  border-radius:14px;
-  background:#eaf9f4;
-  color:#0cae78;
+  width:39px;
+  height:39px;
+  border-radius:12px;
+  background:#e8faf4;
   display:flex;
-  align-items:center;
   justify-content:center;
-  font-size:20px;
+  align-items:center;
+  color:#0aaf77;
 }
 
-.miner-lock{
-  font-size:17px;
-}
-
-.miner h4{
-  margin-top:13px;
-  font-size:15px;
+.miner h3{
+  margin-top:10px;
+  font-size:14px;
 }
 
 .miner p{
   margin-top:5px;
-  color:#74838c;
-  font-size:11px;
+  color:#7a8991;
+  font-size:10px;
 }
 
 .miner-rate{
-  margin-top:12px;
-  color:#0aaa75;
-  font-size:13px;
+  margin-top:10px;
+  color:#0aaa74;
+  font-size:11px;
   font-weight:900;
 }
-
-/* ================= FRIENDS ================= */
 
 .referral{
-  border-radius:25px;
-  background:
-    linear-gradient(
-      135deg,
-      #ecfbf5,
-      #ffffff
-    );
-  border:1px solid #d6eee6;
-  padding:23px;
+  background:#f1fbf7;
+  border:1px solid #d4eee5;
+  border-radius:22px;
+  padding:20px;
 }
 
-.ref-title{
+.referral h2{
   font-size:22px;
-  font-weight:900;
 }
 
-.ref-sub{
-  margin-top:7px;
-  color:#70808a;
-  font-size:12px;
+.referral p{
+  color:#71808a;
+  font-size:11px;
   line-height:1.6;
+  margin-top:7px;
 }
 
 .ref-code{
-  margin-top:20px;
-  padding:15px;
-  border-radius:16px;
+  margin-top:16px;
   background:#fff;
-  border:1px dashed #91dbc3;
+  border:1px dashed #88dbc1;
+  border-radius:14px;
+  padding:13px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
 }
 
-.ref-code strong{
-  color:#0aaa75;
-  font-size:17px;
-}
-
-.copy-btn{
+.copy{
   border:0;
-  background:#0bb87b;
-  color:#fff;
-  border-radius:11px;
-  padding:9px 13px;
-  font-size:11px;
+  border-radius:9px;
+  background:#0ab97c;
+  color:white;
+  padding:8px 11px;
+  font-size:10px;
   font-weight:800;
-}
-
-.friend-stats{
-  margin-top:15px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.friend-stat{
-  padding:18px;
-  border:1px solid #dcece7;
-  border-radius:20px;
-  text-align:center;
-}
-
-.friend-stat b{
-  display:block;
-  font-size:25px;
-}
-
-.friend-stat span{
-  display:block;
-  margin-top:5px;
-  font-size:11px;
-  color:#788790;
-}
-
-/* ================= PROFILE ================= */
-
-.profile-card{
-  border:1px solid #dcece7;
-  border-radius:23px;
-  padding:20px;
-  background:#fff;
 }
 
 .profile-row{
   display:flex;
   align-items:center;
-  padding:15px 0;
+  padding:13px 0;
   border-bottom:1px solid #edf3f1;
 }
 
@@ -861,206 +626,148 @@ button{
 }
 
 .profile-icon{
-  width:43px;
-  height:43px;
-  border-radius:14px;
-  background:#eaf9f4;
+  width:39px;
+  height:39px;
+  border-radius:12px;
+  background:#e8faf4;
+  color:#0aaf77;
   display:flex;
   align-items:center;
   justify-content:center;
-  color:#0aaa75;
 }
 
-.profile-data{
-  margin-left:13px;
-  flex:1;
+.profile-text{
+  margin-left:12px;
 }
 
 .profile-label{
-  color:#7a8991;
-  font-size:11px;
+  color:#829099;
+  font-size:10px;
 }
 
 .profile-value{
   margin-top:4px;
-  font-size:14px;
+  font-size:13px;
   font-weight:800;
-}
-
-.withdraw{
-  margin-top:15px;
-  border:1px solid #dcece7;
-  border-radius:23px;
-  padding:20px;
 }
 
 .input{
   width:100%;
-  margin-top:12px;
-  height:49px;
-  border:1px solid #d8eae5;
-  border-radius:14px;
-  padding:0 14px;
+  height:47px;
+  border:1px solid #d9ebe5;
+  border-radius:13px;
+  padding:0 13px;
+  margin-top:10px;
   outline:none;
-  font-size:13px;
 }
 
-.withdraw-btn{
+.withdraw{
   width:100%;
-  margin-top:12px;
-  height:52px;
+  height:48px;
   border:0;
-  border-radius:16px;
-  background:#0dbd83;
+  border-radius:14px;
+  background:#0bbb80;
   color:#fff;
   font-weight:900;
+  margin-top:10px;
 }
 
-.demo-note{
-  margin-top:9px;
-  color:#89959d;
-  font-size:10px;
-  line-height:1.5;
-}
+/* ================= SMALL SCREENS ================= */
 
-/* ================= BOTTOM NAV ================= */
-
-.bottom-nav{
-  position:fixed;
-  left:50%;
-  bottom:10px;
-  transform:translateX(-50%);
-  width:min(500px,calc(100% - 20px));
-  height:91px;
-  background:rgba(255,255,255,.97);
-  border:1px solid #dcebe7;
-  border-radius:29px;
-  box-shadow:
-    0 12px 40px rgba(22,55,47,.10);
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  z-index:100;
-  backdrop-filter:blur(15px);
-}
-
-.nav-btn{
-  border:0;
-  background:transparent;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  color:#7c8a93;
-  cursor:pointer;
-  position:relative;
-}
-
-.nav-icon{
-  font-size:25px;
-  line-height:1;
-}
-
-.nav-label{
-  font-size:12px;
-  font-weight:700;
-}
-
-.nav-btn.active{
-  color:#0aaf77;
-}
-
-.nav-btn.active::after{
-  content:"";
-  position:absolute;
-  bottom:9px;
-  width:58px;
-  height:4px;
-  border-radius:10px;
-  background:#0cbb80;
-}
-
-/* ================= TOAST ================= */
-
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:115px;
-  transform:translate(-50%,20px);
-  opacity:0;
-  pointer-events:none;
-  padding:12px 18px;
-  border-radius:14px;
-  background:#12232b;
-  color:white;
-  font-size:12px;
-  font-weight:700;
-  transition:.3s;
-  z-index:300;
-  white-space:nowrap;
-}
-
-.toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:390px){
+@media(max-height:700px){
 
   .header{
-    padding-left:11px;
-    padding-right:11px;
+    height:70px;
   }
 
-  .wallet-box,
-  .level-box{
-    min-width:93px;
+  .home,
+  .page{
+    height:calc(100vh - 70px);
   }
 
-  .logo-main{
-    font-size:23px;
-    letter-spacing:3px;
+  .hero{
+    height:215px;
   }
 
-  .logo-sub{
-    font-size:6px;
-    letter-spacing:3px;
-  }
-
-  .coin-stage{
-    height:290px;
-  }
-
-  .coin-svg{
-    width:275px;
-    height:275px;
-  }
-
-  .balance-title{
-    font-size:20px;
+  .hero svg{
+    width:205px;
+    height:205px;
   }
 
   .balance-number{
-    font-size:48px;
+    font-size:41px;
   }
 
-  .stat-title{
-    font-size:10px;
+  .balance-title{
+    font-size:16px;
   }
 
-  .stat-number{
-    font-size:21px;
+  .stats{
+    height:105px;
+    margin-top:11px;
   }
 
-  .stat-unit{
-    font-size:12px;
+  .stat-icon{
+    width:32px;
+    height:32px;
+  }
+
+  .stat-value{
+    font-size:18px;
   }
 
   .claim{
-    height:68px;
-    font-size:27px;
+    height:52px;
+    margin-top:9px;
+  }
+
+  .info{
+    height:57px;
+  }
+
+  .info-logo{
+    width:40px;
+    height:40px;
+  }
+
+  .nav{
+    height:61px;
+  }
+}
+
+@media(max-width:380px){
+
+  .logo-main{
+    font-size:21px;
+  }
+
+  .wallet-title{
+    font-size:8px;
+  }
+
+  .wallet-address{
+    font-size:11px;
+  }
+
+  .hero{
+    height:205px;
+  }
+
+  .hero svg{
+    width:195px;
+    height:195px;
+  }
+
+  .balance-number{
+    font-size:38px;
+  }
+
+  .stat-title{
+    font-size:8px;
+  }
+
+  .stat-value{
+    font-size:17px;
   }
 }
 </style>
@@ -1074,1370 +781,998 @@ button{
 
 <header class="header">
 
-  <div class="wallet-box">
+  <div class="wallet">
     <div class="wallet-icon">▣</div>
-    <div class="wallet-info">
-      <div class="wallet-title">Wallet Connected</div>
-      <div class="wallet-address">UQCN...iD7</div>
+
+    <div class="wallet-text">
+      <div class="wallet-title">
+        Wallet Connected
+      </div>
+
+      <div class="wallet-address">
+        UQCN...iD7
+      </div>
     </div>
   </div>
+
 
   <div class="logo">
-    <div class="logo-main">LUNARO</div>
-    <div class="logo-sub">AUTOMATIC MINING</div>
+    <div class="logo-main">
+      LUNARO
+    </div>
+
+    <div class="logo-sub">
+      AUTOMATIC MINING
+    </div>
   </div>
 
-  <div class="level-box">
-    <div class="level-title">LVL 3</div>
+
+  <div class="level">
+
+    <div class="level-title">
+      LVL 3
+    </div>
+
     <div class="level-bar">
-      <div class="level-progress"></div>
+      <div class="level-fill"></div>
     </div>
+
     <div class="level-xp">
-      <span id="xpTop">348</span> / 1,000
+      348 / 1,000
     </div>
+
   </div>
 
 </header>
 
 
-<!-- =========================================================
+<!-- ==================================================
                          HOME
-========================================================= -->
+================================================== -->
 
-<section id="home" class="page active">
+<section id="home" class="home">
 
-  <!-- COIN -->
+<!-- CENTER DESIGN -->
 
-  <div class="coin-stage">
+<div class="hero">
 
-    <div class="coin-glow"></div>
+  <div class="hero-glow"></div>
 
-    <!--
-      REALISTIC GOLD LNR COIN
-      Everything is embedded directly in this HTML.
-      No image upload required.
-    -->
 
-    <svg class="coin-svg"
-         viewBox="0 0 500 470"
-         xmlns="http://www.w3.org/2000/svg">
+  <svg viewBox="0 0 500 450"
+       xmlns="http://www.w3.org/2000/svg">
 
-      <defs>
+    <defs>
 
-        <!-- GOLD METAL -->
+      <linearGradient id="crystal"
+                      x1="0"
+                      y1="0"
+                      x2="1"
+                      y2="1">
 
-        <radialGradient id="goldFace"
-                        cx="38%"
-                        cy="30%"
-                        r="75%">
+        <stop offset="0"
+              stop-color="#eaffff"/>
 
-          <stop offset="0%"
-                stop-color="#fff7b0"/>
+        <stop offset=".25"
+              stop-color="#52e4c0"/>
 
-          <stop offset="18%"
-                stop-color="#ffe875"/>
+        <stop offset=".55"
+              stop-color="#009f77"/>
 
-          <stop offset="43%"
-                stop-color="#e9b52d"/>
+        <stop offset=".8"
+              stop-color="#8ffff0"/>
 
-          <stop offset="68%"
-                stop-color="#fff09a"/>
+        <stop offset="1"
+              stop-color="#00775a"/>
 
-          <stop offset="84%"
-                stop-color="#c99017"/>
+      </linearGradient>
 
-          <stop offset="100%"
-                stop-color="#8e6410"/>
 
-        </radialGradient>
+      <linearGradient id="gold"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1">
 
-        <linearGradient id="goldEdge"
-                        x1="0"
-                        y1="0"
-                        x2="1"
-                        y2="1">
+        <stop offset="0"
+              stop-color="#fff0a0"/>
 
-          <stop offset="0%"
-                stop-color="#fff4a0"/>
+        <stop offset=".35"
+              stop-color="#ffd54d"/>
 
-          <stop offset="25%"
-                stop-color="#dba727"/>
+        <stop offset=".7"
+              stop-color="#edb52b"/>
 
-          <stop offset="50%"
-                stop-color="#fff1a0"/>
+        <stop offset="1"
+              stop-color="#c98b13"/>
 
-          <stop offset="72%"
-                stop-color="#bd8610"/>
+      </linearGradient>
 
-          <stop offset="100%"
-                stop-color="#ffe46d"/>
 
-        </linearGradient>
+      <filter id="glow">
 
-        <linearGradient id="greenRing"
-                        x1="0"
-                        y1="0"
-                        x2="1"
-                        y2="1">
+        <feGaussianBlur
+          stdDeviation="5"
+          result="b"/>
 
-          <stop offset="0%"
-                stop-color="#007f59"/>
+        <feMerge>
+          <feMergeNode in="b"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
 
-          <stop offset="35%"
-                stop-color="#12c98e"/>
+      </filter>
 
-          <stop offset="70%"
-                stop-color="#00a875"/>
+    </defs>
 
-          <stop offset="100%"
-                stop-color="#005f45"/>
 
-        </linearGradient>
+    <!-- BACK ORBIT -->
 
-        <filter id="coinShadow"
-                x="-50%"
-                y="-50%"
-                width="200%"
-                height="200%">
+    <ellipse
+      cx="250"
+      cy="220"
+      rx="190"
+      ry="65"
+      fill="none"
+      stroke="#00c98e"
+      stroke-width="5"
+      opacity=".28"
+      transform="rotate(-12 250 220)"
+      filter="url(#glow)"/>
 
-          <feDropShadow
-            dx="0"
-            dy="13"
-            stdDeviation="12"
-            flood-color="#087653"
-            flood-opacity=".20"/>
-
-        </filter>
-
-        <filter id="ringGlow"
-                x="-50%"
-                y="-50%"
-                width="200%"
-                height="200%">
-
-          <feGaussianBlur
-            stdDeviation="3"
-            result="blur"/>
-
-          <feMerge>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-
-        </filter>
-
-        <linearGradient id="textGold"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1">
-
-          <stop offset="0%"
-                stop-color="#fff4a0"/>
-
-          <stop offset="30%"
-                stop-color="#ffd95b"/>
-
-          <stop offset="60%"
-                stop-color="#f0bd32"/>
-
-          <stop offset="100%"
-                stop-color="#d89d19"/>
-
-        </linearGradient>
-
-      </defs>
-
-
-      <!-- BACK RING -->
-
-      <ellipse
-        cx="250"
-        cy="235"
-        rx="210"
-        ry="70"
-        fill="none"
-        stroke="#08b980"
-        stroke-width="5"
-        opacity=".18"
-        filter="url(#ringGlow)"
-        transform="rotate(-11 250 235)"/>
-
-      <ellipse
-        cx="250"
-        cy="235"
-        rx="208"
-        ry="68"
-        fill="none"
-        stroke="url(#greenRing)"
-        stroke-width="5"
-        opacity=".95"
-        transform="rotate(-11 250 235)"/>
-
-
-      <!-- COIN SHADOW -->
-
-      <ellipse
-        cx="250"
-        cy="260"
-        rx="150"
-        ry="150"
-        fill="#8b6413"
-        opacity=".16"
-        filter="url(#coinShadow)"/>
-
-
-      <!-- COIN -->
-
-      <circle
-        cx="250"
-        cy="220"
-        r="137"
-        fill="url(#goldEdge)"
-        stroke="#c89418"
-        stroke-width="6"/>
-
-      <circle
-        cx="250"
-        cy="220"
-        r="126"
-        fill="url(#goldFace)"
-        stroke="#fff0a0"
-        stroke-width="3"/>
-
-
-      <!-- REALISTIC INNER RINGS -->
-
-      <circle
-        cx="250"
-        cy="220"
-        r="113"
-        fill="none"
-        stroke="#b47d0c"
-        stroke-width="3"
-        opacity=".75"/>
-
-      <circle
-        cx="250"
-        cy="220"
-        r="105"
-        fill="none"
-        stroke="#ffe679"
-        stroke-width="2"
-        opacity=".8"/>
-
-      <circle
-        cx="250"
-        cy="220"
-        r="95"
-        fill="none"
-        stroke="#b78312"
-        stroke-width="2"
-        opacity=".55"/>
-
-
-      <!-- METAL HIGHLIGHTS -->
-
-      <path
-        d="M145 168
-           C172 108 252 82 314 111"
-        fill="none"
-        stroke="#fffbd0"
-        stroke-width="7"
-        stroke-linecap="round"
-        opacity=".55"/>
-
-      <path
-        d="M157 286
-           C210 328 290 331 343 282"
-        fill="none"
-        stroke="#a8750c"
-        stroke-width="5"
-        opacity=".45"/>
-
-
-      <!-- LNR
-           SINGLE GOLD COLOR
-           NO OUTLINE
-      -->
-
-      <text
-        x="250"
-        y="250"
-        text-anchor="middle"
-        font-family="Arial, Helvetica, sans-serif"
-        font-size="88"
-        font-weight="900"
-        letter-spacing="2"
-        fill="url(#textGold)">
-        LNR
-      </text>
-
-
-      <!-- FRONT SATURN RING SECTION -->
-
-      <path
-        d="M45 239
-           C90 183 158 174 250 190
-           C343 207 411 196 455 153"
-        fill="none"
-        stroke="#04d89b"
-        stroke-width="8"
-        stroke-linecap="round"
-        opacity=".22"
-        filter="url(#ringGlow)"/>
-
-      <path
-        d="M45 239
-           C90 183 158 174 250 190
-           C343 207 411 196 455 153"
-        fill="none"
-        stroke="url(#greenRing)"
-        stroke-width="5"
-        stroke-linecap="round"/>
-
-
-      <!-- SECOND ORBIT -->
-
-      <ellipse
-        cx="250"
-        cy="220"
-        rx="210"
-        ry="70"
-        fill="none"
-        stroke="#08c98e"
-        stroke-width="3"
-        opacity=".75"
-        transform="rotate(14 250 220)"/>
-
-
-      <!-- SMALL ORBIT DOTS -->
-
-      <circle
-        cx="414"
-        cy="174"
-        r="8"
-        fill="#13bd84"/>
-
-      <circle
-        cx="91"
-        cy="260"
-        r="7"
-        fill="#12b87e"/>
-
-    </svg>
-
-  </div>
-
-
-  <!-- BALANCE -->
-
-  <div class="balance">
-
-    <div class="balance-title">
-      TOTAL BALANCE ⓘ
-    </div>
-
-    <div class="balance-number"
-         id="totalBalance">
-      25,000.00
-    </div>
-
-    <div class="balance-token">
-      <span class="token-dot">L</span>
+    <ellipse
+      cx="250"
+      cy="220"
+      rx="188"
+      ry="63"
+      fill="none"
+      stroke="#09c990"
+      stroke-width="4"
+      opacity=".8"
+      transform="rotate(-12 250 220)"/>
+
+
+    <!-- CRYSTAL -->
+
+    <polygon
+      points="250,48 355,170 250,350 145,170"
+      fill="url(#crystal)"
+      opacity=".93"
+      stroke="#69f4d5"
+      stroke-width="2"/>
+
+
+    <!-- INNER CRYSTAL -->
+
+    <polygon
+      points="250,82 320,174 250,318 180,174"
+      fill="#0bbd8a"
+      opacity=".30"/>
+
+
+    <polygon
+      points="250,48 250,350 145,170"
+      fill="#ffffff"
+      opacity=".18"/>
+
+    <polygon
+      points="250,48 355,170 250,350"
+      fill="#006c53"
+      opacity=".16"/>
+
+
+    <!-- LNR -->
+
+    <text
+      x="250"
+      y="245"
+      text-anchor="middle"
+      font-family="Arial,Helvetica,sans-serif"
+      font-size="78"
+      font-weight="900"
+      letter-spacing="1"
+      fill="url(#gold)">
       LNR
-    </div>
-
-  </div>
-
-
-  <!-- STATS -->
-
-  <div class="stats">
-
-    <div class="stat">
-
-      <div class="stat-icon">▣</div>
-
-      <div class="stat-title">
-        WALLET BALANCE
-      </div>
-
-      <div class="stat-number"
-           id="walletBalance">
-        25,000.00
-      </div>
-
-      <div class="stat-unit">
-        LNR
-      </div>
-
-    </div>
-
-
-    <div class="stat">
-
-      <div class="stat-icon">⚒</div>
-
-      <div class="stat-title">
-        MINED (NOT CLAIMED)
-      </div>
-
-      <div class="stat-number"
-           id="minedBalance">
-        0.00
-      </div>
-
-      <div class="stat-unit">
-        LNR
-      </div>
-
-    </div>
-
-
-    <div class="stat">
-
-      <div class="stat-icon">ϟ</div>
-
-      <div class="stat-title">
-        MINING SPEED
-      </div>
-
-      <div class="stat-number">
-        0.70
-      </div>
-
-      <div class="stat-unit">
-        LNR / hour
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- CLAIM -->
-
-  <button class="claim"
-          onclick="claimMining()">
-
-    <div class="claim-content">
-
-      <span class="claim-icon">ϟ</span>
-
-      <span>CLAIM</span>
-
-    </div>
-
-    <span class="claim-arrow">›</span>
-
-  </button>
-
-
-  <!-- ACTIVE -->
-
-  <div class="mining-active">
-
-    <span class="mining-line"></span>
-
-    <span class="mining-dot"></span>
-
-    <span>
-      AUTOMATIC MINING ACTIVE
-    </span>
-
-    <span class="mining-dot"></span>
-
-    <span class="mining-line"></span>
-
-  </div>
-
-
-  <!-- INFO -->
-
-  <div class="info-card">
-
-    <div class="info-logo">
-      LNR
-    </div>
-
-    <div class="info-text">
-
-      <div class="info-title">
-        LUNARO
-      </div>
-
-      <div class="info-sub">
-        Lunar Mining Network
-      </div>
-
-    </div>
-
-    <div class="info-right">
-      The future is yours
-    </div>
-
-  </div>
-
-
-  <!-- LEVEL JOURNEY -->
-
-  <div class="section">
-
-    <div class="section-head">
-
-      <div class="section-title">
-        Level Journey
-      </div>
-
-      <div class="section-more">
-        LVL 3
-      </div>
-
-    </div>
-
-    <div class="journey">
-
-      <div class="journey-top">
-
-        <div class="journey-level">
-          Level 3
-        </div>
-
-        <div class="journey-xp">
-          <span id="xpJourney">348</span> / 1,000 XP
-        </div>
-
-      </div>
-
-      <div class="journey-track">
-
-        <div class="journey-fill"
-             id="journeyFill"></div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- RECENT ACTIVITY -->
-
-  <div class="section">
-
-    <div class="section-head">
-
-      <div class="section-title">
-        Recent Activity
-      </div>
-
-      <div class="section-more">
-        View all
-      </div>
-
-    </div>
-
-    <div id="activityList">
-
-      <div class="activity">
-
-        <div class="activity-icon">
-          ⚡
-        </div>
-
-        <div class="activity-main">
-
-          <div class="activity-name">
-            Automatic Mining
-          </div>
-
-          <div class="activity-time">
-            Mining is active
-          </div>
-
-        </div>
-
-        <div class="activity-value">
-          +0.70/h
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================================================
-                         TASKS
-========================================================= -->
-
-<section id="tasks" class="page">
-
-  <div class="section">
-
-    <div class="section-head">
-      <div class="section-title">
-        Daily Tasks
-      </div>
-
-      <div class="section-more">
-        Rewards
-      </div>
-    </div>
-
-
-    <div class="task">
-
-      <div class="task-icon">
-        ✓
-      </div>
-
-      <div class="task-main">
-
-        <div class="task-title">
-          Daily Check-in
-        </div>
-
-        <div class="task-reward">
-          +25 LNR
-        </div>
-
-      </div>
-
-      <button class="task-btn"
-              onclick="taskDone(this)">
-        CLAIM
-      </button>
-
-    </div>
-
-
-    <div class="task">
-
-      <div class="task-icon">
-        ◉
-      </div>
-
-      <div class="task-main">
-
-        <div class="task-title">
-          Join Community
-        </div>
-
-        <div class="task-reward">
-          +50 LNR
-        </div>
-
-      </div>
-
-      <button class="task-btn"
-              onclick="taskDone(this)">
-        OPEN
-      </button>
-
-    </div>
-
-
-    <div class="task">
-
-      <div class="task-icon">
-        ★
-      </div>
-
-      <div class="task-main">
-
-        <div class="task-title">
-          Invite a Friend
-        </div>
-
-        <div class="task-reward">
-          +100 LNR
-        </div>
-
-      </div>
-
-      <button class="task-btn"
-              onclick="goPage('friends')">
-        INVITE
-      </button>
-
-    </div>
-
-
-    <div class="task">
-
-      <div class="task-icon">
-        ◇
-      </div>
-
-      <div class="task-main">
-
-        <div class="task-title">
-          Keep Mining Active
-        </div>
-
-        <div class="task-reward">
-          +30 XP
-        </div>
-
-      </div>
-
-      <button class="task-btn"
-              onclick="showToast('Mining is already active')">
-        ACTIVE
-      </button>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================================================
-                         MINERS
-========================================================= -->
-
-<section id="miners" class="page">
-
-  <div class="section">
-
-    <div class="section-head">
-
-      <div class="section-title">
-        Miner Store
-      </div>
-
-      <div class="section-more">
-        Upgrade
-      </div>
-
-    </div>
-
-
-    <!-- CHART -->
-
-    <div class="chart-card">
-
-      <div class="journey-top">
-
-        <div class="journey-level">
-          Mining Performance
-        </div>
-
-        <div class="journey-xp">
-          LNR / hour
-        </div>
-
-      </div>
-
-      <div class="chart">
-
-        <svg viewBox="0 0 400 150"
-             preserveAspectRatio="none">
-
-          <defs>
-
-            <linearGradient
-              id="chartFill"
-              x1="0"
-              y1="0"
-              x2="0"
-              y2="1">
-
-              <stop offset="0%"
-                    stop-color="#10b981"
-                    stop-opacity=".25"/>
-
-              <stop offset="100%"
-                    stop-color="#10b981"
-                    stop-opacity="0"/>
-
-            </linearGradient>
-
-          </defs>
-
-          <path
-            d="M0 125
-               C35 120 45 110 72 115
-               C100 120 108 91 135 98
-               C165 106 176 70 205 82
-               C233 94 250 55 275 65
-               C304 78 315 38 345 48
-               C367 55 385 27 400 35
-               L400 150
-               L0 150 Z"
-            fill="url(#chartFill)"/>
-
-          <path
-            d="M0 125
-               C35 120 45 110 72 115
-               C100 120 108 91 135 98
-               C165 106 176 70 205 82
-               C233 94 250 55 275 65
-               C304 78 315 38 345 48
-               C367 55 385 27 400 35"
-            fill="none"
-            stroke="#10b981"
-            stroke-width="4"
-            stroke-linecap="round"/>
-
-        </svg>
-
-      </div>
-
-    </div>
-
-
-    <div class="miners-grid">
-
-      <div class="miner">
-
-        <div class="miner-top">
-
-          <div class="miner-icon">
-            ⚙
-          </div>
-
-          <div class="miner-lock">
-            ✓
-          </div>
-
-        </div>
-
-        <h4>
-          Basic Miner
-        </h4>
-
-        <p>
-          Starter mining unit
-        </p>
-
-        <div class="miner-rate">
-          0.70 LNR/h
-        </div>
-
-      </div>
-
-
-      <div class="miner">
-
-        <div class="miner-top">
-
-          <div class="miner-icon">
-            ⚙
-          </div>
-
-          <div class="miner-lock">
-            🔒
-          </div>
-
-        </div>
-
-        <h4>
-          Silver Miner
-        </h4>
-
-        <p>
-          Unlock at Level 5
-        </p>
-
-        <div class="miner-rate">
-          1.50 LNR/h
-        </div>
-
-      </div>
-
-
-      <div class="miner">
-
-        <div class="miner-top">
-
-          <div class="miner-icon">
-            ◆
-          </div>
-
-          <div class="miner-lock">
-            🔒
-          </div>
-
-        </div>
-
-        <h4>
-          Gold Miner
-        </h4>
-
-        <p>
-          Unlock at Level 10
-        </p>
-
-        <div class="miner-rate">
-          3.00 LNR/h
-        </div>
-
-      </div>
-
-
-      <div class="miner">
-
-        <div class="miner-top">
-
-          <div class="miner-icon">
-            ✦
-          </div>
-
-          <div class="miner-lock">
-            🔒
-          </div>
-
-        </div>
-
-        <h4>
-          Diamond Miner
-        </h4>
-
-        <p>
-          Unlock at Level 20
-        </p>
-
-        <div class="miner-rate">
-          7.50 LNR/h
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================================================
-                         FRIENDS
-========================================================= -->
-
-<section id="friends" class="page">
-
-  <div class="section">
-
-    <div class="referral">
-
-      <div class="ref-title">
-        Invite Friends
-      </div>
-
-      <div class="ref-sub">
-        Invite your friends to LUNARO.
-        Your referral reward is calculated
-        when your invited friend claims.
-      </div>
-
-
-      <div class="ref-code">
-
-        <strong id="refCode">
-          LNR-7A92X
-        </strong>
-
-        <button class="copy-btn"
-                onclick="copyReferral()">
-          COPY
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div class="friend-stats">
-
-      <div class="friend-stat">
-
-        <b id="friendCount">
-          0
-        </b>
-
-        <span>
-          Friends
-        </span>
-
-      </div>
-
-
-      <div class="friend-stat">
-
-        <b id="refRewards">
-          0.00
-        </b>
-
-        <span>
-          Referral Rewards
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <div class="section">
-
-      <div class="section-head">
-
-        <div class="section-title">
-          How it works
-        </div>
-
-      </div>
-
-
-      <div class="task">
-
-        <div class="task-icon">
-          1
-        </div>
-
-        <div class="task-main">
-
-          <div class="task-title">
-            Share your referral
-          </div>
-
-          <div class="task-reward">
-            Send your unique code
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="task">
-
-        <div class="task-icon">
-          2
-        </div>
-
-        <div class="task-main">
-
-          <div class="task-title">
-            Friend joins
-          </div>
-
-          <div class="task-reward">
-            Referral is linked once
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="task">
-
-        <div class="task-icon">
-          3
-        </div>
-
-        <div class="task-main">
-
-          <div class="task-title">
-            Friend claims
-          </div>
-
-          <div class="task-reward">
-            Referral reward becomes eligible
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================================================
-                         PROFILE
-========================================================= -->
-
-<section id="profile" class="page">
-
-  <div class="section">
-
-    <div class="section-head">
-
-      <div class="section-title">
-        Profile
-      </div>
-
-    </div>
-
-
-    <div class="profile-card">
-
-      <div class="profile-row">
-
-        <div class="profile-icon">
-          ▣
-        </div>
-
-        <div class="profile-data">
-
-          <div class="profile-label">
-            Connected Wallet
-          </div>
-
-          <div class="profile-value">
-            UQCN...iD7
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="profile-row">
-
-        <div class="profile-icon">
-          L
-        </div>
-
-        <div class="profile-data">
-
-          <div class="profile-label">
-            Wallet Balance
-          </div>
-
-          <div class="profile-value">
-            <span id="profileBalance">
-              25,000.00
-            </span>
-            LNR
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="profile-row">
-
-        <div class="profile-icon">
-          ★
-        </div>
-
-        <div class="profile-data">
-
-          <div class="profile-label">
-            Current Level
-          </div>
-
-          <div class="profile-value">
-            Level 3
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="withdraw">
-
-      <div class="section-title">
-        Withdrawal
-      </div>
-
-      <input
-        class="input"
-        id="withdrawAmount"
-        type="number"
-        min="0"
-        placeholder="Amount in LNR">
-
-      <button
-        class="withdraw-btn"
-        onclick="withdrawDemo()">
-
-        REQUEST WITHDRAWAL
-
-      </button>
-
-      <div class="demo-note">
-        Prototype mode: withdrawal is only a local
-        demo and does not transfer real cryptocurrency.
-      </div>
-
-    </div>
-
-
-    <div class="section">
-
-      <div class="section-head">
-
-        <div class="section-title">
-          Withdrawal History
-        </div>
-
-      </div>
-
-      <div id="history">
-
-        <div class="activity">
-
-          <div class="activity-icon">
-            —
-          </div>
-
-          <div class="activity-main">
-
-            <div class="activity-name">
-              No withdrawals yet
-            </div>
-
-            <div class="activity-time">
-              History will appear here
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
+    </text>
+
+
+    <!-- FRONT ORBIT -->
+
+    <path
+      d="M55 265
+         C105 195 170 180 250 198
+         C330 216 400 195 445 145"
+      fill="none"
+      stroke="#00d99c"
+      stroke-width="7"
+      opacity=".18"
+      filter="url(#glow)"/>
+
+    <path
+      d="M55 265
+         C105 195 170 180 250 198
+         C330 216 400 195 445 145"
+      fill="none"
+      stroke="#09c98f"
+      stroke-width="4"/>
+
+
+    <!-- SECOND ORBIT -->
+
+    <ellipse
+      cx="250"
+      cy="220"
+      rx="195"
+      ry="64"
+      fill="none"
+      stroke="#18dba5"
+      stroke-width="3"
+      opacity=".7"
+      transform="rotate(15 250 220)"/>
+
+
+    <!-- ORBIT NODES -->
+
+    <circle
+      cx="94"
+      cy="265"
+      r="7"
+      fill="#0cc28a"/>
+
+    <circle
+      cx="407"
+      cy="174"
+      r="8"
+      fill="#08b87e"/>
+
+
+    <!-- BASE -->
+
+    <ellipse
+      cx="250"
+      cy="356"
+      rx="95"
+      ry="19"
+      fill="#00ad7c"
+      opacity=".18"/>
+
+    <ellipse
+      cx="250"
+      cy="350"
+      rx="72"
+      ry="13"
+      fill="#0fcf98"
+      opacity=".5"/>
+
+  </svg>
 
 </div>
 
 
-<!-- =========================================================
-                       BOTTOM NAV
-========================================================= -->
+<!-- BALANCE -->
 
-<nav class="bottom-nav">
+<div class="balance">
+
+  <div class="balance-title">
+    TOTAL BALANCE ⓘ
+  </div>
+
+  <div
+    class="balance-number"
+    id="total">
+    25,000.00
+  </div>
+
+  <div class="balance-token">
+
+    <span class="token">
+      L
+    </span>
+
+    LNR
+
+  </div>
+
+</div>
+
+
+<!-- STATS -->
+
+<div class="stats">
+
+  <div class="stat">
+
+    <div class="stat-icon">
+      ▣
+    </div>
+
+    <div class="stat-title">
+      WALLET BALANCE
+    </div>
+
+    <div
+      class="stat-value"
+      id="wallet">
+      25,000.00
+    </div>
+
+    <div class="stat-unit">
+      LNR
+    </div>
+
+  </div>
+
+
+  <div class="stat">
+
+    <div class="stat-icon">
+      ⚒
+    </div>
+
+    <div class="stat-title">
+      MINED (NOT CLAIMED)
+    </div>
+
+    <div
+      class="stat-value"
+      id="mined">
+      0.00
+    </div>
+
+    <div class="stat-unit">
+      LNR
+    </div>
+
+  </div>
+
+
+  <div class="stat">
+
+    <div class="stat-icon">
+      ϟ
+    </div>
+
+    <div class="stat-title">
+      MINING SPEED
+    </div>
+
+    <div class="stat-value">
+      0.70
+    </div>
+
+    <div class="stat-unit">
+      LNR / hour
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- CLAIM -->
+
+<button
+  class="claim"
+  onclick="claim()">
+
+  <span class="claim-left">
+    ϟ
+  </span>
+
+  CLAIM
+
+  <span class="claim-arrow">
+    ›
+  </span>
+
+</button>
+
+
+<!-- STATUS -->
+
+<div class="status">
+
+  <span class="status-line"></span>
+
+  <span class="dot"></span>
+
+  AUTOMATIC MINING ACTIVE
+
+  <span class="dot"></span>
+
+  <span class="status-line"></span>
+
+</div>
+
+
+<!-- INFO -->
+
+<div class="info">
+
+  <div class="info-logo">
+    LNR
+  </div>
+
+  <div class="info-text">
+
+    <div class="info-title">
+      LUNARO
+    </div>
+
+    <div class="info-sub">
+      Lunar Mining Network
+    </div>
+
+  </div>
+
+  <div class="info-right">
+    The future is yours
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+                         TASKS
+================================================== -->
+
+<section id="tasks" class="page">
+
+  <div class="page-title">
+    Daily Tasks
+  </div>
+
+
+  <div class="card task">
+
+    <div class="task-icon">
+      ✓
+    </div>
+
+    <div class="task-main">
+
+      <div class="task-title">
+        Daily Check-in
+      </div>
+
+      <div class="task-reward">
+        +25 LNR
+      </div>
+
+    </div>
+
+    <button
+      class="task-btn"
+      onclick="done(this)">
+      CLAIM
+    </button>
+
+  </div>
+
+
+  <div class="card task">
+
+    <div class="task-icon">
+      ★
+    </div>
+
+    <div class="task-main">
+
+      <div class="task-title">
+        Join Community
+      </div>
+
+      <div class="task-reward">
+        +50 LNR
+      </div>
+
+    </div>
+
+    <button
+      class="task-btn"
+      onclick="done(this)">
+      OPEN
+    </button>
+
+  </div>
+
+
+  <div class="card task">
+
+    <div class="task-icon">
+      ♧
+    </div>
+
+    <div class="task-main">
+
+      <div class="task-title">
+        Invite a Friend
+      </div>
+
+      <div class="task-reward">
+        +100 LNR
+      </div>
+
+    </div>
+
+    <button
+      class="task-btn"
+      onclick="go('friends')">
+      INVITE
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ==================================================
+                         MINERS
+================================================== -->
+
+<section id="miners" class="page">
+
+  <div class="page-title">
+    Miner Store
+  </div>
+
+
+  <div class="card">
+
+    <b>
+      Mining Performance
+    </b>
+
+    <div style="
+      height:110px;
+      margin-top:15px;
+    ">
+
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 400 120"
+        preserveAspectRatio="none">
+
+        <path
+          d="
+          M0 100
+          C40 94 55 88 80 91
+          C110 95 120 70 150 78
+          C180 86 195 55 220 67
+          C250 81 270 42 295 51
+          C325 61 345 29 370 38
+          C383 42 392 25 400 28"
+          fill="none"
+          stroke="#0bbd82"
+          stroke-width="4"/>
+
+      </svg>
+
+    </div>
+
+  </div>
+
+
+  <div class="miner-grid">
+
+    <div class="miner">
+
+      <div class="miner-icon">
+        ⚙
+      </div>
+
+      <h3>
+        Basic Miner
+      </h3>
+
+      <p>
+        Starter
+      </p>
+
+      <div class="miner-rate">
+        0.70 LNR/h
+      </div>
+
+    </div>
+
+
+    <div class="miner">
+
+      <div class="miner-icon">
+        ⚙
+      </div>
+
+      <h3>
+        Silver Miner
+      </h3>
+
+      <p>
+        Level 5
+      </p>
+
+      <div class="miner-rate">
+        1.50 LNR/h
+      </div>
+
+    </div>
+
+
+    <div class="miner">
+
+      <div class="miner-icon">
+        ◆
+      </div>
+
+      <h3>
+        Gold Miner
+      </h3>
+
+      <p>
+        Level 10
+      </p>
+
+      <div class="miner-rate">
+        3.00 LNR/h
+      </div>
+
+    </div>
+
+
+    <div class="miner">
+
+      <div class="miner-icon">
+        ✦
+      </div>
+
+      <h3>
+        Diamond Miner
+      </h3>
+
+      <p>
+        Level 20
+      </p>
+
+      <div class="miner-rate">
+        7.50 LNR/h
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ==================================================
+                         FRIENDS
+================================================== -->
+
+<section id="friends" class="page">
+
+  <div class="page-title">
+    Friends
+  </div>
+
+
+  <div class="referral">
+
+    <h2>
+      Invite Friends
+    </h2>
+
+    <p>
+      Invite your friends to LUNARO.
+      Referral rewards become eligible
+      when the invited friend claims.
+    </p>
+
+
+    <div class="ref-code">
+
+      <b>
+        LNR-7A92X
+      </b>
+
+      <button
+        class="copy"
+        onclick="copyCode()">
+        COPY
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="card"
+       style="margin-top:12px">
+
+    <div class="task">
+
+      <div class="task-icon">
+        1
+      </div>
+
+      <div class="task-main">
+
+        <div class="task-title">
+          Share your code
+        </div>
+
+        <div class="task-reward">
+          Send your referral link
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card task">
+
+    <div class="task-icon">
+      2
+    </div>
+
+    <div class="task-main">
+
+      <div class="task-title">
+        Friend joins
+      </div>
+
+      <div class="task-reward">
+        Referral becomes linked
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card task">
+
+    <div class="task-icon">
+      3
+    </div>
+
+    <div class="task-main">
+
+      <div class="task-title">
+        Friend claims
+      </div>
+
+      <div class="task-reward">
+        Reward becomes eligible
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ==================================================
+                         PROFILE
+================================================== -->
+
+<section id="profile" class="page">
+
+  <div class="page-title">
+    Profile
+  </div>
+
+
+  <div class="card">
+
+    <div class="profile-row">
+
+      <div class="profile-icon">
+        ▣
+      </div>
+
+      <div class="profile-text">
+
+        <div class="profile-label">
+          Connected Wallet
+        </div>
+
+        <div class="profile-value">
+          UQCN...iD7
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="profile-row">
+
+      <div class="profile-icon">
+        L
+      </div>
+
+      <div class="profile-text">
+
+        <div class="profile-label">
+          Wallet Balance
+        </div>
+
+        <div
+          class="profile-value"
+          id="profileBalance">
+          25,000.00 LNR
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="profile-row">
+
+      <div class="profile-icon">
+        ★
+      </div>
+
+      <div class="profile-text">
+
+        <div class="profile-label">
+          Level
+        </div>
+
+        <div class="profile-value">
+          Level 3
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <b>
+      Withdrawal
+    </b>
+
+    <input
+      class="input"
+      type="number"
+      placeholder="Amount in LNR"
+      id="withdrawAmount">
+
+    <button
+      class="withdraw"
+      onclick="withdraw()">
+      REQUEST WITHDRAWAL
+    </button>
+
+    <p style="
+      font-size:9px;
+      color:#89959d;
+      margin-top:8px;
+      line-height:1.5;
+    ">
+      Prototype mode only. No real cryptocurrency
+      transfer is performed by this demo.
+    </p>
+
+  </div>
+
+</section>
+
+
+<!-- ==================================================
+                       NAVIGATION
+================================================== -->
+
+<nav class="nav">
 
   <button
-    class="nav-btn active"
+    class="active"
     data-page="home"
-    onclick="goPage('home')">
+    onclick="go('home')">
 
-    <div class="nav-icon">◔</div>
-    <div class="nav-label">Mine</div>
+    <span class="nav-icon">
+      ◔
+    </span>
+
+    Mine
 
   </button>
 
 
   <button
-    class="nav-btn"
     data-page="tasks"
-    onclick="goPage('tasks')">
+    onclick="go('tasks')">
 
-    <div class="nav-icon">☷</div>
-    <div class="nav-label">Tasks</div>
+    <span class="nav-icon">
+      ☷
+    </span>
+
+    Tasks
 
   </button>
 
 
   <button
-    class="nav-btn"
     data-page="miners"
-    onclick="goPage('miners')">
+    onclick="go('miners')">
 
-    <div class="nav-icon">⚒</div>
-    <div class="nav-label">Miners</div>
+    <span class="nav-icon">
+      ⚒
+    </span>
+
+    Miners
 
   </button>
 
 
   <button
-    class="nav-btn"
     data-page="friends"
-    onclick="goPage('friends')">
+    onclick="go('friends')">
 
-    <div class="nav-icon">♧</div>
-    <div class="nav-label">Friends</div>
+    <span class="nav-icon">
+      ♧
+    </span>
+
+    Friends
 
   </button>
 
 
   <button
-    class="nav-btn"
     data-page="profile"
-    onclick="goPage('profile')">
+    onclick="go('profile')">
 
-    <div class="nav-icon">●</div>
-    <div class="nav-label">Profile</div>
+    <span class="nav-icon">
+      ●
+    </span>
+
+    Profile
 
   </button>
 
 </nav>
 
-
-<div class="toast" id="toast"></div>
+</div>
 
 
 <script>
 
-/* =========================================================
-                     LUNARO STATE
-========================================================= */
+/* ==========================================
+             LUNARO MINING STATE
+========================================== */
 
 let state = {
-
   wallet:25000,
-
   mined:0,
-
-  lastMining:Date.now(),
-
-  xp:348,
-
-  level:3,
-
   rate:0.70,
-
-  refRewards:0,
-
-  friends:0,
-
-  history:[],
-
-  activity:[]
-
+  last:Date.now()
 };
 
 
-/* =========================================================
-                     LOAD STATE
-========================================================= */
+/* ==========================================
+                 LOAD
+========================================== */
 
 try{
 
-  const saved =
-    localStorage.getItem("lunaro_state");
+  const old =
+    localStorage.getItem("lunaro");
 
-  if(saved){
-
-    const parsed =
-      JSON.parse(saved);
+  if(old){
 
     state = {
       ...state,
-      ...parsed
+      ...JSON.parse(old)
     };
 
   }
@@ -2445,16 +1780,16 @@ try{
 }catch(e){}
 
 
-/* =========================================================
-                     SAVE STATE
-========================================================= */
+/* ==========================================
+                 SAVE
+========================================== */
 
 function save(){
 
   try{
 
     localStorage.setItem(
-      "lunaro_state",
+      "lunaro",
       JSON.stringify(state)
     );
 
@@ -2463,16 +1798,17 @@ function save(){
 }
 
 
-/* =========================================================
-                 AUTOMATIC MINING
-========================================================= */
+/* ==========================================
+             AUTOMATIC MINING
+========================================== */
 
-function accrue(){
+function mining(){
 
-  const now = Date.now();
+  const now =
+    Date.now();
 
   const hours =
-    (now - state.lastMining) / 3600000;
+    (now-state.last)/3600000;
 
   if(hours > 0){
 
@@ -2481,20 +1817,21 @@ function accrue(){
 
   }
 
-  state.lastMining = now;
+  state.last =
+    now;
 
   save();
 
 }
 
 
-/* =========================================================
-                       FORMAT
-========================================================= */
+/* ==========================================
+                  FORMAT
+========================================== */
 
-function fmt(num){
+function money(n){
 
-  return Number(num || 0)
+  return Number(n)
     .toLocaleString(
       "en-US",
       {
@@ -2506,88 +1843,57 @@ function fmt(num){
 }
 
 
-/* =========================================================
-                       RENDER
-========================================================= */
+/* ==========================================
+                  RENDER
+========================================== */
 
 function render(){
 
-  accrue();
-
-  const total =
-    state.wallet;
+  mining();
 
   document.getElementById(
-    "walletBalance"
-  ).textContent = fmt(state.wallet);
+    "wallet"
+  ).textContent =
+    money(state.wallet);
 
 
   document.getElementById(
-    "minedBalance"
-  ).textContent = fmt(state.mined);
+    "mined"
+  ).textContent =
+    money(state.mined);
 
+
+  /*
+    Mined is NOT included in wallet
+    until the user presses CLAIM.
+  */
 
   document.getElementById(
-    "totalBalance"
-  ).textContent = fmt(total);
+    "total"
+  ).textContent =
+    money(state.wallet);
 
 
   document.getElementById(
     "profileBalance"
-  ).textContent = fmt(state.wallet);
-
-
-  document.getElementById(
-    "xpTop"
-  ).textContent = Math.floor(state.xp);
-
-
-  document.getElementById(
-    "xpJourney"
-  ).textContent = Math.floor(state.xp);
-
-
-  const progress =
-    Math.min(
-      100,
-      (state.xp / 1000) * 100
-    );
-
-  document.getElementById(
-    "journeyFill"
-  ).style.width =
-    progress + "%";
-
-
-  document.getElementById(
-    "friendCount"
   ).textContent =
-    state.friends;
-
-
-  document.getElementById(
-    "refRewards"
-  ).textContent =
-    fmt(state.refRewards);
-
-
-  renderHistory();
+    money(state.wallet)+" LNR";
 
 }
 
 
-/* =========================================================
-                        CLAIM
-========================================================= */
+/* ==========================================
+                    CLAIM
+========================================== */
 
-function claimMining(){
+function claim(){
 
-  accrue();
+  mining();
 
-  if(state.mined <= 0.0001){
+  if(state.mined < 0.01){
 
-    showToast(
-      "Nothing to claim yet"
+    alert(
+      "Mining balance is not ready yet."
     );
 
     return;
@@ -2597,62 +1903,33 @@ function claimMining(){
   const amount =
     state.mined;
 
-  /*
-    IMPORTANT:
-    mined is added to wallet ONLY HERE.
-  */
+  state.wallet +=
+    amount;
 
-  state.wallet += amount;
-
-  state.mined = 0;
-
-  state.xp += 10;
-
-  if(state.xp >= 1000){
-
-    state.level++;
-
-    state.xp = 0;
-
-  }
-
-
-  state.activity.unshift({
-
-    name:"Mining Claimed",
-
-    value:amount,
-
-    time:new Date().toLocaleTimeString()
-
-  });
-
-
-  state.activity =
-    state.activity.slice(0,5);
-
+  state.mined =
+    0;
 
   save();
 
   render();
 
-  showToast(
-    "+" + fmt(amount) + " LNR claimed"
+  alert(
+    "+"+money(amount)+" LNR claimed!"
   );
 
 }
 
 
-/* =========================================================
-                         NAVIGATION
-========================================================= */
+/* ==========================================
+                PAGE NAVIGATION
+========================================== */
 
-function goPage(page){
+function go(page){
 
   document
-    .querySelectorAll(".page")
+    .querySelectorAll(".page,.home")
     .forEach(
-      p => p.classList.remove("active")
+      el => el.classList.remove("active")
     );
 
 
@@ -2667,59 +1944,26 @@ function goPage(page){
 
 
   document
-    .querySelectorAll(".nav-btn")
-    .forEach(btn => {
+    .querySelectorAll(".nav button")
+    .forEach(
+      btn => {
 
-      btn.classList.toggle(
-        "active",
-        btn.dataset.page === page
-      );
+        btn.classList.toggle(
+          "active",
+          btn.dataset.page === page
+        );
 
-    });
-
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-}
-
-
-/* =========================================================
-                         TOAST
-========================================================= */
-
-let toastTimer;
-
-function showToast(message){
-
-  const toast =
-    document.getElementById("toast");
-
-  toast.textContent =
-    message;
-
-  toast.classList.add("show");
-
-  clearTimeout(toastTimer);
-
-  toastTimer =
-    setTimeout(
-      () => {
-        toast.classList.remove("show");
-      },
-      2200
+      }
     );
 
 }
 
 
-/* =========================================================
-                      TASKS
-========================================================= */
+/* ==========================================
+                    TASK
+========================================== */
 
-function taskDone(button){
+function done(button){
 
   button.textContent =
     "DONE";
@@ -2728,206 +1972,107 @@ function taskDone(button){
     true;
 
   button.style.opacity =
-    ".55";
-
-  showToast(
-    "Task completed"
-  );
+    ".5";
 
 }
 
 
-/* =========================================================
-                    COPY REFERRAL
-========================================================= */
+/* ==========================================
+                COPY REFERRAL
+========================================== */
 
-function copyReferral(){
+function copyCode(){
 
   const code =
-    document.getElementById(
-      "refCode"
-    ).textContent.trim();
+    "LNR-7A92X";
 
   if(
-    navigator.clipboard &&
-    navigator.clipboard.writeText
+    navigator.clipboard
   ){
 
-    navigator.clipboard.writeText(code);
+    navigator.clipboard
+      .writeText(code);
 
   }
 
-  showToast(
+  alert(
     "Referral code copied"
   );
 
 }
 
 
-/* =========================================================
-                     WITHDRAW DEMO
-========================================================= */
+/* ==========================================
+             DEMO WITHDRAWAL
+========================================== */
 
-function withdrawDemo(){
-
-  const input =
-    document.getElementById(
-      "withdrawAmount"
-    );
+function withdraw(){
 
   const amount =
-    Number(input.value);
+    Number(
+      document.getElementById(
+        "withdrawAmount"
+      ).value
+    );
 
+  if(
+    !amount ||
+    amount <= 0
+  ){
 
-  if(!amount || amount <= 0){
-
-    showToast(
-      "Enter a valid amount"
+    alert(
+      "Enter a valid amount."
     );
 
     return;
 
   }
 
+  if(
+    amount > state.wallet
+  ){
 
-  if(amount > state.wallet){
-
-    showToast(
-      "Insufficient balance"
+    alert(
+      "Insufficient balance."
     );
 
     return;
 
   }
-
 
   /*
-    DEMO ONLY.
-    No real TON transaction occurs.
+    Demo only.
+    No real blockchain transaction.
   */
 
-  state.wallet -= amount;
-
-
-  state.history.unshift({
-
-    amount:amount,
-
-    time:new Date().toLocaleString(),
-
-    status:"Demo Requested"
-
-  });
-
+  state.wallet -=
+    amount;
 
   save();
 
-  input.value = "";
-
   render();
 
-  showToast(
-    "Demo withdrawal request created"
+  document.getElementById(
+    "withdrawAmount"
+  ).value = "";
+
+  alert(
+    "Demo withdrawal request created."
   );
 
 }
 
 
-/* =========================================================
-                    HISTORY
-========================================================= */
+/* ==========================================
+                  START
+========================================== */
 
-function renderHistory(){
-
-  const box =
-    document.getElementById(
-      "history"
-    );
-
-  if(
-    !state.history ||
-    state.history.length === 0
-  ){
-
-    box.innerHTML = `
-
-      <div class="activity">
-
-        <div class="activity-icon">
-          —
-        </div>
-
-        <div class="activity-main">
-
-          <div class="activity-name">
-            No withdrawals yet
-          </div>
-
-          <div class="activity-time">
-            History will appear here
-          </div>
-
-        </div>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  box.innerHTML =
-    state.history
-      .slice(0,8)
-      .map(item => `
-
-        <div class="activity">
-
-          <div class="activity-icon">
-            ↗
-          </div>
-
-          <div class="activity-main">
-
-            <div class="activity-name">
-              ${fmt(item.amount)} LNR
-            </div>
-
-            <div class="activity-time">
-              ${item.time}
-            </div>
-
-          </div>
-
-          <div class="activity-value">
-            ${item.status}
-          </div>
-
-        </div>
-
-      `)
-      .join("");
-
-}
-
-
-/* =========================================================
-                  MINING TIMER
-========================================================= */
+render();
 
 setInterval(
   render,
   1000
 );
-
-
-/* =========================================================
-                       START
-========================================================= */
-
-render();
 
 </script>
 
