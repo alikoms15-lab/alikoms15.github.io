@@ -7,7 +7,6 @@
 
 <title>LUNARO — Automatic Mining</title>
 
-<!-- Telegram Mini App -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
@@ -26,8 +25,12 @@ body{
     overflow-x:hidden;
 }
 
-button{
+button,input{
     font-family:inherit;
+}
+
+button{
+    cursor:pointer;
 }
 
 .app{
@@ -39,7 +42,7 @@ button{
     padding-bottom:90px;
 }
 
-/* ================= HEADER ================= */
+/* HEADER */
 
 .header{
     padding:16px 16px 8px;
@@ -122,7 +125,7 @@ button{
     font-size:9px;
 }
 
-/* ================= LOGO ================= */
+/* LOGO */
 
 .logo{
     text-align:center;
@@ -148,7 +151,7 @@ button{
     font-weight:700;
 }
 
-/* ================= PAGE ================= */
+/* PAGE */
 
 .page{
     display:none;
@@ -159,7 +162,7 @@ button{
     display:block;
 }
 
-/* ================= MINING VISUAL ================= */
+/* MINING VISUAL */
 
 .mining-visual{
     height:250px;
@@ -214,7 +217,7 @@ button{
     left:104px;
 }
 
-/* crystal */
+/* CRYSTAL */
 
 .crystal{
     position:relative;
@@ -289,7 +292,7 @@ button{
         0 4px 7px rgba(0,0,0,.2);
 }
 
-/* ================= BALANCE ================= */
+/* BALANCE */
 
 .balance-box{
     text-align:center;
@@ -320,7 +323,7 @@ button{
     letter-spacing:1px;
 }
 
-/* ================= STATS ================= */
+/* STATS */
 
 .stats{
     display:grid;
@@ -357,7 +360,7 @@ button{
     font-weight:700;
 }
 
-/* ================= CLAIM ================= */
+/* CLAIM */
 
 .claim-wrap{
     margin-top:17px;
@@ -374,7 +377,6 @@ button{
     font-weight:900;
     letter-spacing:.5px;
     box-shadow:0 10px 25px rgba(12,166,90,.23);
-    cursor:pointer;
     transition:.15s;
 }
 
@@ -401,7 +403,7 @@ button{
     box-shadow:0 0 9px rgba(12,166,90,.5);
 }
 
-/* ================= INFO ================= */
+/* INFO */
 
 .info-card{
     margin-top:17px;
@@ -439,7 +441,7 @@ button{
     line-height:1.5;
 }
 
-/* ================= OTHER PAGES ================= */
+/* OTHER PAGES */
 
 .page-title{
     font-size:24px;
@@ -483,7 +485,7 @@ button{
     font-weight:800;
 }
 
-/* tasks */
+/* TASKS */
 
 .task{
     display:flex;
@@ -506,6 +508,7 @@ button{
     align-items:center;
     justify-content:center;
     color:#0ca65a;
+    font-weight:900;
 }
 
 .task-info{
@@ -534,7 +537,7 @@ button{
     font-weight:800;
 }
 
-/* miners */
+/* MINERS */
 
 .miner-grid{
     display:grid;
@@ -579,7 +582,7 @@ button{
     color:#929a95;
 }
 
-/* chart */
+/* CHART */
 
 .chart{
     height:150px;
@@ -597,7 +600,7 @@ button{
     height:100%;
 }
 
-/* friends */
+/* FRIENDS */
 
 .referral-code{
     font-size:22px;
@@ -630,7 +633,24 @@ button{
     font-weight:900;
 }
 
-/* profile */
+.referral-stat{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid #edf0ee;
+    font-size:11px;
+}
+
+.referral-stat:last-child{
+    border-bottom:0;
+}
+
+.referral-stat span:last-child{
+    color:#0ca65a;
+    font-weight:900;
+}
+
+/* PROFILE */
 
 .profile-user{
     display:flex;
@@ -690,7 +710,7 @@ button{
     font-size:11px;
 }
 
-/* ================= BOTTOM NAV ================= */
+/* BOTTOM NAV */
 
 .bottom-nav{
     position:fixed;
@@ -721,7 +741,6 @@ button{
     position:relative;
     font-size:8px;
     font-weight:800;
-    cursor:pointer;
 }
 
 .nav-btn svg{
@@ -744,7 +763,7 @@ button{
     background:#0ca65a;
 }
 
-/* ================= TOAST ================= */
+/* TOAST */
 
 .toast{
     position:fixed;
@@ -769,9 +788,8 @@ button{
     transform:translate(-50%,0);
 }
 
-/* ================= MOBILE ================= */
-
 @media(max-width:360px){
+
     .balance-number{
         font-size:32px;
     }
@@ -791,8 +809,6 @@ button{
 
 <div class="app">
 
-<!-- ================= HEADER ================= -->
-
 <header class="header">
 
     <div class="header-row">
@@ -806,37 +822,44 @@ button{
                 </svg>
             </div>
 
-            <span id="walletAddress">UQCN...iD7</span>
+            <span id="walletAddress">Not connected</span>
         </div>
 
         <div class="level-pill">
+
             <div class="level-top">
                 <span>LVL</span>
-                <span class="level-badge">3</span>
+                <span id="levelBadge" class="level-badge">1</span>
             </div>
 
             <div class="level-progress">
-                <span></span>
+                <span id="levelProgress"></span>
             </div>
 
-            <div class="level-count">348 / 1,000</div>
+            <div id="levelCount" class="level-count">
+                0 / 1,000
+            </div>
+
         </div>
 
     </div>
 
     <div class="logo">
+
         <div class="logo-title">
             LUNA<span>RO</span>
         </div>
+
         <div class="logo-sub">
             AUTOMATIC MINING
         </div>
+
     </div>
 
 </header>
 
 
-<!-- ================= HOME ================= -->
+<!-- HOME -->
 
 <section id="home" class="page active">
 
@@ -851,13 +874,19 @@ button{
         <div class="orbit-dot two"></div>
 
         <div class="crystal">
+
             <div class="crystal-main"></div>
             <div class="crystal-left"></div>
             <div class="crystal-right"></div>
-            <div class="crystal-text">LNR</div>
+
+            <div class="crystal-text">
+                LNR
+            </div>
+
         </div>
 
     </div>
+
 
     <div class="balance-box">
 
@@ -865,8 +894,8 @@ button{
             TOTAL BALANCE
         </div>
 
-        <div class="balance-number" id="balance">
-            25,000.00
+        <div id="balance" class="balance-number">
+            0.00
         </div>
 
         <div class="balance-token">
@@ -879,27 +908,53 @@ button{
     <div class="stats">
 
         <div class="stat-card">
-            <div class="stat-title">Wallet<br>Balance</div>
-            <div class="stat-value" id="walletBalance">
-                25,000.00
-            </div>
-            <div class="stat-unit">LNR</div>
-        </div>
 
-        <div class="stat-card">
-            <div class="stat-title">Mined<br>Not Claimed</div>
-            <div class="stat-value" id="minedBalance">
+            <div class="stat-title">
+                Wallet<br>Balance
+            </div>
+
+            <div id="walletBalance" class="stat-value">
                 0.00
             </div>
-            <div class="stat-unit">LNR</div>
+
+            <div class="stat-unit">
+                LNR
+            </div>
+
         </div>
 
+
         <div class="stat-card">
-            <div class="stat-title">Mining<br>Speed</div>
-            <div class="stat-value">
+
+            <div class="stat-title">
+                Mined<br>Not Claimed
+            </div>
+
+            <div id="minedBalance" class="stat-value">
+                0.00
+            </div>
+
+            <div class="stat-unit">
+                LNR
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Mining<br>Speed
+            </div>
+
+            <div id="miningSpeed" class="stat-value">
                 0.70
             </div>
-            <div class="stat-unit">LNR / H</div>
+
+            <div class="stat-unit">
+                LNR / H
+            </div>
+
         </div>
 
     </div>
@@ -907,13 +962,20 @@ button{
 
     <div class="claim-wrap">
 
-        <button class="claim-btn" onclick="claimMining()">
+        <button id="claimButton"
+                class="claim-btn"
+                onclick="claimMining()">
+
             CLAIM LNR
+
         </button>
 
         <div class="mining-status">
+
             <span class="status-dot"></span>
+
             AUTOMATIC MINING ACTIVE
+
         </div>
 
     </div>
@@ -926,6 +988,7 @@ button{
         </div>
 
         <div>
+
             <div class="info-title">
                 Lunar Mining Network
             </div>
@@ -933,6 +996,7 @@ button{
             <div class="info-text">
                 The future is yours. Keep mining and build your LNR journey.
             </div>
+
         </div>
 
     </div>
@@ -940,7 +1004,7 @@ button{
 </section>
 
 
-<!-- ================= TASKS ================= -->
+<!-- TASKS -->
 
 <section id="tasks" class="page">
 
@@ -952,9 +1016,11 @@ button{
         Complete missions and earn LNR rewards.
     </div>
 
+
     <div class="section-card">
 
         <div class="section-head">
+
             <div class="section-title">
                 Daily Missions
             </div>
@@ -962,25 +1028,28 @@ button{
             <div class="badge">
                 DAILY
             </div>
+
         </div>
 
 
         <div class="task">
 
-            <div class="task-icon">
-                ✓
-            </div>
+            <div class="task-icon">✓</div>
 
             <div class="task-info">
+
                 <div class="task-name">
                     Open LUNARO
                 </div>
+
                 <div class="task-reward">
                     +10 LNR
                 </div>
+
             </div>
 
-            <button class="task-btn" onclick="completeTask(this)">
+            <button class="task-btn"
+                    onclick="completeTask(this,10)">
                 START
             </button>
 
@@ -989,20 +1058,22 @@ button{
 
         <div class="task">
 
-            <div class="task-icon">
-                ★
-            </div>
+            <div class="task-icon">★</div>
 
             <div class="task-info">
+
                 <div class="task-name">
                     Check Mining
                 </div>
+
                 <div class="task-reward">
                     +15 LNR
                 </div>
+
             </div>
 
-            <button class="task-btn" onclick="completeTask(this)">
+            <button class="task-btn"
+                    onclick="completeTask(this,15)">
                 START
             </button>
 
@@ -1011,20 +1082,22 @@ button{
 
         <div class="task">
 
-            <div class="task-icon">
-                ◉
-            </div>
+            <div class="task-icon">◉</div>
 
             <div class="task-info">
+
                 <div class="task-name">
                     Daily Login
                 </div>
+
                 <div class="task-reward">
                     +25 LNR
                 </div>
+
             </div>
 
-            <button class="task-btn" onclick="completeTask(this)">
+            <button class="task-btn"
+                    onclick="completeTask(this,25)">
                 START
             </button>
 
@@ -1035,7 +1108,7 @@ button{
 </section>
 
 
-<!-- ================= MINERS ================= -->
+<!-- MINERS -->
 
 <section id="miners" class="page">
 
@@ -1051,18 +1124,22 @@ button{
     <div class="section-card">
 
         <div class="section-head">
+
             <div class="section-title">
                 My Level Journey
             </div>
 
             <div class="badge">
-                LVL 3
+                LVL <span id="journeyLevel">1</span>
             </div>
+
         </div>
+
 
         <div class="chart">
 
-            <svg viewBox="0 0 400 150" preserveAspectRatio="none">
+            <svg viewBox="0 0 400 150"
+                 preserveAspectRatio="none">
 
                 <polyline
                     points="0,125 50,112 100,115 150,90 200,98 250,70 300,76 350,42 400,25"
@@ -1070,11 +1147,13 @@ button{
                     stroke="#0ca65a"
                     stroke-width="4"
                     stroke-linecap="round"
-                    stroke-linejoin="round"
-                />
+                    stroke-linejoin="round"/>
 
-                <circle cx="400" cy="25" r="6"
-                        fill="#0ca65a"/>
+                <circle
+                    cx="400"
+                    cy="25"
+                    r="6"
+                    fill="#0ca65a"/>
 
             </svg>
 
@@ -1086,6 +1165,7 @@ button{
     <div class="section-card">
 
         <div class="section-head">
+
             <div class="section-title">
                 Miner Store
             </div>
@@ -1093,37 +1173,93 @@ button{
             <div class="badge">
                 4 MINERS
             </div>
+
         </div>
 
 
         <div class="miner-grid">
 
             <div class="miner-card">
-                <div class="miner-icon">⛏</div>
-                <div class="miner-name">Starter</div>
-                <div class="miner-speed">0.70 LNR/H</div>
-                <div class="miner-status">UNLOCKED</div>
+
+                <div class="miner-icon">
+                    ⛏
+                </div>
+
+                <div class="miner-name">
+                    Starter
+                </div>
+
+                <div class="miner-speed">
+                    0.70 LNR/H
+                </div>
+
+                <div class="miner-status">
+                    UNLOCKED
+                </div>
+
             </div>
 
-            <div class="miner-card">
-                <div class="miner-icon">⚡</div>
-                <div class="miner-name">Silver</div>
-                <div class="miner-speed">1.20 LNR/H</div>
-                <div class="miner-status">LOCKED</div>
-            </div>
 
             <div class="miner-card">
-                <div class="miner-icon">◆</div>
-                <div class="miner-name">Gold</div>
-                <div class="miner-speed">2.50 LNR/H</div>
-                <div class="miner-status">LOCKED</div>
+
+                <div class="miner-icon">
+                    ⚡
+                </div>
+
+                <div class="miner-name">
+                    Silver
+                </div>
+
+                <div class="miner-speed">
+                    1.20 LNR/H
+                </div>
+
+                <div class="miner-status">
+                    LOCKED
+                </div>
+
             </div>
 
+
             <div class="miner-card">
-                <div class="miner-icon">✦</div>
-                <div class="miner-name">Lunar</div>
-                <div class="miner-speed">5.00 LNR/H</div>
-                <div class="miner-status">LOCKED</div>
+
+                <div class="miner-icon">
+                    ◆
+                </div>
+
+                <div class="miner-name">
+                    Gold
+                </div>
+
+                <div class="miner-speed">
+                    2.50 LNR/H
+                </div>
+
+                <div class="miner-status">
+                    LOCKED
+                </div>
+
+            </div>
+
+
+            <div class="miner-card">
+
+                <div class="miner-icon">
+                    ✦
+                </div>
+
+                <div class="miner-name">
+                    Diamond
+                </div>
+
+                <div class="miner-speed">
+                    5.00 LNR/H
+                </div>
+
+                <div class="miner-status">
+                    LOCKED
+                </div>
+
             </div>
 
         </div>
@@ -1133,7 +1269,7 @@ button{
 </section>
 
 
-<!-- ================= FRIENDS ================= -->
+<!-- FRIENDS -->
 
 <section id="friends" class="page">
 
@@ -1142,13 +1278,14 @@ button{
     </div>
 
     <div class="page-subtitle">
-        Invite friends and grow your LUNARO network.
+        Invite friends and earn rewards when they claim.
     </div>
 
 
     <div class="section-card">
 
         <div class="section-head">
+
             <div class="section-title">
                 Your Referral Code
             </div>
@@ -1156,17 +1293,24 @@ button{
             <div class="badge">
                 10%
             </div>
+
         </div>
 
-        <div class="referral-code">
-            LNR-7K4P
+
+        <div id="referralCode"
+             class="referral-code">
+            LNR------
         </div>
 
-        <div class="referral-link">
-            t.me/LUNARO_BOT?start=ref_LNR-7K4P
+
+        <div id="referralLink"
+             class="referral-link">
+            Loading referral link...
         </div>
 
-        <button class="copy-btn" onclick="copyReferral()">
+
+        <button class="copy-btn"
+                onclick="copyReferral()">
             COPY INVITE LINK
         </button>
 
@@ -1176,14 +1320,37 @@ button{
     <div class="section-card">
 
         <div class="section-head">
+
             <div class="section-title">
-                Referral Reward
+                Referral Stats
             </div>
+
         </div>
 
-        <div class="info-text" style="font-size:11px">
-            You receive a 10% referral reward when your invited friend
-            successfully claims their mined LNR.
+
+        <div class="referral-stat">
+
+            <span>
+                Friends
+            </span>
+
+            <span id="friendCount">
+                0
+            </span>
+
+        </div>
+
+
+        <div class="referral-stat">
+
+            <span>
+                Earned
+            </span>
+
+            <span id="referralEarned">
+                0.00 LNR
+            </span>
+
         </div>
 
     </div>
@@ -1191,7 +1358,7 @@ button{
 </section>
 
 
-<!-- ================= PROFILE ================= -->
+<!-- PROFILE -->
 
 <section id="profile" class="page">
 
@@ -1206,17 +1373,19 @@ button{
 
     <div class="profile-user">
 
-        <div class="profile-avatar" id="profileAvatar">
+        <div id="profileAvatar"
+             class="profile-avatar">
             L
         </div>
 
         <div>
 
             <div class="profile-label">
-                TELEGRAM USER
+                Telegram User
             </div>
 
-            <div id="telegramName" class="profile-name">
+            <div id="telegramName"
+                 class="profile-name">
                 Connecting...
             </div>
 
@@ -1228,47 +1397,24 @@ button{
     <div class="section-card">
 
         <div class="section-head">
+
             <div class="section-title">
                 Connected Wallet
             </div>
 
             <div class="badge">
-                CONNECTED
-            </div>
-        </div>
-
-        <div class="referral-link">
-            UQCN...iD7
-        </div>
-
-    </div>
-
-
-    <div class="section-card">
-
-        <div class="section-head">
-            <div class="section-title">
-                Withdrawal
-            </div>
-
-            <div class="badge">
                 DEMO
             </div>
+
         </div>
 
-        <div class="info-text">
-            Real blockchain withdrawals will be connected in a later stage.
-        </div>
+        <input id="walletInput"
+               class="input"
+               placeholder="TON wallet address">
 
-        <input
-            class="input"
-            type="number"
-            id="withdrawAmount"
-            placeholder="Amount of LNR"
-        >
-
-        <button class="withdraw-btn" onclick="demoWithdraw()">
-            REQUEST WITHDRAWAL
+        <button class="withdraw-btn"
+                onclick="demoWithdraw()">
+            WITHDRAW
         </button>
 
     </div>
@@ -1277,239 +1423,474 @@ button{
     <div class="section-card">
 
         <div class="section-head">
+
             <div class="section-title">
-                Withdrawal History
+                Account
             </div>
+
         </div>
 
-        <div class="info-text">
-            No withdrawals yet.
+        <div class="referral-stat">
+
+            <span>
+                Telegram ID
+            </span>
+
+            <span id="telegramId">
+                —
+            </span>
+
+        </div>
+
+        <div class="referral-stat">
+
+            <span>
+                Referral Code
+            </span>
+
+            <span id="profileReferralCode">
+                —
+            </span>
+
         </div>
 
     </div>
 
 </section>
 
+</div>
 
-<!-- ================= BOTTOM NAV ================= -->
+
+<!-- BOTTOM NAV -->
 
 <nav class="bottom-nav">
 
     <button class="nav-btn active"
-            onclick="openPage('home',this)">
+            onclick="showPage('home',this)">
 
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M12 3v18"/>
-            <path d="M7 8l5-5 5 5"/>
-            <path d="M7 16l5 5 5-5"/>
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor">
+
+            <path d="M3 10.5 12 3l9 7.5"/>
+            <path d="M5 9.5V21h14V9.5"/>
+            <path d="M9 21v-6h6v6"/>
+
         </svg>
 
-        Mine
+        <span>Mine</span>
 
     </button>
 
 
     <button class="nav-btn"
-            onclick="openPage('tasks',this)">
+            onclick="showPage('tasks',this)">
 
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <rect x="4" y="3" width="16" height="18" rx="3"/>
-            <path d="M8 8h8"/>
-            <path d="M8 12h8"/>
-            <path d="M8 16h5"/>
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor">
+
+            <path d="M5 4h14v17H5z"/>
+            <path d="M8 8h8M8 12h8M8 16h5"/>
+
         </svg>
 
-        Tasks
+        <span>Tasks</span>
 
     </button>
 
 
     <button class="nav-btn"
-            onclick="openPage('miners',this)">
+            onclick="showPage('miners',this)">
 
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M6 20V10"/>
-            <path d="M12 20V4"/>
-            <path d="M18 20v-7"/>
-            <path d="M4 20h16"/>
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor">
+
+            <path d="M14 3 4 14h7l-1 7 10-11h-7z"/>
+
         </svg>
 
-        Miners
+        <span>Miners</span>
 
     </button>
 
 
     <button class="nav-btn"
-            onclick="openPage('friends',this)">
+            onclick="showPage('friends',this)">
 
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor">
+
             <circle cx="9" cy="8" r="3"/>
             <circle cx="17" cy="9" r="2.5"/>
             <path d="M3 20c0-3.2 2.7-5 6-5s6 1.8 6 5"/>
-            <path d="M15 15c3 0 5 1.6 5 4"/>
+            <path d="M15 15c3 0 5 1.6 5 5"/>
+
         </svg>
 
-        Friends
+        <span>Friends</span>
 
     </button>
 
 
     <button class="nav-btn"
-            onclick="openPage('profile',this)">
+            onclick="showPage('profile',this)">
 
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="8" r="3.5"/>
-            <path d="M4 21c.8-4 3.5-6 8-6s7.2 2 8 6"/>
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor">
+
+            <circle cx="12" cy="8" r="3"/>
+            <path d="M5 21c.5-4 3-6 7-6s6.5 2 7 6"/>
+
         </svg>
 
-        Profile
+        <span>Profile</span>
 
     </button>
 
 </nav>
 
-</div>
 
-
-<div id="toast" class="toast">
-    Done
+<div id="toast"
+     class="toast">
 </div>
 
 
 <script>
 
 /* =====================================================
-   LUNARO CORE
+   LUNARO CONFIG
 ===================================================== */
 
-const state = {
+const API_URL =
+    "https://lunaro-api.alikoms15.workers.dev";
 
-    wallet: 25000,
 
-    mined: 0,
+/* =====================================================
+   TELEGRAM
+===================================================== */
 
-    rate: 0.70,
+const tg =
+    window.Telegram?.WebApp || null;
 
-    lastMiningTime: Date.now()
+let telegramUser = null;
+
+
+/* =====================================================
+   LOCAL STATE
+===================================================== */
+
+let state = {
+
+    telegram_id:null,
+
+    username:null,
+
+    first_name:"User",
+
+    wallet:0,
+
+    mined:0,
+
+    mining_rate:0.70,
+
+    level:1,
+
+    referral_code:null,
+
+    referred_by:null,
+
+    referral_earned:0,
+
+    last:Date.now()
 
 };
 
 
 /* =====================================================
-   TELEGRAM MINI APP
+   TELEGRAM INIT
 ===================================================== */
-
-const tg = window.Telegram?.WebApp;
 
 function initTelegram(){
 
     if(!tg){
 
-        console.log("LUNARO: Telegram WebApp not detected.");
-
         document.getElementById("telegramName").textContent =
-            "Open LUNARO inside Telegram";
+            "Browser User";
 
         return;
+
     }
 
     tg.ready();
-
     tg.expand();
 
-    const user = tg.initDataUnsafe?.user;
+    telegramUser =
+        tg.initDataUnsafe?.user || null;
 
-    if(user){
+    if(telegramUser){
 
-        const firstName = user.first_name || "User";
+        state.telegram_id =
+            String(telegramUser.id);
 
-        const username = user.username
-            ? "@" + user.username
-            : "";
+        state.username =
+            telegramUser.username || null;
 
-        const fullName =
-            username
-            ? firstName + " " + username
-            : firstName;
+        state.first_name =
+            telegramUser.first_name || "User";
+
+        const displayName =
+            state.username
+            ? state.first_name + " @" + state.username
+            : state.first_name;
 
         document.getElementById("telegramName")
-            .textContent = fullName;
+            .textContent = displayName;
+
+        document.getElementById("telegramId")
+            .textContent = state.telegram_id;
 
         document.getElementById("profileAvatar")
             .textContent =
-            firstName.charAt(0).toUpperCase();
-
-        console.log("LUNARO Telegram User:",user);
-
-    }else{
-
-        document.getElementById("telegramName")
-            .textContent = "Telegram User";
+            state.first_name.charAt(0).toUpperCase();
 
     }
 
 }
 
-initTelegram();
+
+/* =====================================================
+   LOAD USER FROM API
+===================================================== */
+
+async function loadUser(){
+
+    if(!state.telegram_id){
+
+        showToast("Open LUNARO inside Telegram");
+
+        updateUI();
+
+        return;
+
+    }
+
+    try{
+
+        const response =
+            await fetch(API_URL + "/user",{
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    telegram_id:
+                        state.telegram_id,
+
+                    username:
+                        state.username,
+
+                    first_name:
+                        state.first_name
+
+                })
+
+            });
+
+
+        const data =
+            await response.json();
+
+
+        if(!data.success){
+
+            throw new Error(
+                data.error || "API error"
+            );
+
+        }
+
+
+        const user =
+            data.user;
+
+
+        state.wallet =
+            Number(user.balance || 0);
+
+        state.mined =
+            Number(user.mined || 0);
+
+        state.mining_rate =
+            Number(user.mining_rate || 0.70);
+
+        state.level =
+            Number(user.level || 1);
+
+        state.referral_code =
+            user.referral_code;
+
+        state.referred_by =
+            user.referred_by;
+
+        state.last =
+            Date.now();
+
+
+        updateUI();
+
+        updateReferral();
+
+
+        if(data.new_user){
+
+            showToast(
+                "Welcome to LUNARO 🚀"
+            );
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "Could not connect to LUNARO API"
+        );
+
+        updateUI();
+
+    }
+
+}
 
 
 /* =====================================================
-   MINING ENGINE
+   MINING
 ===================================================== */
 
-function updateMining(){
+function mining(){
 
-    const now = Date.now();
+    const now =
+        Date.now();
 
     const elapsed =
-        (now - state.lastMiningTime) / 3600000;
+        (now - state.last) / 3600000;
+
 
     if(elapsed > 0){
 
-        state.mined += elapsed * state.rate;
-
-        state.lastMiningTime = now;
+        state.mined +=
+            elapsed * state.mining_rate;
 
     }
+
+
+    state.last =
+        now;
+
 
     updateUI();
 
 }
 
 
-setInterval(updateMining,1000);
-
-
 /* =====================================================
-   UI
+   UPDATE UI
 ===================================================== */
 
 function updateUI(){
 
+    const wallet =
+        Number(state.wallet || 0);
+
+    const mined =
+        Number(state.mined || 0);
+
+
     document.getElementById("balance")
         .textContent =
-        formatNumber(state.wallet);
+        wallet.toLocaleString(
+            "en-US",
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
+
 
     document.getElementById("walletBalance")
         .textContent =
-        formatNumber(state.wallet);
+        wallet.toLocaleString(
+            "en-US",
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
+
 
     document.getElementById("minedBalance")
         .textContent =
-        formatNumber(state.mined);
+        mined.toLocaleString(
+            "en-US",
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
 
-}
+
+    document.getElementById("miningSpeed")
+        .textContent =
+        state.mining_rate.toFixed(2);
 
 
-function formatNumber(value){
+    document.getElementById("levelBadge")
+        .textContent =
+        state.level;
 
-    return Number(value).toLocaleString(
-        "en-US",
-        {
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        }
-    );
+
+    document.getElementById("journeyLevel")
+        .textContent =
+        state.level;
+
+
+    const progress =
+        Math.min(
+            100,
+            Math.max(
+                0,
+                (wallet / 1000) * 100
+            )
+        );
+
+
+    document.getElementById("levelProgress")
+        .style.width =
+        progress + "%";
+
+
+    document.getElementById("levelCount")
+        .textContent =
+        wallet.toLocaleString(
+            "en-US",
+            {
+                maximumFractionDigits:0
+            }
+        ) + " / 1,000";
+
+
+    document.getElementById("profileReferralCode")
+        .textContent =
+        state.referral_code || "—";
 
 }
 
@@ -1518,42 +1899,266 @@ function formatNumber(value){
    CLAIM
 ===================================================== */
 
-function claimMining(){
+async function claimMining(){
 
-    updateMining();
+    mining();
+
 
     if(state.mined <= 0){
 
-        showToast("Nothing to claim yet.");
+        showToast(
+            "Nothing to claim yet"
+        );
 
         return;
 
     }
 
-    state.wallet += state.mined;
 
-    state.mined = 0;
+    if(!state.telegram_id){
 
-    state.lastMiningTime = Date.now();
+        showToast(
+            "Telegram account required"
+        );
 
-    updateUI();
+        return;
 
-    showToast("LNR claimed successfully ✓");
+    }
+
+
+    const amount =
+        Number(
+            state.mined.toFixed(8)
+        );
+
+
+    try{
+
+        const response =
+            await fetch(
+                API_URL + "/claim",
+                {
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        telegram_id:
+                            state.telegram_id,
+
+                        amount:amount
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!data.success){
+
+            throw new Error(
+                data.error || "Claim failed"
+            );
+
+        }
+
+
+        state.wallet += amount;
+
+        state.mined = 0;
+
+        state.last = Date.now();
+
+
+        updateUI();
+
+        showToast(
+            amount.toFixed(4) +
+            " LNR claimed"
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "Claim server is not ready yet"
+        );
+
+    }
 
 }
 
 
 /* =====================================================
-   NAVIGATION
+   TASKS
 ===================================================== */
 
-function openPage(pageId,button){
+function completeTask(button,reward){
+
+    if(button.dataset.done === "1")
+        return;
+
+
+    button.dataset.done = "1";
+
+    button.textContent = "DONE";
+
+    button.style.background =
+        "#dfe8e2";
+
+    button.style.color =
+        "#5d6962";
+
+
+    state.wallet +=
+        Number(reward);
+
+
+    updateUI();
+
+
+    showToast(
+        "+" + reward + " LNR"
+    );
+
+}
+
+
+/* =====================================================
+   REFERRAL
+===================================================== */
+
+function updateReferral(){
+
+    const code =
+        state.referral_code ||
+        "LNR------";
+
+
+    document.getElementById(
+        "referralCode"
+    ).textContent = code;
+
+
+    const username =
+        telegramUser?.username ||
+        "";
+
+
+    const botUsername =
+        "YOUR_BOT_USERNAME";
+
+
+    const link =
+        "https://t.me/" +
+        botUsername +
+        "?start=ref_" +
+        code;
+
+
+    document.getElementById(
+        "referralLink"
+    ).textContent = link;
+
+}
+
+
+async function copyReferral(){
+
+    const code =
+        state.referral_code ||
+        "LNR------";
+
+
+    const botUsername =
+        "YOUR_BOT_USERNAME";
+
+
+    const link =
+        "https://t.me/" +
+        botUsername +
+        "?start=ref_" +
+        code;
+
+
+    try{
+
+        await navigator.clipboard.writeText(
+            link
+        );
+
+        showToast(
+            "Invite link copied"
+        );
+
+    }catch{
+
+        showToast(
+            "Copy failed"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DEMO WITHDRAWAL
+===================================================== */
+
+function demoWithdraw(){
+
+    const address =
+        document.getElementById(
+            "walletInput"
+        ).value.trim();
+
+
+    if(!address){
+
+        showToast(
+            "Enter your TON wallet"
+        );
+
+        return;
+
+    }
+
+
+    showToast(
+        "Withdrawal is currently DEMO"
+    );
+
+}
+
+
+/* =====================================================
+   PAGE NAVIGATION
+===================================================== */
+
+function showPage(
+    pageId,
+    button
+){
 
     document
         .querySelectorAll(".page")
         .forEach(page => {
 
-            page.classList.remove("active");
+            page.classList.remove(
+                "active"
+            );
 
         });
 
@@ -1567,12 +2172,16 @@ function openPage(pageId,button){
         .querySelectorAll(".nav-btn")
         .forEach(btn => {
 
-            btn.classList.remove("active");
+            btn.classList.remove(
+                "active"
+            );
 
         });
 
 
-    button.classList.add("active");
+    button.classList.add(
+        "active"
+    );
 
 
     window.scrollTo({
@@ -1584,123 +2193,39 @@ function openPage(pageId,button){
 
 
 /* =====================================================
-   TASKS
-===================================================== */
-
-function completeTask(button){
-
-    if(button.dataset.done){
-
-        return;
-
-    }
-
-    button.dataset.done = "1";
-
-    button.textContent = "DONE";
-
-    button.style.background = "#111713";
-
-    state.mined += 10;
-
-    updateUI();
-
-    showToast("+10 LNR added to mining");
-
-
-}
-
-
-/* =====================================================
-   REFERRAL
-===================================================== */
-
-function copyReferral(){
-
-    const link =
-        "https://t.me/LUNARO_BOT?start=ref_LNR-7K4P";
-
-    if(navigator.clipboard){
-
-        navigator.clipboard.writeText(link)
-            .then(() => {
-
-                showToast("Invite link copied ✓");
-
-            });
-
-    }else{
-
-        showToast("Copy not supported");
-
-    }
-
-}
-
-
-/* =====================================================
-   DEMO WITHDRAWAL
-===================================================== */
-
-function demoWithdraw(){
-
-    const amount =
-        Number(
-            document.getElementById("withdrawAmount").value
-        );
-
-    if(!amount || amount <= 0){
-
-        showToast("Enter an amount.");
-
-        return;
-
-    }
-
-    if(amount > state.wallet){
-
-        showToast("Insufficient balance.");
-
-        return;
-
-    }
-
-    /*
-       IMPORTANT:
-       This is only a local demo.
-       No real TON transaction happens here.
-    */
-
-    showToast(
-        "Demo request created — blockchain withdrawal comes later."
-    );
-
-}
-
-
-/* =====================================================
    TOAST
 ===================================================== */
-
-let toastTimer;
 
 function showToast(message){
 
     const toast =
-        document.getElementById("toast");
+        document.getElementById(
+            "toast"
+        );
 
-    toast.textContent = message;
 
-    toast.classList.add("show");
+    toast.textContent =
+        message;
 
-    clearTimeout(toastTimer);
 
-    toastTimer =
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+
+    window.toastTimer =
         setTimeout(() => {
 
-            toast.classList.remove("show");
+            toast.classList.remove(
+                "show"
+            );
 
-        },2200);
+        },2500);
 
 }
 
@@ -1709,7 +2234,15 @@ function showToast(message){
    START
 ===================================================== */
 
-updateUI();
+initTelegram();
+
+loadUser();
+
+
+setInterval(
+    mining,
+    1000
+);
 
 </script>
 
