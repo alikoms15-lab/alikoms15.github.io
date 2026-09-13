@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
 <title>LUNARO</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
 *{
   box-sizing:border-box;
   margin:0;
@@ -16,24 +19,31 @@
 :root{
   --green:#08b97d;
   --green2:#12d99a;
-  --dark:#12232c;
+  --green3:#00a970;
+  --dark:#10242d;
   --gray:#71808b;
   --line:#d9eee7;
   --soft:#f4fbf8;
 }
 
-html,body{
+html,
+body{
   width:100%;
   height:100%;
   overflow:hidden;
   background:#fff;
-  font-family:Arial,Helvetica,sans-serif;
-  color:var(--dark);
 }
 
 body{
+  font-family:Inter,Arial,Helvetica,sans-serif;
+  color:var(--dark);
   display:flex;
   justify-content:center;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
 }
 
 .app{
@@ -45,7 +55,9 @@ body{
   position:relative;
 }
 
-/* ================= HEADER ================= */
+/* ==================================================
+                      HEADER
+================================================== */
 
 .header{
   height:82px;
@@ -58,26 +70,31 @@ body{
 
 .wallet{
   height:57px;
-  border:1px solid #d9eee7;
+  border:1px solid #d8eee7;
   border-radius:19px;
   display:flex;
   align-items:center;
   padding:7px 9px;
+  background:#fff;
   box-shadow:0 5px 18px rgba(0,150,110,.06);
-  min-width:0;
 }
 
 .wallet-icon{
-  width:29px;
-  height:29px;
-  border-radius:9px;
-  background:#ddf8ef;
+  width:30px;
+  height:30px;
+  border-radius:10px;
+  background:#e0f9f1;
   color:var(--green);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:15px;
   margin-right:7px;
+  flex-shrink:0;
+}
+
+.wallet-icon svg{
+  width:19px;
+  height:19px;
 }
 
 .wallet-text{
@@ -85,9 +102,9 @@ body{
 }
 
 .wallet-title{
-  font-size:9px;
-  font-weight:700;
   color:var(--green);
+  font-size:9px;
+  font-weight:800;
   white-space:nowrap;
 }
 
@@ -96,6 +113,7 @@ body{
   font-size:12px;
   font-weight:700;
   white-space:nowrap;
+  letter-spacing:.1px;
 }
 
 .logo{
@@ -104,35 +122,39 @@ body{
 
 .logo-main{
   font-size:25px;
+  line-height:1;
   font-weight:900;
   letter-spacing:3px;
-  color:#10222b;
+  color:#10232d;
 }
 
 .logo-sub{
   font-size:7px;
   letter-spacing:3px;
-  color:#87949b;
+  color:#8b989e;
   margin-top:5px;
+  font-weight:600;
 }
 
 .level{
   height:57px;
-  border:1px solid #d9eee7;
+  border:1px solid #d8eee7;
   border-radius:19px;
   padding:7px 10px;
   text-align:center;
+  background:#fff;
   box-shadow:0 5px 18px rgba(0,150,110,.06);
 }
 
 .level-title{
   font-size:17px;
   font-weight:900;
+  letter-spacing:.3px;
 }
 
 .level-bar{
   height:7px;
-  background:#dfe9e7;
+  background:#e0e9e7;
   border-radius:20px;
   margin:5px auto 3px;
   overflow:hidden;
@@ -142,15 +164,24 @@ body{
 .level-fill{
   width:35%;
   height:100%;
-  background:linear-gradient(90deg,#08b879,#28d69e);
+  background:linear-gradient(
+    90deg,
+    #07b878,
+    #20d79d
+  );
   border-radius:20px;
 }
 
 .level-xp{
   font-size:8px;
+  color:#4d6069;
+  font-weight:600;
 }
 
-/* ================= MAIN ================= */
+
+/* ==================================================
+                     HOME
+================================================== */
 
 .home{
   height:calc(100vh - 82px);
@@ -158,7 +189,10 @@ body{
   overflow:hidden;
 }
 
-/* ================= CENTER DESIGN ================= */
+
+/* ==================================================
+                  CENTER DESIGN
+================================================== */
 
 .hero{
   height:265px;
@@ -188,7 +222,10 @@ body{
   overflow:visible;
 }
 
-/* ================= BALANCE ================= */
+
+/* ==================================================
+                     BALANCE
+================================================== */
 
 .balance{
   text-align:center;
@@ -196,7 +233,7 @@ body{
 }
 
 .balance-title{
-  color:#687984;
+  color:#657680;
   font-size:18px;
   font-weight:700;
   letter-spacing:.6px;
@@ -220,21 +257,31 @@ body{
   color:var(--green);
   font-size:20px;
   font-weight:900;
+  letter-spacing:.5px;
 }
 
 .token{
   width:25px;
   height:25px;
   border-radius:50%;
-  background:linear-gradient(145deg,#2add9f,#08aa73);
+  background:linear-gradient(
+    145deg,
+    #2add9f,
+    #08aa73
+  );
   color:#fff;
   display:flex;
   justify-content:center;
   align-items:center;
-  font-size:12px;
+  font-size:11px;
+  font-weight:900;
+  box-shadow:0 4px 10px rgba(8,180,125,.2);
 }
 
-/* ================= STATS ================= */
+
+/* ==================================================
+                       STATS
+================================================== */
 
 .stats{
   height:116px;
@@ -269,11 +316,15 @@ body{
   margin:auto;
   border-radius:12px;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
   color:#0bb57b;
   background:#e5f9f2;
-  font-size:18px;
+}
+
+.stat-icon svg{
+  width:20px;
+  height:20px;
 }
 
 .stat-title{
@@ -281,6 +332,7 @@ body{
   color:#6e7d86;
   font-size:9px;
   font-weight:700;
+  letter-spacing:.25px;
   white-space:nowrap;
 }
 
@@ -288,15 +340,20 @@ body{
   margin-top:5px;
   font-size:21px;
   font-weight:900;
+  letter-spacing:-.4px;
 }
 
 .stat-unit{
   margin-top:3px;
   color:#75838b;
   font-size:11px;
+  font-weight:500;
 }
 
-/* ================= CLAIM ================= */
+
+/* ==================================================
+                       CLAIM
+================================================== */
 
 .claim{
   height:59px;
@@ -304,20 +361,41 @@ body{
   border:0;
   border-radius:32px;
   margin-top:13px;
-  color:white;
+  color:#fff;
+
   background:linear-gradient(
     90deg,
     #08b978,
     #0bd294,
     #09bd83
   );
+
   box-shadow:
     0 9px 23px rgba(8,190,130,.27),
     inset 0 2px 3px rgba(255,255,255,.3);
+
   font-size:25px;
   font-weight:900;
   letter-spacing:2px;
+
   position:relative;
+
+  transition:
+    transform .12s ease,
+    box-shadow .12s ease;
+}
+
+.claim:hover{
+  box-shadow:
+    0 12px 30px rgba(8,190,130,.32),
+    inset 0 2px 3px rgba(255,255,255,.35);
+}
+
+.claim:active{
+  transform:scale(.985);
+  box-shadow:
+    0 5px 13px rgba(8,190,130,.22),
+    inset 0 3px 5px rgba(0,0,0,.08);
 }
 
 .claim-left{
@@ -326,11 +404,15 @@ body{
   width:35px;
   height:35px;
   border-radius:50%;
-  border:1px solid rgba(255,255,255,.4);
+  border:1px solid rgba(255,255,255,.42);
   display:flex;
   justify-content:center;
   align-items:center;
-  font-size:19px;
+}
+
+.claim-left svg{
+  width:19px;
+  height:19px;
 }
 
 .claim-arrow{
@@ -338,9 +420,13 @@ body{
   right:23px;
   font-size:30px;
   font-weight:300;
+  line-height:1;
 }
 
-/* ================= STATUS ================= */
+
+/* ==================================================
+                      STATUS
+================================================== */
 
 .status{
   height:31px;
@@ -351,6 +437,7 @@ body{
   color:#0aac76;
   font-size:10px;
   font-weight:800;
+  letter-spacing:.2px;
   margin-top:7px;
 }
 
@@ -365,9 +452,27 @@ body{
   height:10px;
   border-radius:50%;
   background:#14cf95;
+  box-shadow:
+    0 0 0 4px rgba(20,207,149,.08);
+  animation:pulse 1.8s infinite;
 }
 
-/* ================= INFO ================= */
+@keyframes pulse{
+
+  0%,100%{
+    opacity:1;
+  }
+
+  50%{
+    opacity:.45;
+  }
+
+}
+
+
+/* ==================================================
+                        INFO
+================================================== */
 
 .info{
   height:65px;
@@ -413,9 +518,13 @@ body{
   margin-left:auto;
   color:#10af7a;
   font-size:9px;
+  font-weight:600;
 }
 
-/* ================= BOTTOM ================= */
+
+/* ==================================================
+                   BOTTOM NAVIGATION
+================================================== */
 
 .nav{
   position:absolute;
@@ -423,12 +532,18 @@ body{
   right:10px;
   bottom:9px;
   height:67px;
+
   border:1px solid #dcece7;
   border-radius:23px;
-  background:rgba(255,255,255,.97);
-  box-shadow:0 8px 28px rgba(30,70,60,.10);
+
+  background:rgba(255,255,255,.98);
+
+  box-shadow:
+    0 8px 28px rgba(30,70,60,.10);
+
   display:grid;
   grid-template-columns:repeat(5,1fr);
+
   z-index:20;
 }
 
@@ -436,35 +551,78 @@ body{
   border:0;
   background:none;
   color:#71808a;
+
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
+
   gap:4px;
+
   font-size:9px;
   font-weight:700;
+
   position:relative;
+
+  transition:
+    color .15s ease,
+    transform .15s ease;
+}
+
+.nav button:active{
+  transform:scale(.91);
 }
 
 .nav-icon{
-  font-size:21px;
+  width:29px;
+  height:29px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:10px;
+
+  transition:
+    background .15s ease,
+    transform .15s ease;
+}
+
+.nav-icon svg{
+  width:23px;
+  height:23px;
 }
 
 .nav button.active{
   color:#08ae77;
 }
 
-.nav button.active::after{
-  content:"";
-  position:absolute;
-  bottom:5px;
-  width:48px;
-  height:3px;
-  border-radius:5px;
-  background:#0abb80;
+.nav button.active .nav-icon{
+  background:#e4faf3;
+  transform:translateY(-1px);
 }
 
-/* ================= OTHER PAGES ================= */
+.nav button.active::after{
+  content:"";
+
+  position:absolute;
+  bottom:5px;
+
+  width:48px;
+  height:3px;
+
+  border-radius:5px;
+
+  background:#0abb80;
+
+  box-shadow:
+    0 2px 7px rgba(10,190,130,.25);
+}
+
+
+/* ==================================================
+                    OTHER PAGES
+================================================== */
 
 .page{
   display:none;
@@ -480,6 +638,7 @@ body{
 .page-title{
   font-size:24px;
   font-weight:900;
+  letter-spacing:-.5px;
   margin-bottom:15px;
 }
 
@@ -489,7 +648,13 @@ body{
   padding:18px;
   margin-bottom:12px;
   background:#fff;
+  box-shadow:0 5px 18px rgba(30,70,60,.035);
 }
+
+
+/* ==================================================
+                        TASKS
+================================================== */
 
 .task{
   display:flex;
@@ -503,14 +668,22 @@ body{
   border-radius:13px;
   background:#e7f9f2;
   color:#0bad77;
+
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:19px;
+
+  flex-shrink:0;
+}
+
+.task-icon svg{
+  width:21px;
+  height:21px;
 }
 
 .task-main{
   flex:1;
+  min-width:0;
 }
 
 .task-title{
@@ -522,17 +695,28 @@ body{
   margin-top:4px;
   color:#0aae77;
   font-size:11px;
+  font-weight:600;
 }
 
 .task-btn{
   border:0;
   border-radius:10px;
   padding:8px 10px;
-  background:#0bbd82;
+  background:#0ab97c;
   color:#fff;
   font-size:9px;
   font-weight:800;
+  transition:.15s;
 }
+
+.task-btn:active{
+  transform:scale(.94);
+}
+
+
+/* ==================================================
+                        MINERS
+================================================== */
 
 .miner-grid{
   display:grid;
@@ -544,6 +728,12 @@ body{
   border:1px solid var(--line);
   border-radius:18px;
   padding:15px;
+  background:#fff;
+  transition:.15s;
+}
+
+.miner:active{
+  transform:scale(.98);
 }
 
 .miner-icon{
@@ -555,6 +745,11 @@ body{
   justify-content:center;
   align-items:center;
   color:#0aaf77;
+}
+
+.miner-icon svg{
+  width:20px;
+  height:20px;
 }
 
 .miner h3{
@@ -575,6 +770,11 @@ body{
   font-weight:900;
 }
 
+
+/* ==================================================
+                       FRIENDS
+================================================== */
+
 .referral{
   background:#f1fbf7;
   border:1px solid #d4eee5;
@@ -584,6 +784,7 @@ body{
 
 .referral h2{
   font-size:22px;
+  font-weight:900;
 }
 
 .referral p{
@@ -599,6 +800,7 @@ body{
   border:1px dashed #88dbc1;
   border-radius:14px;
   padding:13px;
+
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -613,6 +815,15 @@ body{
   font-size:10px;
   font-weight:800;
 }
+
+.copy:active{
+  transform:scale(.94);
+}
+
+
+/* ==================================================
+                       PROFILE
+================================================== */
 
 .profile-row{
   display:flex;
@@ -634,6 +845,11 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
+}
+
+.profile-icon svg{
+  width:20px;
+  height:20px;
 }
 
 .profile-text{
@@ -659,6 +875,12 @@ body{
   padding:0 13px;
   margin-top:10px;
   outline:none;
+  font-family:inherit;
+}
+
+.input:focus{
+  border-color:#67d5b4;
+  box-shadow:0 0 0 3px rgba(10,190,130,.08);
 }
 
 .withdraw{
@@ -672,7 +894,10 @@ body{
   margin-top:10px;
 }
 
-/* ================= SMALL SCREENS ================= */
+
+/* ==================================================
+                    SMALL SCREENS
+================================================== */
 
 @media(max-height:700px){
 
@@ -733,7 +958,9 @@ body{
   .nav{
     height:61px;
   }
+
 }
+
 
 @media(max-width:380px){
 
@@ -769,22 +996,57 @@ body{
   .stat-value{
     font-size:17px;
   }
+
 }
 </style>
 </head>
+
 
 <body>
 
 <div class="app">
 
-<!-- ================= HEADER ================= -->
+
+<!-- ==================================================
+                         HEADER
+================================================== -->
 
 <header class="header">
 
   <div class="wallet">
-    <div class="wallet-icon">▣</div>
+
+    <div class="wallet-icon">
+
+      <svg viewBox="0 0 24 24" fill="none">
+        <path
+          d="M4 7.5A2.5 2.5 0 0 1 6.5 5H19"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"/>
+
+        <path
+          d="M5 5h12a3 3 0 0 1 3 3v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a3 3 0 0 1 2-3Z"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <path
+          d="M16 12h4"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"/>
+
+        <circle
+          cx="16"
+          cy="12"
+          r="1"
+          fill="currentColor"/>
+      </svg>
+
+    </div>
+
 
     <div class="wallet-text">
+
       <div class="wallet-title">
         Wallet Connected
       </div>
@@ -792,11 +1054,14 @@ body{
       <div class="wallet-address">
         UQCN...iD7
       </div>
+
     </div>
+
   </div>
 
 
   <div class="logo">
+
     <div class="logo-main">
       LUNARO
     </div>
@@ -804,6 +1069,7 @@ body{
     <div class="logo-sub">
       AUTOMATIC MINING
     </div>
+
   </div>
 
 
@@ -814,7 +1080,9 @@ body{
     </div>
 
     <div class="level-bar">
+
       <div class="level-fill"></div>
+
     </div>
 
     <div class="level-xp">
@@ -832,6 +1100,7 @@ body{
 
 <section id="home" class="home">
 
+
 <!-- CENTER DESIGN -->
 
 <div class="hero">
@@ -839,52 +1108,64 @@ body{
   <div class="hero-glow"></div>
 
 
-  <svg viewBox="0 0 500 450"
-       xmlns="http://www.w3.org/2000/svg">
+  <svg
+    viewBox="0 0 500 450"
+    xmlns="http://www.w3.org/2000/svg">
 
     <defs>
 
-      <linearGradient id="crystal"
-                      x1="0"
-                      y1="0"
-                      x2="1"
-                      y2="1">
+      <linearGradient
+        id="crystal"
+        x1="0"
+        y1="0"
+        x2="1"
+        y2="1">
 
-        <stop offset="0"
-              stop-color="#eaffff"/>
+        <stop
+          offset="0"
+          stop-color="#eaffff"/>
 
-        <stop offset=".25"
-              stop-color="#52e4c0"/>
+        <stop
+          offset=".25"
+          stop-color="#52e4c0"/>
 
-        <stop offset=".55"
-              stop-color="#009f77"/>
+        <stop
+          offset=".55"
+          stop-color="#009f77"/>
 
-        <stop offset=".8"
-              stop-color="#8ffff0"/>
+        <stop
+          offset=".8"
+          stop-color="#8ffff0"/>
 
-        <stop offset="1"
-              stop-color="#00775a"/>
+        <stop
+          offset="1"
+          stop-color="#00775a"/>
 
       </linearGradient>
 
 
-      <linearGradient id="gold"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1">
+      <linearGradient
+        id="gold"
+        x1="0"
+        y1="0"
+        x2="0"
+        y2="1">
 
-        <stop offset="0"
-              stop-color="#fff0a0"/>
+        <stop
+          offset="0"
+          stop-color="#fff0a0"/>
 
-        <stop offset=".35"
-              stop-color="#ffd54d"/>
+        <stop
+          offset=".35"
+          stop-color="#ffd54d"/>
 
-        <stop offset=".7"
-              stop-color="#edb52b"/>
+        <stop
+          offset=".7"
+          stop-color="#edb52b"/>
 
-        <stop offset="1"
-              stop-color="#c98b13"/>
+        <stop
+          offset="1"
+          stop-color="#c98b13"/>
 
       </linearGradient>
 
@@ -896,8 +1177,10 @@ body{
           result="b"/>
 
         <feMerge>
+
           <feMergeNode in="b"/>
           <feMergeNode in="SourceGraphic"/>
+
         </feMerge>
 
       </filter>
@@ -918,6 +1201,7 @@ body{
       opacity=".28"
       transform="rotate(-12 250 220)"
       filter="url(#glow)"/>
+
 
     <ellipse
       cx="250"
@@ -941,8 +1225,6 @@ body{
       stroke-width="2"/>
 
 
-    <!-- INNER CRYSTAL -->
-
     <polygon
       points="250,82 320,174 250,318 180,174"
       fill="#0bbd8a"
@@ -953,6 +1235,7 @@ body{
       points="250,48 250,350 145,170"
       fill="#ffffff"
       opacity=".18"/>
+
 
     <polygon
       points="250,48 355,170 250,350"
@@ -966,7 +1249,7 @@ body{
       x="250"
       y="245"
       text-anchor="middle"
-      font-family="Arial,Helvetica,sans-serif"
+      font-family="Inter,Arial,sans-serif"
       font-size="78"
       font-weight="900"
       letter-spacing="1"
@@ -978,19 +1261,22 @@ body{
     <!-- FRONT ORBIT -->
 
     <path
-      d="M55 265
-         C105 195 170 180 250 198
-         C330 216 400 195 445 145"
+      d="
+      M55 265
+      C105 195 170 180 250 198
+      C330 216 400 195 445 145"
       fill="none"
       stroke="#00d99c"
       stroke-width="7"
       opacity=".18"
       filter="url(#glow)"/>
 
+
     <path
-      d="M55 265
-         C105 195 170 180 250 198
-         C330 216 400 195 445 145"
+      d="
+      M55 265
+      C105 195 170 180 250 198
+      C330 216 400 195 445 145"
       fill="none"
       stroke="#09c98f"
       stroke-width="4"/>
@@ -1010,13 +1296,14 @@ body{
       transform="rotate(15 250 220)"/>
 
 
-    <!-- ORBIT NODES -->
+    <!-- NODES -->
 
     <circle
       cx="94"
       cy="265"
       r="7"
       fill="#0cc28a"/>
+
 
     <circle
       cx="407"
@@ -1034,6 +1321,7 @@ body{
       ry="19"
       fill="#00ad7c"
       opacity=".18"/>
+
 
     <ellipse
       cx="250"
@@ -1079,11 +1367,42 @@ body{
 
 <div class="stats">
 
+
   <div class="stat">
 
     <div class="stat-icon">
-      ▣
+
+      <svg viewBox="0 0 24 24" fill="none">
+
+        <rect
+          x="3"
+          y="6"
+          width="18"
+          height="13"
+          rx="2"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <path
+          d="M7 6V4h10v2"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <path
+          d="M16 12h5"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <circle
+          cx="16"
+          cy="12"
+          r="1"
+          fill="currentColor"/>
+
+      </svg>
+
     </div>
+
 
     <div class="stat-title">
       WALLET BALANCE
@@ -1105,8 +1424,37 @@ body{
   <div class="stat">
 
     <div class="stat-icon">
-      ⚒
+
+      <svg viewBox="0 0 24 24" fill="none">
+
+        <path
+          d="M14.5 3.5l6 6"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"/>
+
+        <path
+          d="M12 6l6 6"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"/>
+
+        <path
+          d="M5 13l6 6"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"/>
+
+        <path
+          d="M3 21l7-7"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"/>
+
+      </svg>
+
     </div>
+
 
     <div class="stat-title">
       MINED (NOT CLAIMED)
@@ -1128,8 +1476,17 @@ body{
   <div class="stat">
 
     <div class="stat-icon">
-      ϟ
+
+      <svg viewBox="0 0 24 24" fill="none">
+
+        <path
+          d="M13 2L5 13h6l-1 9 8-12h-6l1-8Z"
+          fill="currentColor"/>
+
+      </svg>
+
     </div>
+
 
     <div class="stat-title">
       MINING SPEED
@@ -1152,13 +1509,24 @@ body{
 
 <button
   class="claim"
+  id="claimButton"
   onclick="claim()">
 
   <span class="claim-left">
-    ϟ
+
+    <svg viewBox="0 0 24 24" fill="none">
+
+      <path
+        d="M13 2L5 13h6l-1 9 8-12h-6l1-8Z"
+        fill="currentColor"/>
+
+    </svg>
+
   </span>
 
-  CLAIM
+  <span id="claimText">
+    CLAIM
+  </span>
 
   <span class="claim-arrow">
     ›
@@ -1217,7 +1585,9 @@ body{
                          TASKS
 ================================================== -->
 
-<section id="tasks" class="page">
+<section
+  id="tasks"
+  class="page">
 
   <div class="page-title">
     Daily Tasks
@@ -1227,8 +1597,31 @@ body{
   <div class="card task">
 
     <div class="task-icon">
-      ✓
+
+      <svg viewBox="0 0 24 24" fill="none">
+
+        <path
+          d="M5 4h14v16H5z"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <path
+          d="M8 8h8M8 12h5"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"/>
+
+        <path
+          d="M8 16l2 2 4-4"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+      </svg>
+
     </div>
+
 
     <div class="task-main">
 
@@ -1242,6 +1635,7 @@ body{
 
     </div>
 
+
     <button
       class="task-btn"
       onclick="done(this)">
@@ -1254,8 +1648,25 @@ body{
   <div class="card task">
 
     <div class="task-icon">
-      ★
+
+      <svg viewBox="0 0 24 24" fill="none">
+
+        <path
+          d="M4 12a8 8 0 1 0 16 0"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <path
+          d="M4 12V6M4 6h6"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+      </svg>
+
     </div>
+
 
     <div class="task-main">
 
@@ -1269,6 +1680,7 @@ body{
 
     </div>
 
+
     <button
       class="task-btn"
       onclick="done(this)">
@@ -1281,8 +1693,37 @@ body{
   <div class="card task">
 
     <div class="task-icon">
-      ♧
+
+      <svg viewBox="0 0 24 24" fill="none">
+
+        <circle
+          cx="9"
+          cy="8"
+          r="3"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <circle
+          cx="17"
+          cy="9"
+          r="2"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <path
+          d="M3 20c0-3 2.5-5 6-5s6 2 6 5"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <path
+          d="M15 15c3 0 5 1.5 5 4"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+      </svg>
+
     </div>
+
 
     <div class="task-main">
 
@@ -1295,6 +1736,7 @@ body{
       </div>
 
     </div>
+
 
     <button
       class="task-btn"
@@ -1311,7 +1753,9 @@ body{
                          MINERS
 ================================================== -->
 
-<section id="miners" class="page">
+<section
+  id="miners"
+  class="page">
 
   <div class="page-title">
     Miner Store
@@ -1323,6 +1767,7 @@ body{
     <b>
       Mining Performance
     </b>
+
 
     <div style="
       height:110px;
@@ -1357,10 +1802,28 @@ body{
 
   <div class="miner-grid">
 
+
     <div class="miner">
 
       <div class="miner-icon">
-        ⚙
+
+        <svg viewBox="0 0 24 24" fill="none">
+
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="2"/>
+
+          <path
+            d="M12 8v4l3 2"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"/>
+
+        </svg>
+
       </div>
 
       <h3>
@@ -1381,7 +1844,31 @@ body{
     <div class="miner">
 
       <div class="miner-icon">
-        ⚙
+
+        <svg viewBox="0 0 24 24" fill="none">
+
+          <path
+            d="M14 3l7 7"
+            stroke="currentColor"
+            stroke-width="2"/>
+
+          <path
+            d="M12 6l6 6"
+            stroke="currentColor"
+            stroke-width="3"/>
+
+          <path
+            d="M5 13l6 6"
+            stroke="currentColor"
+            stroke-width="3"/>
+
+          <path
+            d="M3 21l7-7"
+            stroke="currentColor"
+            stroke-width="2"/>
+
+        </svg>
+
       </div>
 
       <h3>
@@ -1402,7 +1889,21 @@ body{
     <div class="miner">
 
       <div class="miner-icon">
-        ◆
+
+        <svg viewBox="0 0 24 24" fill="none">
+
+          <path
+            d="M12 3l7 5v7l-7 6-7-6V8l7-5Z"
+            stroke="currentColor"
+            stroke-width="2"/>
+
+          <path
+            d="M8 11l4 3 4-3"
+            stroke="currentColor"
+            stroke-width="2"/>
+
+        </svg>
+
       </div>
 
       <h3>
@@ -1423,7 +1924,15 @@ body{
     <div class="miner">
 
       <div class="miner-icon">
-        ✦
+
+        <svg viewBox="0 0 24 24" fill="none">
+
+          <path
+            d="M12 3l2.2 5.2L20 10l-5.8 1.8L12 17l-2.2-5.2L4 10l5.8-1.8L12 3Z"
+            fill="currentColor"/>
+
+        </svg>
+
       </div>
 
       <h3>
@@ -1449,7 +1958,9 @@ body{
                          FRIENDS
 ================================================== -->
 
-<section id="friends" class="page">
+<section
+  id="friends"
+  class="page">
 
   <div class="page-title">
     Friends
@@ -1486,25 +1997,22 @@ body{
   </div>
 
 
-  <div class="card"
-       style="margin-top:12px">
+  <div
+    class="card task"
+    style="margin-top:12px">
 
-    <div class="task">
+    <div class="task-icon">
+      1
+    </div>
 
-      <div class="task-icon">
-        1
+    <div class="task-main">
+
+      <div class="task-title">
+        Share your code
       </div>
 
-      <div class="task-main">
-
-        <div class="task-title">
-          Share your code
-        </div>
-
-        <div class="task-reward">
-          Send your referral link
-        </div>
-
+      <div class="task-reward">
+        Send your referral link
       </div>
 
     </div>
@@ -1560,7 +2068,9 @@ body{
                          PROFILE
 ================================================== -->
 
-<section id="profile" class="page">
+<section
+  id="profile"
+  class="page">
 
   <div class="page-title">
     Profile
@@ -1569,11 +2079,31 @@ body{
 
   <div class="card">
 
+
     <div class="profile-row">
 
       <div class="profile-icon">
-        ▣
+
+        <svg viewBox="0 0 24 24" fill="none">
+
+          <rect
+            x="3"
+            y="6"
+            width="18"
+            height="13"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="2"/>
+
+          <path
+            d="M7 6V4h10v2"
+            stroke="currentColor"
+            stroke-width="2"/>
+
+        </svg>
+
       </div>
+
 
       <div class="profile-text">
 
@@ -1596,6 +2126,7 @@ body{
         L
       </div>
 
+
       <div class="profile-text">
 
         <div class="profile-label">
@@ -1616,8 +2147,18 @@ body{
     <div class="profile-row">
 
       <div class="profile-icon">
-        ★
+
+        <svg viewBox="0 0 24 24" fill="none">
+
+          <path
+            d="M12 3l2.5 5.5L20 11l-5.5 2.5L12 19l-2.5-5.5L4 11l5.5-2.5L12 3Z"
+            stroke="currentColor"
+            stroke-width="2"/>
+
+        </svg>
+
       </div>
+
 
       <div class="profile-text">
 
@@ -1642,17 +2183,22 @@ body{
       Withdrawal
     </b>
 
+
     <input
       class="input"
       type="number"
       placeholder="Amount in LNR"
       id="withdrawAmount">
 
+
     <button
       class="withdraw"
       onclick="withdraw()">
+
       REQUEST WITHDRAWAL
+
     </button>
+
 
     <p style="
       font-size:9px;
@@ -1660,8 +2206,10 @@ body{
       margin-top:8px;
       line-height:1.5;
     ">
+
       Prototype mode only. No real cryptocurrency
       transfer is performed by this demo.
+
     </p>
 
   </div>
@@ -1670,10 +2218,13 @@ body{
 
 
 <!-- ==================================================
-                       NAVIGATION
+                    BOTTOM NAVIGATION
 ================================================== -->
 
 <nav class="nav">
+
+
+  <!-- MINE -->
 
   <button
     class="active"
@@ -1681,7 +2232,29 @@ body{
     onclick="go('home')">
 
     <span class="nav-icon">
-      ◔
+
+      <svg viewBox="0 0 24 24" fill="none">
+
+        <path
+          d="M12 3a9 9 0 1 0 9 9"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"/>
+
+        <path
+          d="M12 3c3 2 4 5 4 8s-1 6-4 10"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"/>
+
+        <circle
+          cx="16"
+          cy="5"
+          r="1.5"
+          fill="currentColor"/>
+
+      </svg>
+
     </span>
 
     Mine
@@ -1689,12 +2262,46 @@ body{
   </button>
 
 
+  <!-- TASKS -->
+
   <button
     data-page="tasks"
     onclick="go('tasks')">
 
     <span class="nav-icon">
-      ☷
+
+      <svg viewBox="0 0 24 24" fill="none">
+
+        <rect
+          x="5"
+          y="4"
+          width="14"
+          height="17"
+          rx="2"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <path
+          d="M8 8h1M11 8h5"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"/>
+
+        <path
+          d="M8 12h1M11 12h5"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"/>
+
+        <path
+          d="M8 16l1 1 2-2"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+      </svg>
+
     </span>
 
     Tasks
@@ -1702,12 +2309,38 @@ body{
   </button>
 
 
+  <!-- MINERS -->
+
   <button
     data-page="miners"
     onclick="go('miners')">
 
     <span class="nav-icon">
-      ⚒
+
+      <svg viewBox="0 0 24 24" fill="none">
+
+        <path
+          d="M14 3l7 7"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <path
+          d="M12 6l6 6"
+          stroke="currentColor"
+          stroke-width="3"/>
+
+        <path
+          d="M5 13l6 6"
+          stroke="currentColor"
+          stroke-width="3"/>
+
+        <path
+          d="M3 21l7-7"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+      </svg>
+
     </span>
 
     Miners
@@ -1715,12 +2348,42 @@ body{
   </button>
 
 
+  <!-- FRIENDS -->
+
   <button
     data-page="friends"
     onclick="go('friends')">
 
     <span class="nav-icon">
-      ♧
+
+      <svg viewBox="0 0 24 24" fill="none">
+
+        <circle
+          cx="9"
+          cy="8"
+          r="3"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <circle
+          cx="17"
+          cy="9"
+          r="2"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <path
+          d="M3 20c0-3 2.5-5 6-5s6 2 6 5"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <path
+          d="M15 15c3 0 5 1.5 5 4"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+      </svg>
+
     </span>
 
     Friends
@@ -1728,12 +2391,28 @@ body{
   </button>
 
 
+  <!-- PROFILE -->
+
   <button
     data-page="profile"
     onclick="go('profile')">
 
     <span class="nav-icon">
-      ●
+
+      <svg viewBox="0 0 24 24" fill="none">
+
+        <circle
+          cx="12"
+          cy="8"
+          r="4"
+          fill="currentColor"/>
+
+        <path
+          d="M4 21c.6-4.2 3.2-6.5 8-6.5s7.4 2.3 8 6.5"
+          fill="currentColor"/>
+
+      </svg>
+
     </span>
 
     Profile
@@ -1742,47 +2421,61 @@ body{
 
 </nav>
 
+
 </div>
 
 
+<!-- ==================================================
+                         JAVASCRIPT
+================================================== -->
+
 <script>
 
-/* ==========================================
-             LUNARO MINING STATE
-========================================== */
+/* ==================================================
+                    STATE
+================================================== */
 
 let state = {
+
   wallet:25000,
+
   mined:0,
+
   rate:0.70,
+
   last:Date.now()
+
 };
 
 
-/* ==========================================
-                 LOAD
-========================================== */
+/* ==================================================
+                     LOAD
+================================================== */
 
 try{
 
-  const old =
+  const saved =
     localStorage.getItem("lunaro");
 
-  if(old){
+  if(saved){
 
     state = {
       ...state,
-      ...JSON.parse(old)
+      ...JSON.parse(saved)
     };
 
   }
 
-}catch(e){}
+}catch(error){
+
+  console.log(error);
+
+}
 
 
-/* ==========================================
-                 SAVE
-========================================== */
+/* ==================================================
+                      SAVE
+================================================== */
 
 function save(){
 
@@ -1793,24 +2486,31 @@ function save(){
       JSON.stringify(state)
     );
 
-  }catch(e){}
+  }catch(error){
+
+    console.log(error);
+
+  }
 
 }
 
 
-/* ==========================================
-             AUTOMATIC MINING
-========================================== */
+/* ==================================================
+                AUTOMATIC MINING
+================================================== */
 
 function mining(){
 
   const now =
     Date.now();
 
-  const hours =
-    (now-state.last)/3600000;
+  const elapsed =
+    now - state.last;
 
-  if(hours > 0){
+  if(elapsed > 0){
+
+    const hours =
+      elapsed / 3600000;
 
     state.mined +=
       hours * state.rate;
@@ -1825,31 +2525,31 @@ function mining(){
 }
 
 
-/* ==========================================
-                  FORMAT
-========================================== */
+/* ==================================================
+                     FORMAT
+================================================== */
 
-function money(n){
+function money(number){
 
-  return Number(n)
-    .toLocaleString(
-      "en-US",
-      {
-        minimumFractionDigits:2,
-        maximumFractionDigits:2
-      }
-    );
+  return Number(number).toLocaleString(
+    "en-US",
+    {
+      minimumFractionDigits:2,
+      maximumFractionDigits:2
+    }
+  );
 
 }
 
 
-/* ==========================================
-                  RENDER
-========================================== */
+/* ==================================================
+                      RENDER
+================================================== */
 
 function render(){
 
   mining();
+
 
   document.getElementById(
     "wallet"
@@ -1864,8 +2564,9 @@ function render(){
 
 
   /*
-    Mined is NOT included in wallet
-    until the user presses CLAIM.
+    IMPORTANT:
+    Mined amount is NOT added to
+    wallet balance until CLAIM.
   */
 
   document.getElementById(
@@ -1877,14 +2578,14 @@ function render(){
   document.getElementById(
     "profileBalance"
   ).textContent =
-    money(state.wallet)+" LNR";
+    money(state.wallet) + " LNR";
 
 }
 
 
-/* ==========================================
-                    CLAIM
-========================================== */
+/* ==================================================
+                       CLAIM
+================================================== */
 
 function claim(){
 
@@ -1900,57 +2601,104 @@ function claim(){
 
   }
 
-  const amount =
-    state.mined;
 
-  state.wallet +=
-    amount;
+  const button =
+    document.getElementById(
+      "claimButton"
+    );
 
-  state.mined =
-    0;
+  const text =
+    document.getElementById(
+      "claimText"
+    );
 
-  save();
 
-  render();
+  button.disabled =
+    true;
 
-  alert(
-    "+"+money(amount)+" LNR claimed!"
-  );
+  text.textContent =
+    "CLAIMING...";
+
+
+  setTimeout(()=>{
+
+    const amount =
+      state.mined;
+
+
+    state.wallet +=
+      amount;
+
+
+    state.mined =
+      0;
+
+
+    save();
+
+    render();
+
+
+    text.textContent =
+      "CLAIM";
+
+
+    button.disabled =
+      false;
+
+
+    alert(
+      "+" + money(amount) +
+      " LNR claimed!"
+    );
+
+
+  },700);
 
 }
 
 
-/* ==========================================
-                PAGE NAVIGATION
-========================================== */
+/* ==================================================
+                  PAGE NAVIGATION
+================================================== */
 
 function go(page){
 
   document
-    .querySelectorAll(".page,.home")
+    .querySelectorAll(
+      ".page,.home"
+    )
     .forEach(
-      el => el.classList.remove("active")
+      element =>
+        element.classList.remove(
+          "active"
+        )
     );
 
 
   const target =
     document.getElementById(page);
 
+
   if(target){
 
-    target.classList.add("active");
+    target.classList.add(
+      "active"
+    );
 
   }
 
 
   document
-    .querySelectorAll(".nav button")
+    .querySelectorAll(
+      ".nav button"
+    )
     .forEach(
-      btn => {
+      button => {
 
-        btn.classList.toggle(
+        button.classList.toggle(
           "active",
-          btn.dataset.page === page
+          button.dataset.page === page
         );
 
       }
@@ -1959,9 +2707,9 @@ function go(page){
 }
 
 
-/* ==========================================
-                    TASK
-========================================== */
+/* ==================================================
+                     TASKS
+================================================== */
 
 function done(button){
 
@@ -1972,39 +2720,47 @@ function done(button){
     true;
 
   button.style.opacity =
-    ".5";
+    ".55";
 
 }
 
 
-/* ==========================================
-                COPY REFERRAL
-========================================== */
+/* ==================================================
+                  COPY REFERRAL
+================================================== */
 
 function copyCode(){
 
   const code =
     "LNR-7A92X";
 
-  if(
-    navigator.clipboard
-  ){
+
+  if(navigator.clipboard){
 
     navigator.clipboard
-      .writeText(code);
+      .writeText(code)
+      .then(()=>{
+
+        alert(
+          "Referral code copied"
+        );
+
+      });
+
+  }else{
+
+    alert(
+      "Referral code: " + code
+    );
 
   }
-
-  alert(
-    "Referral code copied"
-  );
 
 }
 
 
-/* ==========================================
-             DEMO WITHDRAWAL
-========================================== */
+/* ==================================================
+                 DEMO WITHDRAWAL
+================================================== */
 
 function withdraw(){
 
@@ -2014,6 +2770,7 @@ function withdraw(){
         "withdrawAmount"
       ).value
     );
+
 
   if(
     !amount ||
@@ -2028,6 +2785,7 @@ function withdraw(){
 
   }
 
+
   if(
     amount > state.wallet
   ){
@@ -2040,21 +2798,25 @@ function withdraw(){
 
   }
 
+
   /*
-    Demo only.
+    DEMO ONLY.
     No real blockchain transaction.
   */
 
   state.wallet -=
     amount;
 
+
   save();
 
   render();
 
+
   document.getElementById(
     "withdrawAmount"
   ).value = "";
+
 
   alert(
     "Demo withdrawal request created."
@@ -2063,11 +2825,16 @@ function withdraw(){
 }
 
 
-/* ==========================================
-                  START
-========================================== */
+/* ==================================================
+                      START
+================================================== */
 
 render();
+
+
+/*
+  Update mining every second.
+*/
 
 setInterval(
   render,
