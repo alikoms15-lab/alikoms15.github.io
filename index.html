@@ -2,1366 +2,1327 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#07120e">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>LUNARO — LNR</title>
+<meta name="theme-color" content="#07130e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<title>LUNARO — Automatic Mining</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<!-- Official TON Connect UI -->
 <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 
 <style>
+
 :root{
-  --bg:#07120e;
-  --bg2:#0b1914;
-  --card:#0f211a;
-  --card2:#13281f;
-  --line:rgba(148,255,195,.12);
-  --green:#62f59a;
-  --green2:#20c96b;
-  --text:#f2fff7;
-  --muted:#8da79a;
-  --danger:#ff7272;
-  --yellow:#ffd76a;
-  --shadow:0 20px 60px rgba(0,0,0,.28);
+    --bg:#06100b;
+    --bg2:#091810;
+    --card:#0d1d15;
+    --card2:#10251b;
+    --green:#32f58a;
+    --green2:#16c86b;
+    --text:#f4fff8;
+    --muted:#8da99a;
+    --border:rgba(80,255,160,.12);
+    --danger:#ff5e70;
+    --gold:#f4c95d;
 }
 
 *{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
-  margin:0;
-  padding:0;
-  min-height:100%;
-  background:
-    radial-gradient(circle at 50% -10%,rgba(42,207,112,.16),transparent 38%),
-    var(--bg);
-  color:var(--text);
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+    background:
+        radial-gradient(circle at 50% -10%,rgba(39,255,139,.13),transparent 35%),
+        linear-gradient(180deg,#07130e,#030806);
+    color:var(--text);
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 }
 
 body{
-  min-height:100vh;
-  overflow-x:hidden;
-}
-
-button,input{
-  font:inherit;
+    overflow-x:hidden;
 }
 
 button{
-  border:0;
-  cursor:pointer;
+    font-family:inherit;
 }
 
-.app{
-  width:100%;
-  max-width:540px;
-  min-height:100vh;
-  margin:auto;
-  padding:
-    max(14px,env(safe-area-inset-top))
-    14px
-    calc(100px + env(safe-area-inset-bottom))
-    14px;
+#app{
+    width:100%;
+    max-width:520px;
+    min-height:100vh;
+    margin:auto;
+    padding-bottom:92px;
 }
+
+/* HEADER */
 
 .header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:14px;
+    position:sticky;
+    top:0;
+    z-index:30;
+    padding:14px 15px;
+    background:rgba(5,14,9,.84);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(255,255,255,.04);
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
+.header-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
 }
 
-.brandMark{
-  width:40px;
-  height:40px;
-  border-radius:14px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(145deg,#78ffad,#1b9e58);
-  color:#06110b;
-  font-weight:1000;
-  box-shadow:0 8px 30px rgba(54,238,137,.25);
+.brand-mini{
+    display:flex;
+    align-items:center;
+    gap:9px;
 }
 
-.brandText{
-  line-height:1.05;
+.brand-mini img{
+    width:35px;
+    height:35px;
+    border-radius:11px;
+    object-fit:cover;
 }
 
-.brandText strong{
-  display:block;
-  font-size:14px;
-  letter-spacing:2px;
+.brand-mini strong{
+    font-size:14px;
+    letter-spacing:1.5px;
 }
 
-.brandText span{
-  color:var(--muted);
-  font-size:9px;
-  letter-spacing:1.5px;
+.status-pill{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 10px;
+    border-radius:999px;
+    background:#0c1b13;
+    border:1px solid var(--border);
+    font-size:11px;
+    color:var(--muted);
+    max-width:185px;
 }
 
-.headerRight{
-  display:flex;
-  align-items:center;
-  gap:7px;
+.status-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#69786f;
+    flex:none;
 }
 
-.pill{
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.035);
-  padding:8px 10px;
-  border-radius:999px;
-  font-size:10px;
-  color:var(--muted);
-  white-space:nowrap;
+.status-pill.connected{
+    color:#baffd5;
 }
 
-.level{
-  color:var(--green);
+.status-pill.connected .status-dot{
+    background:var(--green);
+    box-shadow:0 0 10px var(--green);
 }
 
-.walletDot{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  display:inline-block;
-  margin-right:5px;
-  background:#777;
+.wallet-short{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
 }
 
-.walletDot.connected{
-  background:var(--green);
-  box-shadow:0 0 10px var(--green);
-}
+/* PAGES */
 
 .page{
-  display:none;
-  animation:fade .22s ease;
+    display:none;
+    padding:18px 15px;
 }
 
 .page.active{
-  display:block;
+    display:block;
 }
 
-@keyframes fade{
-  from{opacity:0;transform:translateY(5px)}
-  to{opacity:1;transform:none}
-}
+/* HERO */
 
 .hero{
-  position:relative;
-  overflow:hidden;
-  border:1px solid var(--line);
-  border-radius:28px;
-  padding:22px 18px 20px;
-  background:
-    radial-gradient(circle at 50% 35%,rgba(76,246,144,.14),transparent 32%),
-    linear-gradient(145deg,#10271d,#091610);
-  box-shadow:var(--shadow);
+    text-align:center;
+    padding:14px 0 18px;
 }
 
-.hero:before{
-  content:"";
-  position:absolute;
-  width:210px;
-  height:210px;
-  left:50%;
-  top:40px;
-  transform:translateX(-50%);
-  border-radius:50%;
-  border:1px solid rgba(103,255,160,.09);
-  box-shadow:
-    0 0 0 20px rgba(103,255,160,.025),
-    0 0 0 40px rgba(103,255,160,.018);
+.hero-label{
+    color:var(--green);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:2px;
+    margin-bottom:15px;
 }
 
-.miningVisual{
-  height:245px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
+.crystal-wrap{
+    width:190px;
+    height:190px;
+    margin:0 auto 15px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-.orbit{
-  position:absolute;
-  width:205px;
-  height:205px;
-  border-radius:50%;
-  border:1px dashed rgba(105,255,163,.18);
-  animation:spin 18s linear infinite;
-}
-
-.orbit:after{
-  content:"";
-  position:absolute;
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 16px var(--green);
-  top:18px;
-  left:30px;
-}
-
-@keyframes spin{
-  to{transform:rotate(360deg)}
+.crystal-glow{
+    position:absolute;
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    background:rgba(42,255,133,.13);
+    filter:blur(35px);
 }
 
 .crystal{
-  width:132px;
-  height:132px;
-  transform:rotate(45deg);
-  border-radius:32px;
-  display:grid;
-  place-items:center;
-  background:
-    linear-gradient(135deg,#8dffbb,#38dc7d 45%,#117d46);
-  box-shadow:
-    0 0 45px rgba(70,255,146,.27),
-    inset -15px -18px 25px rgba(0,60,29,.2),
-    inset 10px 10px 22px rgba(255,255,255,.2);
-  position:relative;
+    width:128px;
+    height:128px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transform:rotate(45deg);
+    border-radius:26px;
+    background:
+        linear-gradient(135deg,#8affbe 0%,#18d96e 35%,#087b43 70%,#032e1a 100%);
+    box-shadow:
+        0 0 30px rgba(43,255,139,.32),
+        inset 10px 10px 25px rgba(255,255,255,.16),
+        inset -15px -15px 25px rgba(0,0,0,.28);
 }
 
-.crystal:before{
-  content:"";
-  position:absolute;
-  inset:12px;
-  border:1px solid rgba(255,255,255,.25);
-  border-radius:22px;
+.crystal::before{
+    content:"";
+    position:absolute;
+    inset:14px;
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:18px;
 }
 
-.crystal span{
-  transform:rotate(-45deg);
-  font-size:32px;
-  font-weight:1000;
-  letter-spacing:2px;
-  color:#052111;
+.crystal-text{
+    transform:rotate(-45deg);
+    font-weight:1000;
+    font-size:30px;
+    letter-spacing:1px;
+    color:#d9ffe9;
+    text-shadow:
+        0 2px 0 #087441,
+        0 0 15px rgba(255,255,255,.25);
 }
 
-.miningState{
-  position:absolute;
-  bottom:2px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:10px;
-  letter-spacing:1.4px;
-  color:var(--muted);
-  white-space:nowrap;
+.orbit{
+    position:absolute;
+    width:190px;
+    height:72px;
+    border:2px solid rgba(65,255,153,.55);
+    border-radius:50%;
+    transform:rotate(-25deg);
+    box-shadow:0 0 15px rgba(55,255,144,.22);
 }
 
-.miningState.active{
-  color:var(--green);
+.orbit::after{
+    content:"";
+    position:absolute;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#8bffc0;
+    box-shadow:0 0 15px #39ff91;
+    right:18px;
+    top:4px;
 }
 
-.miningState.wait{
-  color:var(--yellow);
+.hero-title{
+    font-size:29px;
+    font-weight:900;
+    letter-spacing:2px;
+    margin:0;
 }
 
-.balanceLabel{
-  text-align:center;
-  color:var(--muted);
-  font-size:10px;
-  letter-spacing:1.6px;
-  margin-top:2px;
+.hero-sub{
+    color:var(--muted);
+    font-size:11px;
+    margin-top:6px;
+    letter-spacing:1.7px;
 }
 
-.balance{
-  text-align:center;
-  font-size:39px;
-  font-weight:1000;
-  letter-spacing:-1.5px;
-  margin:5px 0 2px;
+/* WALLET BUTTON */
+
+.wallet-area{
+    margin:10px 0 18px;
 }
 
-.unit{
-  color:var(--green);
-  font-size:13px;
-  font-weight:800;
-  letter-spacing:1px;
+.connect-btn,
+.claim-btn,
+.withdraw-btn{
+    width:100%;
+    border:0;
+    border-radius:17px;
+    min-height:54px;
+    font-weight:900;
+    letter-spacing:.5px;
+    cursor:pointer;
 }
+
+.connect-btn{
+    color:#031109;
+    background:linear-gradient(135deg,#74ffb0,#20e778);
+    box-shadow:0 10px 30px rgba(25,236,116,.16);
+}
+
+.connect-btn:active,
+.claim-btn:active,
+.withdraw-btn:active{
+    transform:scale(.985);
+}
+
+.disconnect-btn{
+    width:100%;
+    margin-top:9px;
+    min-height:45px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.08);
+    background:#0b1711;
+    color:#9eafa5;
+    font-weight:800;
+}
+
+/* BALANCE */
+
+.balance-card{
+    background:
+        linear-gradient(145deg,rgba(21,53,37,.9),rgba(8,23,15,.95));
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:20px;
+    margin-bottom:12px;
+    box-shadow:0 20px 60px rgba(0,0,0,.18);
+}
+
+.balance-label{
+    color:var(--muted);
+    font-size:11px;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+}
+
+.balance-number{
+    margin-top:7px;
+    font-size:35px;
+    font-weight:950;
+    letter-spacing:-1px;
+}
+
+.balance-unit{
+    color:var(--green);
+    font-size:14px;
+    margin-left:5px;
+}
+
+.balance-separator{
+    height:1px;
+    background:rgba(255,255,255,.06);
+    margin:16px 0;
+}
+
+.mining-status{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:12px;
+}
+
+.mining-active{
+    color:#8fffb9;
+}
+
+.mining-stopped{
+    color:#ffb0b9;
+}
+
+/* STATS */
 
 .stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-top:20px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:12px;
 }
 
 .stat{
-  background:rgba(255,255,255,.035);
-  border:1px solid var(--line);
-  border-radius:17px;
-  padding:12px 7px;
-  text-align:center;
-  min-width:0;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:15px;
 }
 
-.stat small{
-  display:block;
-  color:var(--muted);
-  font-size:8px;
-  letter-spacing:.8px;
-  margin-bottom:5px;
-  text-transform:uppercase;
+.stat-label{
+    color:var(--muted);
+    font-size:10px;
+    letter-spacing:1px;
 }
 
-.stat strong{
-  display:block;
-  font-size:13px;
-  overflow:hidden;
-  text-overflow:ellipsis;
+.stat-value{
+    margin-top:7px;
+    font-size:18px;
+    font-weight:850;
 }
 
-.stat em{
-  display:block;
-  color:var(--green);
-  font-size:8px;
-  font-style:normal;
-  margin-top:2px;
+.stat-value.green{
+    color:var(--green);
 }
 
-.claim{
-  width:100%;
-  margin-top:15px;
-  padding:16px;
-  border-radius:17px;
-  color:#04120a;
-  font-weight:1000;
-  letter-spacing:.8px;
-  background:linear-gradient(135deg,#75ffad,#28ca70);
-  box-shadow:0 10px 28px rgba(38,215,111,.2);
+/* CLAIM */
+
+.claim-btn{
+    color:#021008;
+    background:linear-gradient(135deg,#b0ffd0,#32f58a);
 }
 
-.claim:disabled{
-  opacity:.38;
-  cursor:not-allowed;
-  box-shadow:none;
+.claim-btn:disabled{
+    opacity:.35;
+    cursor:not-allowed;
 }
 
-.connectBox{
-  margin-top:12px;
-  padding:13px;
-  border-radius:17px;
-  background:rgba(255,255,255,.025);
-  border:1px solid var(--line);
-}
-
-.connectRow{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.connectInfo{
-  min-width:0;
-}
-
-.connectInfo small{
-  display:block;
-  color:var(--muted);
-  font-size:8px;
-  letter-spacing:1px;
-  margin-bottom:4px;
-}
-
-.connectAddress{
-  font-size:11px;
-  font-weight:800;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.connectBtn{
-  min-width:112px;
-  padding:11px 12px;
-  border-radius:12px;
-  background:#193b2b;
-  border:1px solid rgba(110,255,164,.15);
-  color:var(--green);
-  font-size:10px;
-  font-weight:900;
-}
-
-.disconnectBtn{
-  display:none;
-  width:100%;
-  margin-top:9px;
-  padding:10px;
-  border-radius:12px;
-  background:rgba(255,114,114,.08);
-  color:var(--danger);
-  border:1px solid rgba(255,114,114,.12);
-  font-size:10px;
-  font-weight:800;
-}
-
-.sectionTitle{
-  display:flex;
-  align-items:end;
-  justify-content:space-between;
-  margin:6px 2px 12px;
-}
-
-.sectionTitle h2{
-  margin:0;
-  font-size:21px;
-}
-
-.sectionTitle span{
-  color:var(--muted);
-  font-size:10px;
-}
+/* CARDS */
 
 .card{
-  background:linear-gradient(145deg,#10251b,#0c1b15);
-  border:1px solid var(--line);
-  border-radius:21px;
-  padding:16px;
-  margin-bottom:10px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:17px;
+    margin-bottom:11px;
 }
+
+.card-title{
+    font-weight:900;
+    font-size:15px;
+}
+
+.card-sub{
+    color:var(--muted);
+    font-size:11px;
+    margin-top:5px;
+}
+
+/* TASKS */
 
 .task{
-  display:flex;
-  align-items:center;
-  gap:12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
 }
 
-.taskIcon{
-  width:43px;
-  height:43px;
-  flex:none;
-  border-radius:14px;
-  display:grid;
-  place-items:center;
-  background:rgba(98,245,154,.09);
-  font-size:18px;
+.task-info{
+    flex:1;
 }
 
-.taskMain{
-  flex:1;
-  min-width:0;
+.task-reward{
+    color:var(--green);
+    font-size:11px;
+    margin-top:5px;
 }
 
-.taskMain strong{
-  display:block;
-  font-size:13px;
+.task button{
+    border:0;
+    background:#143b27;
+    color:#8fffb9;
+    padding:10px 14px;
+    border-radius:12px;
+    font-weight:800;
 }
 
-.taskMain span{
-  display:block;
-  color:var(--muted);
-  font-size:9px;
-  margin-top:3px;
+/* FRIENDS */
+
+.ref-code{
+    padding:15px;
+    background:#07140d;
+    border:1px dashed rgba(80,255,160,.25);
+    border-radius:15px;
+    text-align:center;
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:3px;
+    color:var(--green);
+    margin:12px 0;
 }
 
-.taskBtn{
-  padding:9px 11px;
-  border-radius:11px;
-  background:#193c2b;
-  color:var(--green);
-  font-size:9px;
-  font-weight:900;
+.copy-btn{
+    width:100%;
+    border:1px solid rgba(70,255,150,.18);
+    background:#10291c;
+    color:#a9ffca;
+    padding:12px;
+    border-radius:13px;
+    font-weight:800;
 }
 
-.taskBtn.done{
-  background:rgba(98,245,154,.08);
-  color:var(--green);
+/* PROFILE */
+
+.profile-row{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:13px 0;
+    border-bottom:1px solid rgba(255,255,255,.05);
 }
 
-.minerGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
+.profile-row:last-child{
+    border-bottom:0;
 }
 
-.miner{
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:14px;
-  background:#0e2118;
+.profile-label{
+    color:var(--muted);
+    font-size:11px;
 }
 
-.minerTop{
-  display:flex;
-  justify-content:space-between;
-  gap:5px;
+.profile-value{
+    text-align:right;
+    font-size:12px;
+    font-weight:800;
+    word-break:break-all;
 }
 
-.miner strong{
-  font-size:12px;
+/* WITHDRAW */
+
+.withdraw-info{
+    background:#07140d;
+    border-radius:15px;
+    padding:14px;
+    margin:12px 0;
 }
 
-.miner small{
-  color:var(--muted);
-  font-size:8px;
+.withdraw-line{
+    display:flex;
+    justify-content:space-between;
+    padding:5px 0;
+    font-size:12px;
 }
 
-.minerRate{
-  color:var(--green);
-  font-weight:900;
-  font-size:16px;
-  margin-top:15px;
+.withdraw-line span:first-child{
+    color:var(--muted);
 }
 
-.progress{
-  height:6px;
-  border-radius:20px;
-  overflow:hidden;
-  background:#183127;
-  margin-top:9px;
+.withdraw-line strong{
+    color:#eafff1;
 }
 
-.progress span{
-  display:block;
-  height:100%;
-  width:40%;
-  border-radius:20px;
-  background:linear-gradient(90deg,#2bcf73,#8affb9);
+.withdraw-btn{
+    color:#041008;
+    background:linear-gradient(135deg,#f0d37c,#d8ae45);
 }
 
-.chart{
-  height:150px;
-  position:relative;
-  overflow:hidden;
+.withdraw-btn:disabled{
+    opacity:.35;
 }
 
-.chart svg{
-  width:100%;
-  height:100%;
+/* BOTTOM NAV */
+
+.bottom-nav{
+    position:fixed;
+    left:50%;
+    bottom:10px;
+    transform:translateX(-50%);
+    width:min(500px,calc(100% - 20px));
+    z-index:50;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:3px;
+    padding:7px;
+    background:rgba(7,18,12,.94);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:22px;
+    box-shadow:0 15px 50px rgba(0,0,0,.4);
 }
 
-.refCode{
-  font-size:24px;
-  font-weight:1000;
-  letter-spacing:4px;
-  text-align:center;
-  color:var(--green);
-  margin:8px 0;
+.nav-btn{
+    border:0;
+    background:transparent;
+    color:#71867a;
+    padding:9px 2px;
+    border-radius:15px;
+    font-size:9px;
+    font-weight:800;
 }
 
-.refLink{
-  padding:11px;
-  border-radius:12px;
-  background:#08140f;
-  color:var(--muted);
-  font-size:9px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  border:1px solid var(--line);
+.nav-btn.active{
+    background:#12321f;
+    color:#9bffc0;
 }
 
-.copyBtn{
-  width:100%;
-  margin-top:9px;
-  padding:12px;
-  border-radius:12px;
-  background:#193b2b;
-  color:var(--green);
-  font-weight:900;
-  font-size:10px;
+.nav-icon{
+    display:block;
+    font-size:17px;
+    margin-bottom:3px;
 }
 
-.refStats{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-  margin-top:10px;
-}
-
-.refStat{
-  padding:15px;
-  text-align:center;
-  border-radius:16px;
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--line);
-}
-
-.refStat small{
-  display:block;
-  color:var(--muted);
-  font-size:8px;
-  margin-bottom:4px;
-}
-
-.refStat strong{
-  color:var(--green);
-  font-size:17px;
-}
-
-.profileCard{
-  text-align:center;
-}
-
-.avatar{
-  width:65px;
-  height:65px;
-  margin:0 auto 10px;
-  border-radius:22px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(145deg,#75ffad,#1e9d58);
-  color:#04120a;
-  font-size:23px;
-  font-weight:1000;
-}
-
-.profileName{
-  font-size:18px;
-  font-weight:900;
-}
-
-.profileId{
-  color:var(--muted);
-  font-size:9px;
-  margin-top:3px;
-}
-
-.input{
-  width:100%;
-  padding:13px;
-  border-radius:12px;
-  outline:none;
-  border:1px solid var(--line);
-  background:#08150f;
-  color:var(--text);
-  margin-top:8px;
-}
-
-.withdrawInfo{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:7px;
-  margin-top:10px;
-}
-
-.withdrawMini{
-  text-align:center;
-  padding:10px 5px;
-  border-radius:13px;
-  background:rgba(255,255,255,.025);
-  border:1px solid var(--line);
-}
-
-.withdrawMini small{
-  display:block;
-  color:var(--muted);
-  font-size:7px;
-}
-
-.withdrawMini strong{
-  display:block;
-  font-size:12px;
-  margin-top:4px;
-}
-
-.withdrawBtn{
-  width:100%;
-  padding:14px;
-  margin-top:10px;
-  border-radius:13px;
-  background:linear-gradient(135deg,#75ffad,#2dce73);
-  color:#04120a;
-  font-weight:1000;
-}
-
-.withdrawBtn:disabled{
-  opacity:.35;
-}
-
-.historyItem{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:12px 0;
-  border-bottom:1px solid var(--line);
-}
-
-.historyItem:last-child{
-  border-bottom:0;
-}
-
-.historyLeft strong{
-  display:block;
-  font-size:11px;
-}
-
-.historyLeft small{
-  display:block;
-  color:var(--muted);
-  font-size:8px;
-  margin-top:3px;
-}
-
-.status{
-  font-size:8px;
-  padding:5px 7px;
-  border-radius:8px;
-  background:rgba(98,245,154,.08);
-  color:var(--green);
-  align-self:center;
-}
-
-.empty{
-  text-align:center;
-  padding:20px;
-  color:var(--muted);
-  font-size:10px;
-}
-
-.bottomNav{
-  position:fixed;
-  z-index:50;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(540px,100%);
-  padding:8px 10px calc(8px + env(safe-area-inset-bottom));
-  background:rgba(5,14,10,.94);
-  backdrop-filter:blur(18px);
-  border-top:1px solid var(--line);
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-}
-
-.navBtn{
-  background:transparent;
-  color:#71887c;
-  padding:7px 2px;
-  border-radius:12px;
-  font-size:8px;
-  font-weight:800;
-}
-
-.navBtn span{
-  display:block;
-  font-size:18px;
-  margin-bottom:3px;
-}
-
-.navBtn.active{
-  color:var(--green);
-  background:rgba(98,245,154,.06);
-}
+/* TOAST */
 
 .toast{
-  position:fixed;
-  z-index:100;
-  left:50%;
-  bottom:92px;
-  transform:translate(-50%,20px);
-  width:min(92%,430px);
-  padding:13px 15px;
-  border-radius:14px;
-  background:#13251d;
-  border:1px solid var(--line);
-  color:var(--text);
-  font-size:10px;
-  text-align:center;
-  opacity:0;
-  pointer-events:none;
-  transition:.22s;
-  box-shadow:var(--shadow);
+    position:fixed;
+    left:50%;
+    bottom:92px;
+    transform:translate(-50%,20px);
+    opacity:0;
+    pointer-events:none;
+    z-index:100;
+    max-width:calc(100% - 30px);
+    padding:12px 17px;
+    border-radius:14px;
+    background:#12251a;
+    border:1px solid rgba(90,255,160,.2);
+    color:#e9fff1;
+    font-size:12px;
+    text-align:center;
+    transition:.25s ease;
 }
 
 .toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
+    opacity:1;
+    transform:translate(-50%,0);
 }
 
-.toast.error{
-  border-color:rgba(255,114,114,.25);
-  color:#ffb0b0;
-}
+/* MODAL */
 
 .modal{
-  position:fixed;
-  z-index:90;
-  inset:0;
-  background:rgba(0,0,0,.7);
-  backdrop-filter:blur(8px);
-  display:none;
-  align-items:flex-end;
-  justify-content:center;
+    position:fixed;
+    inset:0;
+    z-index:90;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(0,0,0,.7);
+    backdrop-filter:blur(7px);
 }
 
 .modal.show{
-  display:flex;
+    display:flex;
 }
 
-.modalBox{
-  width:min(540px,100%);
-  background:#0d1d15;
-  border:1px solid var(--line);
-  border-radius:25px 25px 0 0;
-  padding:20px;
-  padding-bottom:calc(20px + env(safe-area-inset-bottom));
+.modal-box{
+    width:min(420px,100%);
+    background:#0c1b13;
+    border:1px solid var(--border);
+    border-radius:23px;
+    padding:22px;
 }
 
-.modalBox h3{
-  margin:0 0 7px;
+.modal-title{
+    font-size:18px;
+    font-weight:900;
 }
 
-.modalBox p{
-  color:var(--muted);
-  font-size:10px;
-  line-height:1.6;
+.modal-text{
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.7;
+    margin:12px 0 18px;
 }
 
-.modalActions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:15px;
+.modal-actions{
+    display:flex;
+    gap:9px;
 }
 
-.modalActions button{
-  padding:13px;
-  border-radius:13px;
-  font-weight:900;
+.modal-actions button{
+    flex:1;
+    min-height:45px;
+    border-radius:13px;
+    border:0;
+    font-weight:800;
 }
 
-.cancel{
-  background:#17271f;
-  color:var(--muted);
+.modal-cancel{
+    background:#15221b;
+    color:#9caea3;
 }
 
-.confirm{
-  background:linear-gradient(135deg,#75ffad,#2dce73);
-  color:#04120a;
+.modal-confirm{
+    background:var(--green);
+    color:#031008;
 }
 
-.spinner{
-  display:inline-block;
-  width:12px;
-  height:12px;
-  border:2px solid rgba(0,0,0,.2);
-  border-top-color:currentColor;
-  border-radius:50%;
-  animation:spin .7s linear infinite;
-  vertical-align:-2px;
-  margin-right:5px;
+/* SMALL */
+
+.empty{
+    text-align:center;
+    padding:30px 10px;
+    color:var(--muted);
+    font-size:12px;
 }
 
-@media(max-width:370px){
-  .stats{
-    gap:5px;
-  }
-
-  .stat strong{
-    font-size:11px;
-  }
-
-  .miningVisual{
-    height:220px;
-  }
-
-  .crystal{
-    width:115px;
-    height:115px;
-  }
-}
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div id="app">
 
-<header class="header">
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-row">
 
-  <div class="brand">
-    <div class="brandMark">L</div>
-    <div class="brandText">
-      <strong>LUNARO</strong>
-      <span>AUTOMATIC MINING</span>
-    </div>
-  </div>
+            <div class="brand-mini">
+                <img
+                    src="icon-180.png"
+                    alt="LUNARO"
+                    onerror="this.style.display='none'"
+                >
 
-  <div class="headerRight">
-    <div class="pill level" id="levelPill">LVL 1</div>
-    <div class="pill">
-      <span id="walletDot" class="walletDot"></span>
-      <span id="walletAddress">OFFLINE</span>
-    </div>
-  </div>
+                <strong>LUNARO</strong>
+            </div>
 
-</header>
+            <div id="walletStatus"
+                 class="status-pill">
 
-<!-- HOME -->
-<section id="home" class="page active">
+                <span class="status-dot"></span>
 
-  <div class="hero">
+                <span id="walletStatusText"
+                      class="wallet-short">
+                    Wallet not connected
+                </span>
 
-    <div class="miningVisual">
+            </div>
 
-      <div class="orbit"></div>
-
-      <div class="crystal">
-        <span>LNR</span>
-      </div>
-
-      <div id="miningState" class="miningState wait">
-        CONNECT WALLET TO START MINING
-      </div>
-
-    </div>
-
-    <div class="balanceLabel">TOTAL BALANCE</div>
-
-    <div class="balance">
-      <span id="balance">0.00</span>
-      <span class="unit">LNR</span>
-    </div>
-
-    <div class="stats">
-
-      <div class="stat">
-        <small>Wallet Balance</small>
-        <strong id="walletBalance">0.00</strong>
-        <em>LNR</em>
-      </div>
-
-      <div class="stat">
-        <small>Mined</small>
-        <strong id="minedBalance">0.00</strong>
-        <em>UNCLAIMED</em>
-      </div>
-
-      <div class="stat">
-        <small>Mining Speed</small>
-        <strong id="miningSpeed">0.00</strong>
-        <em>LNR/H</em>
-      </div>
-
-    </div>
-
-    <button
-      id="claimButton"
-      class="claim"
-      onclick="claimMining()"
-      disabled
-    >
-      CONNECT WALLET TO CLAIM
-    </button>
-
-  </div>
-
-  <div class="connectBox">
-
-    <div class="connectRow">
-
-      <div class="connectInfo">
-        <small>TON WALLET</small>
-        <div id="connectedAddress" class="connectAddress">
-          No wallet connected
         </div>
-      </div>
+    </header>
 
-      <button
-        id="customConnectButton"
-        class="connectBtn"
-        onclick="openWalletModal()"
-      >
-        CONNECT
-      </button>
 
-    </div>
+    <!-- HOME -->
+    <section id="page-mine" class="page active">
 
-    <button
-      id="disconnectButton"
-      class="disconnectBtn"
-      onclick="disconnectWallet()"
-    >
-      DISCONNECT WALLET
-    </button>
+        <div class="hero">
 
-  </div>
+            <div class="hero-label">
+                AUTOMATIC MINING
+            </div>
 
-</section>
+            <div class="crystal-wrap">
 
+                <div class="crystal-glow"></div>
 
-<!-- TASKS -->
-<section id="tasks" class="page">
+                <div class="orbit"></div>
 
-  <div class="sectionTitle">
-    <h2>Tasks</h2>
-    <span>Earn LNR</span>
-  </div>
+                <div class="crystal">
+                    <div class="crystal-text">LNR</div>
+                </div>
 
-  <div id="taskList">
+            </div>
 
-    <div class="card task">
-      <div class="taskIcon">✈️</div>
+            <h1 class="hero-title">
+                LUNARO
+            </h1>
 
-      <div class="taskMain">
-        <strong>Join LUNARO Community</strong>
-        <span>Complete through the official task flow</span>
-      </div>
-
-      <button class="taskBtn" onclick="completeTask('community',this)">
-        +25
-      </button>
-    </div>
-
-    <div class="card task">
-      <div class="taskIcon">📢</div>
+            <div class="hero-sub">
+                AUTOMATIC • SECURE • DECENTRALIZED
+            </div>
 
-      <div class="taskMain">
-        <strong>Follow LUNARO</strong>
-        <span>Reward is verified by the server</span>
-      </div>
+        </div>
 
-      <button class="taskBtn" onclick="completeTask('follow',this)">
-        +25
-      </button>
-    </div>
 
-    <div class="card task">
-      <div class="taskIcon">🚀</div>
+        <!-- WALLET -->
+        <div class="wallet-area">
 
-      <div class="taskMain">
-        <strong>Launch Mission</strong>
-        <span>Complete the mission to receive LNR</span>
-      </div>
+            <button
+                id="connectButton"
+                class="connect-btn"
+                onclick="connectWallet()">
+                CONNECT WALLET
+            </button>
 
-      <button class="taskBtn" onclick="completeTask('launch',this)">
-        +50
-      </button>
-    </div>
+            <button
+                id="disconnectButton"
+                class="disconnect-btn"
+                onclick="disconnectWallet()"
+                style="display:none;">
+                DISCONNECT WALLET
+            </button>
 
-  </div>
+        </div>
 
-</section>
 
+        <!-- TOTAL BALANCE -->
+        <div class="balance-card">
 
-<!-- MINERS -->
-<section id="miners" class="page">
+            <div class="balance-label">
+                TOTAL BALANCE
+            </div>
 
-  <div class="sectionTitle">
-    <h2>Mining</h2>
-    <span>Automatic system</span>
-  </div>
+            <div class="balance-number">
+                <span id="balance">0.0000</span>
+                <span class="balance-unit">LNR</span>
+            </div>
 
-  <div class="card">
+            <div class="balance-separator"></div>
 
-    <div class="minerTop">
-      <strong>Your Mining Power</strong>
-      <small id="powerLabel">CONNECTED WALLET</small>
-    </div>
+            <div class="mining-status">
 
-    <div class="minerRate">
-      <span id="minerRateLarge">0.00</span> LNR / H
-    </div>
+                <span>
+                    Mining status
+                </span>
 
-    <div class="progress">
-      <span id="miningProgress"></span>
-    </div>
+                <strong
+                    id="miningStatus"
+                    class="mining-stopped">
+                    WALLET REQUIRED
+                </strong>
 
-    <div style="display:flex;justify-content:space-between;margin-top:7px">
-      <small style="color:var(--muted);font-size:8px">
-        Level <span id="minerLevel">1</span>
-      </small>
+            </div>
 
-      <small style="color:var(--muted);font-size:8px">
-        Automatic
-      </small>
-    </div>
+        </div>
 
-  </div>
 
-  <div class="sectionTitle">
-    <h2>Network</h2>
-    <span>LNR activity</span>
-  </div>
+        <!-- STATS -->
+        <div class="stats">
 
-  <div class="card chart">
+            <div class="stat">
 
-    <svg viewBox="0 0 400 150" preserveAspectRatio="none">
+                <div class="stat-label">
+                    MINED
+                </div>
 
-      <path
-        d="M0 125 C40 112 50 118 75 90
-           S110 105 135 75
-           S165 93 190 65
-           S230 82 255 50
-           S290 70 320 42
-           S350 56 400 25"
-        fill="none"
-        stroke="rgba(98,245,154,.8)"
-        stroke-width="3"
-      />
+                <div class="stat-value green">
+                    <span id="minedBalance">
+                        0.0000
+                    </span>
+                    LNR
+                </div>
 
-      <path
-        d="M0 125 C40 112 50 118 75 90
-           S110 105 135 75
-           S165 93 190 65
-           S230 82 255 50
-           S290 70 320 42
-           S350 56 400 25
-           L400 150 L0 150 Z"
-        fill="rgba(98,245,154,.06)"
-      />
+            </div>
 
-    </svg>
 
-  </div>
+            <div class="stat">
 
-</section>
+                <div class="stat-label">
+                    WALLET BALANCE
+                </div>
 
+                <div class="stat-value">
+                    <span id="walletBalance">
+                        0.0000
+                    </span>
+                    LNR
+                </div>
 
-<!-- FRIENDS -->
-<section id="friends" class="page">
+            </div>
 
-  <div class="sectionTitle">
-    <h2>Friends</h2>
-    <span>Referral</span>
-  </div>
 
-  <div class="card">
+            <div class="stat">
 
-    <div style="text-align:center;color:var(--muted);font-size:9px">
-      YOUR REFERRAL CODE
-    </div>
+                <div class="stat-label">
+                    MINING SPEED
+                </div>
 
-    <div id="refCode" class="refCode">
-      —
-    </div>
+                <div class="stat-value">
+                    <span id="miningSpeed">
+                        0.70
+                    </span>
+                    LNR/h
+                </div>
 
-    <div id="refLink" class="refLink">
-      Loading referral link...
-    </div>
+            </div>
 
-    <button class="copyBtn" onclick="copyReferral()">
-      COPY REFERRAL LINK
-    </button>
 
-  </div>
+            <div class="stat">
 
-  <div class="card">
+                <div class="stat-label">
+                    LEVEL
+                </div>
 
-    <div style="text-align:center;color:var(--green);font-weight:900">
-      10% REFERRAL REWARD
-    </div>
+                <div class="stat-value">
+                    <span id="level">
+                        1
+                    </span>
+                </div>
 
-    <div class="refStats">
+            </div>
 
-      <div class="refStat">
-        <small>FRIENDS</small>
-        <strong id="friendCount">0</strong>
-      </div>
+        </div>
 
-      <div class="refStat">
-        <small>EARNED</small>
-        <strong id="refEarned">0.00</strong>
-      </div>
 
-    </div>
+        <!-- CLAIM -->
+        <button
+            id="claimButton"
+            class="claim-btn"
+            onclick="claimMining()"
+            disabled>
 
-  </div>
+            CLAIM MINED LNR
 
-</section>
+        </button>
 
+    </section>
 
-<!-- PROFILE -->
-<section id="profile" class="page">
 
-  <div class="sectionTitle">
-    <h2>Profile</h2>
-    <span>LUNARO account</span>
-  </div>
+    <!-- TASKS -->
+    <section id="page-tasks" class="page">
 
-  <div class="card profileCard">
+        <div class="card">
 
-    <div id="avatar" class="avatar">L</div>
+            <div class="card-title">
+                Tasks
+            </div>
 
-    <div id="profileName" class="profileName">
-      User
-    </div>
+            <div class="card-sub">
+                Complete tasks and receive LNR rewards.
+            </div>
 
-    <div id="profileId" class="profileId">
-      Telegram ID: —
-    </div>
+        </div>
 
-  </div>
 
+        <div class="card task">
 
-  <div class="card">
+            <div class="task-info">
 
-    <div class="sectionTitle">
-      <h2 style="font-size:15px">Wallet</h2>
-      <span id="walletStatusText">Disconnected</span>
-    </div>
+                <strong>
+                    Daily Check
+                </strong>
 
-    <div class="connectAddress" id="profileWallet">
-      No wallet connected
-    </div>
+                <div class="task-reward">
+                    +25 LNR
+                </div>
 
-    <button
-      class="copyBtn"
-      onclick="copyWallet()"
-      id="copyWalletButton"
-      disabled
-    >
-      COPY ADDRESS
-    </button>
+            </div>
 
-  </div>
+            <button onclick="completeTask('daily')">
+                CLAIM
+            </button>
 
+        </div>
 
-  <div class="card">
 
-    <div class="sectionTitle">
-      <h2 style="font-size:15px">Withdraw</h2>
-      <span>To connected wallet</span>
-    </div>
+        <div class="card task">
 
-    <div class="withdrawInfo">
+            <div class="task-info">
 
-      <div class="withdrawMini">
-        <small>MINIMUM</small>
-        <strong>500 LNR</strong>
-      </div>
+                <strong>
+                    Community
+                </strong>
 
-      <div class="withdrawMini">
-        <small>FEE</small>
-        <strong>70 LNR</strong>
-      </div>
+                <div class="task-reward">
+                    +50 LNR
+                </div>
 
-      <div class="withdrawMini">
-        <small>RECEIVE</small>
-        <strong>430 LNR</strong>
-      </div>
+            </div>
 
-    </div>
+            <button onclick="completeTask('community')">
+                CLAIM
+            </button>
 
-    <input
-      id="withdrawAmount"
-      class="input"
-      type="number"
-      min="500"
-      step="1"
-      placeholder="Amount to withdraw"
-    >
+        </div>
 
-    <button
-      id="withdrawButton"
-      class="withdrawBtn"
-      onclick="requestWithdraw()"
-      disabled
-    >
-      WITHDRAW
-    </button>
 
-    <div
-      style="margin-top:8px;color:var(--muted);font-size:8px;text-align:center"
-    >
-      Minimum withdrawal: 500 LNR • Fee: 70 LNR
-    </div>
+        <div class="card task">
 
-  </div>
+            <div class="task-info">
 
+                <strong>
+                    Welcome
+                </strong>
 
-  <div class="card">
+                <div class="task-reward">
+                    +25 LNR
+                </div>
 
-    <div class="sectionTitle">
-      <h2 style="font-size:15px">Withdrawal History</h2>
-      <span id="historyCount">0</span>
-    </div>
+            </div>
 
-    <div id="withdrawHistory">
-      <div class="empty">
-        No withdrawals yet
-      </div>
-    </div>
+            <button onclick="completeTask('welcome')">
+                CLAIM
+            </button>
 
-  </div>
+        </div>
 
-</section>
+    </section>
+
+
+    <!-- MINERS -->
+    <section id="page-miners" class="page">
+
+        <div class="card">
+
+            <div class="card-title">
+                LUNARO Miners
+            </div>
+
+            <div class="card-sub">
+                Your automatic mining system.
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="profile-row">
+
+                <div>
+                    <div class="profile-label">
+                        Current Level
+                    </div>
+                </div>
+
+                <strong>
+                    LEVEL <span id="minerLevel">1</span>
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <div>
+                    <div class="profile-label">
+                        Mining Rate
+                    </div>
+                </div>
+
+                <strong>
+                    <span id="minerRate">0.70</span> LNR/h
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FRIENDS -->
+    <section id="page-friends" class="page">
+
+        <div class="card">
+
+            <div class="card-title">
+                Invite Friends
+            </div>
+
+            <div class="card-sub">
+                Earn 10% of your friend's claimed LNR.
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-sub">
+                YOUR REFERRAL CODE
+            </div>
+
+            <div id="referralCode"
+                 class="ref-code">
+                —
+            </div>
+
+            <button
+                class="copy-btn"
+                onclick="copyReferral()">
+                COPY REFERRAL LINK
+            </button>
+
+        </div>
+
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <div class="stat-label">
+                    FRIENDS
+                </div>
+
+                <div class="stat-value">
+                    <span id="friendCount">0</span>
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-label">
+                    REFERRAL EARNED
+                </div>
+
+                <div class="stat-value green">
+                    <span id="referralEarned">
+                        0.0000
+                    </span>
+                    LNR
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PROFILE -->
+    <section id="page-profile" class="page">
+
+        <div class="card">
+
+            <div class="card-title">
+                Profile
+            </div>
+
+            <div class="card-sub">
+                Your LUNARO account
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="profile-row">
+
+                <div class="profile-label">
+                    Telegram
+                </div>
+
+                <div id="telegramName"
+                     class="profile-value">
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <div class="profile-label">
+                    Telegram ID
+                </div>
+
+                <div id="telegramId"
+                     class="profile-value">
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <div class="profile-label">
+                    Wallet
+                </div>
+
+                <div id="profileWallet"
+                     class="profile-value">
+                    Not connected
+                </div>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <div class="profile-label">
+                    Referral Code
+                </div>
+
+                <div id="profileReferral"
+                     class="profile-value">
+                    —
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- WITHDRAW -->
+
+        <div class="card">
+
+            <div class="card-title">
+                Withdraw
+            </div>
+
+            <div class="card-sub">
+                Minimum withdrawal: 500 LNR
+            </div>
+
+
+            <div class="withdraw-info">
+
+                <div class="withdraw-line">
+                    <span>Withdrawable</span>
+                    <strong>
+                        <span id="withdrawable">
+                            0.0000
+                        </span>
+                        LNR
+                    </strong>
+                </div>
+
+                <div class="withdraw-line">
+                    <span>Minimum</span>
+                    <strong>500 LNR</strong>
+                </div>
+
+                <div class="withdraw-line">
+                    <span>Fee</span>
+                    <strong>70 LNR</strong>
+                </div>
+
+                <div class="withdraw-line">
+                    <span>You receive</span>
+                    <strong>
+                        430 LNR
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <button
+                id="withdrawButton"
+                class="withdraw-btn"
+                onclick="requestWithdraw()"
+                disabled>
+
+                WITHDRAW
+
+            </button>
+
+        </div>
+
+    </section>
 
 </div>
 
 
-<!-- NAV -->
-<nav class="bottomNav">
+<!-- BOTTOM NAV -->
 
-  <button class="navBtn active" onclick="showPage('home',this)">
-    <span>◉</span>
-    Mine
-  </button>
+<nav class="bottom-nav">
 
-  <button class="navBtn" onclick="showPage('tasks',this)">
-    <span>✓</span>
-    Tasks
-  </button>
+    <button
+        class="nav-btn active"
+        data-page="mine"
+        onclick="showPage('mine',this)">
 
-  <button class="navBtn" onclick="showPage('miners',this)">
-    <span>⚡</span>
-    Miners
-  </button>
+        <span class="nav-icon">⛏</span>
+        Mine
 
-  <button class="navBtn" onclick="showPage('friends',this)">
-    <span>♧</span>
-    Friends
-  </button>
+    </button>
 
-  <button class="navBtn" onclick="showPage('profile',this)">
-    <span>◉</span>
-    Profile
-  </button>
+
+    <button
+        class="nav-btn"
+        data-page="tasks"
+        onclick="showPage('tasks',this)">
+
+        <span class="nav-icon">✓</span>
+        Tasks
+
+    </button>
+
+
+    <button
+        class="nav-btn"
+        data-page="miners"
+        onclick="showPage('miners',this)">
+
+        <span class="nav-icon">◈</span>
+        Miners
+
+    </button>
+
+
+    <button
+        class="nav-btn"
+        data-page="friends"
+        onclick="showPage('friends',this)">
+
+        <span class="nav-icon">♧</span>
+        Friends
+
+    </button>
+
+
+    <button
+        class="nav-btn"
+        data-page="profile"
+        onclick="showPage('profile',this)">
+
+        <span class="nav-icon">●</span>
+        Profile
+
+    </button>
 
 </nav>
 
 
 <!-- TOAST -->
+
 <div id="toast" class="toast"></div>
 
 
 <!-- WITHDRAW MODAL -->
+
 <div id="withdrawModal" class="modal">
 
-  <div class="modalBox">
+    <div class="modal-box">
 
-    <h3>Confirm Withdrawal</h3>
+        <div class="modal-title">
+            Confirm Withdrawal
+        </div>
 
-    <p id="withdrawSummary">
-      —
-    </p>
+        <div class="modal-text">
 
-    <div class="modalActions">
+            Minimum withdrawal is 500 LNR.
+            A 70 LNR fee will be deducted.
+            For a 500 LNR withdrawal, you will
+            receive 430 LNR.
 
-      <button
-        class="cancel"
-        onclick="closeWithdrawModal()"
-      >
-        CANCEL
-      </button>
+            <br><br>
 
-      <button
-        class="confirm"
-        onclick="confirmWithdraw()"
-      >
-        CONFIRM
-      </button>
+            Destination:
+
+            <strong id="withdrawAddress">
+                —
+            </strong>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="modal-cancel"
+                onclick="closeWithdrawModal()">
+                CANCEL
+            </button>
+
+            <button
+                class="modal-confirm"
+                onclick="confirmWithdraw()">
+                CONFIRM
+            </button>
+
+        </div>
 
     </div>
-
-  </div>
 
 </div>
 
@@ -1369,43 +1330,48 @@ button{
 <script>
 
 /* =========================================================
-   LUNARO CONFIG
+   CONFIG
 ========================================================= */
 
 const API_URL =
-  "https://lunaro-api.alikoms15.workers.dev";
-
-const APP_NAME = "LUNARO";
-
-const MIN_WITHDRAW = 500;
-
-const WITHDRAW_FEE = 70;
-
-const REFERRAL_PERCENT = 0.10;
+    "https://lunaro-api.alikoms15.workers.dev";
 
 
 /*
- IMPORTANT:
- The actual mining rate should ultimately be returned
- by the backend after wallet verification.
+ * IMPORTANT:
+ * Use the direct HTTPS manifest URL.
+ */
+const MANIFEST_URL =
+    "https://alikoms15-lab.github.io/alikoms15.github.io/tonconnect-manifest.json";
 
- This client-side value is only a temporary display fallback.
-*/
 
-const DEFAULT_MINING_RATE = 0.70;
+/*
+ * Put your actual Telegram bot username here later.
+ *
+ * Example:
+ * window.LUNARO_BOT_USERNAME = "LunaroBot";
+ *
+ * Do NOT put @ in front.
+ */
+window.LUNARO_BOT_USERNAME = "";
 
 
 /* =========================================================
    TELEGRAM
 ========================================================= */
 
-const tg =
-  window.Telegram &&
-  window.Telegram.WebApp
-    ? window.Telegram.WebApp
-    : null;
+const tg = window.Telegram?.WebApp;
 
-let telegramUser = null;
+if(tg){
+
+    try{
+        tg.ready();
+        tg.expand();
+    }catch(e){
+        console.warn("Telegram WebApp init:",e);
+    }
+
+}
 
 
 /* =========================================================
@@ -1414,45 +1380,41 @@ let telegramUser = null;
 
 const state = {
 
-  telegram_id: null,
+    telegram_id:null,
 
-  username: null,
+    username:null,
 
-  first_name: "User",
+    first_name:"User",
 
-  walletAddress: null,
+    walletAddress:null,
 
-  walletBalance: 0,
+    walletBalance:0,
 
-  balance: 0,
+    balance:0,
 
-  mined: 0,
+    mined:0,
 
-  mining_rate: 0,
+    mining_rate:0.70,
 
-  level: 1,
+    level:1,
 
-  referral_code: null,
+    referral_code:null,
 
-  referred_by: null,
+    referred_by:null,
 
-  referral_earned: 0,
+    referral_earned:0,
 
-  friend_count: 0,
+    friend_count:0,
 
-  withdrawals: [],
+    miningRunning:false,
 
-  lastMiningTimestamp: Date.now(),
+    loading:false,
 
-  miningRunning: false,
+    claiming:false,
 
-  loadingUser: false,
+    withdrawing:false,
 
-  claiming: false,
-
-  withdrawing: false,
-
-  tasks: {}
+    lastMiningTick:Date.now()
 
 };
 
@@ -1463,508 +1425,536 @@ const state = {
 
 let tonConnectUI = null;
 
-let walletReady = false;
+let connectedWallet = null;
 
 
 /*
- Manifest URL.
+ * Initialize only once.
+ */
+async function initTonConnect(){
 
- GitHub Pages automatically serves this file from the
- repository root.
-*/
-
-const MANIFEST_URL =
-  window.location.origin +
-  "/tonconnect-manifest.json";
-
-
-function initTonConnect(){
-
-  try{
-
-    if(
-      !window.TON_CONNECT_UI ||
-      !window.TON_CONNECT_UI.TonConnectUI
-    ){
-
-      showToast(
-        "TON Connect could not be loaded.",
-        true
-      );
-
-      return;
+    if(tonConnectUI){
+        return tonConnectUI;
     }
 
+    if(!window.TON_CONNECT_UI){
 
-    tonConnectUI =
-      new TON_CONNECT_UI.TonConnectUI({
+        showToast("TON Connect library هنوز بارگذاری نشده");
 
-        manifestUrl: MANIFEST_URL,
-
-        restoreConnection: true,
-
-        buttonRootId: null
-
-      });
-
-
-    tonConnectUI.onStatusChange(
-
-      async wallet => {
-
-        if(wallet){
-
-          await handleWalletConnected(wallet);
-
-        }else{
-
-          await handleWalletDisconnected();
-
-        }
-
-      }
-
-    );
-
-
-    /*
-     Restore previously connected wallet.
-    */
-
-    if(
-      tonConnectUI.connectionRestored
-    ){
-
-      tonConnectUI.connectionRestored
-        .then(() => {
-
-          if(tonConnectUI.wallet){
-
-            handleWalletConnected(
-              tonConnectUI.wallet
-            );
-
-          }
-
-        })
-        .catch(err => {
-
-          console.warn(
-            "TON restore:",
-            err
-          );
-
-        });
+        throw new Error("TON_CONNECT_UI not available");
 
     }
-
-  }catch(error){
-
-    console.error(
-      "TON Connect initialization error:",
-      error
-    );
-
-    showToast(
-      "Wallet connection could not be initialized.",
-      true
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   WALLET CONNECTION
-========================================================= */
-
-async function openWalletModal(){
-
-  if(!tonConnectUI){
-
-    showToast(
-      "Wallet system is still loading.",
-      true
-    );
-
-    return;
-  }
-
-  try{
-
-    await tonConnectUI.openModal();
-
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      "Unable to open wallet selector.",
-      true
-    );
-
-  }
-
-}
-
-
-async function handleWalletConnected(wallet){
-
-  try{
-
-    if(!wallet || !wallet.account){
-
-      return;
-
-    }
-
-
-    const address =
-      wallet.account.address;
-
-
-    state.walletAddress = address;
-
-    walletReady = true;
-
-    state.lastMiningTimestamp =
-      Date.now();
-
-    /*
-     IMPORTANT:
-     Mining becomes active only here.
-    */
-
-    state.miningRunning = true;
-
-
-    updateWalletUI();
-
-    updateMiningStatus();
-
-
-    /*
-     Tell backend which wallet was connected.
-    */
-
-    await notifyWalletConnected(
-      address
-    );
-
-
-    /*
-     Reload user because wallet balance,
-     mining rate and server state may change.
-    */
-
-    await loadUser();
-
-    showToast(
-      "Wallet connected. Automatic mining started."
-    );
-
-  }catch(error){
-
-    console.error(
-      "Wallet connect handler:",
-      error
-    );
-
-    showToast(
-      "Wallet connected, but account sync failed.",
-      true
-    );
-
-  }
-
-}
-
-
-async function handleWalletDisconnected(){
-
-  /*
-   MOST IMPORTANT RULE:
-   Stop mining immediately.
-  */
-
-  state.miningRunning = false;
-
-  walletReady = false;
-
-  state.walletAddress = null;
-
-  state.walletBalance = 0;
-
-  state.lastMiningTimestamp =
-    Date.now();
-
-
-  updateWalletUI();
-
-  updateMiningStatus();
-
-  updateUI();
-
-  showToast(
-    "Wallet disconnected. Mining stopped."
-  );
-
-}
-
-
-async function disconnectWallet(){
-
-  if(!tonConnectUI){
-
-    return;
-
-  }
-
-  try{
-
-    state.miningRunning = false;
-
-    await tonConnectUI.disconnect();
-
-    /*
-     onStatusChange handles the rest.
-    */
-
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      "Could not disconnect wallet.",
-      true
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   WALLET API SYNC
-========================================================= */
-
-async function notifyWalletConnected(address){
-
-  if(!state.telegram_id){
-
-    return;
-
-  }
-
-  try{
-
-    await apiRequest(
-      "/wallet/connect",
-      {
-
-        telegram_id:
-          state.telegram_id,
-
-        wallet_address:
-          address
-
-      }
-    );
-
-  }catch(error){
-
-    /*
-     Do not break wallet connection if the
-     backend endpoint has not been deployed yet.
-    */
-
-    console.warn(
-      "Wallet backend sync:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   TELEGRAM INIT
-========================================================= */
-
-function initTelegram(){
-
-  if(!tg){
-
-    console.warn(
-      "Telegram WebApp unavailable."
-    );
-
-    return;
-
-  }
-
-  try{
-
-    tg.ready();
-
-    tg.expand();
-
-
-    telegramUser =
-      tg.initDataUnsafe &&
-      tg.initDataUnsafe.user
-        ? tg.initDataUnsafe.user
-        : null;
-
-
-    if(telegramUser){
-
-      state.telegram_id =
-        telegramUser.id || null;
-
-      state.username =
-        telegramUser.username || null;
-
-      state.first_name =
-        telegramUser.first_name ||
-        "User";
-
-    }
-
-
-    /*
-     Read referral parameter from Telegram.
-    */
-
-    const startParam =
-      tg.initDataUnsafe &&
-      tg.initDataUnsafe.start_param
-        ? tg.initDataUnsafe.start_param
-        : null;
-
-
-    if(startParam){
-
-      state.referred_by =
-        startParam;
-
-    }
-
-
-    updateProfileUI();
-
-  }catch(error){
-
-    console.error(
-      "Telegram init:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   API HELPER
-========================================================= */
-
-async function apiRequest(
-  endpoint,
-  body = {},
-  options = {}
-){
-
-  const controller =
-    new AbortController();
-
-  const timeout =
-    setTimeout(
-
-      () =>
-        controller.abort(),
-
-      options.timeout || 15000
-
-    );
-
-
-  try{
-
-    const response =
-      await fetch(
-
-        API_URL + endpoint,
-
-        {
-
-          method:
-            options.method || "POST",
-
-          headers:{
-            "Content-Type":
-              "application/json",
-
-            "Accept":
-              "application/json"
-          },
-
-          body:
-            options.method === "GET"
-              ? undefined
-              : JSON.stringify(body),
-
-          signal:
-            controller.signal
-
-        }
-
-      );
-
-
-    const text =
-      await response.text();
-
-
-    let data = {};
 
 
     try{
 
-      data =
-        text
-          ? JSON.parse(text)
-          : {};
+        tonConnectUI =
+            new TON_CONNECT_UI.TonConnectUI({
 
-    }catch{
+                manifestUrl:MANIFEST_URL,
 
-      data = {
-        raw:text
-      };
+                restoreConnection:true
+
+            });
+
+
+        /*
+         * Connection / restoration / disconnect
+         */
+        tonConnectUI.onStatusChange(
+
+            async(wallet)=>{
+
+                console.log(
+                    "TON STATUS:",
+                    wallet
+                );
+
+
+                if(wallet && wallet.account){
+
+                    await handleWalletConnected(wallet);
+
+                }else{
+
+                    await handleWalletDisconnected();
+
+                }
+
+            },
+
+            (error)=>{
+
+                console.error(
+                    "TON CONNECT ERROR:",
+                    error
+                );
+
+                showToast(
+                    getTonErrorMessage(error)
+                );
+
+            }
+
+        );
+
+
+        /*
+         * Wait until restore is finished.
+         */
+        try{
+
+            await tonConnectUI.connectionRestored;
+
+        }catch(e){
+
+            console.warn(
+                "Connection restore failed:",
+                e
+            );
+
+        }
+
+
+        return tonConnectUI;
+
+
+    }catch(error){
+
+        console.error(
+            "TON CONNECT INIT ERROR:",
+            error
+        );
+
+        showToast(
+            "راه‌اندازی کیف پول ناموفق بود"
+        );
+
+        throw error;
+
+    }
+
+}
+
+
+/* =========================================================
+   CONNECT
+========================================================= */
+
+async function connectWallet(){
+
+    try{
+
+        const ui =
+            await initTonConnect();
+
+
+        /*
+         * If already connected, don't open another connection.
+         */
+        if(ui.connected){
+
+            showToast(
+                "کیف پول قبلاً متصل است"
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Official TON Connect method.
+         */
+        await ui.openModal();
+
+
+    }catch(error){
+
+        console.error(
+            "CONNECT WALLET ERROR:",
+            error
+        );
+
+        showToast(
+            getTonErrorMessage(error)
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CONNECTED
+========================================================= */
+
+async function handleWalletConnected(wallet){
+
+    if(!wallet || !wallet.account){
+
+        return;
+
+    }
+
+
+    connectedWallet = wallet;
+
+
+    const address =
+        wallet.account.address;
+
+
+    /*
+     * Critical:
+     * Mining starts ONLY after wallet connection.
+     */
+    state.walletAddress = address;
+
+    state.miningRunning = true;
+
+    state.lastMiningTick = Date.now();
+
+
+    updateUI();
+
+
+    showToast(
+        "کیف پول با موفقیت متصل شد"
+    );
+
+
+    /*
+     * Sync wallet with backend.
+     */
+    try{
+
+        await apiRequest(
+            "/wallet/connect",
+            {
+
+                telegram_id:
+                    state.telegram_id,
+
+                wallet_address:
+                    address
+
+            }
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Backend wallet connect:",
+            error
+        );
+
+    }
+
+
+    /*
+     * Reload authoritative user data.
+     */
+    await loadUser();
+
+}
+
+
+/* =========================================================
+   DISCONNECT
+========================================================= */
+
+async function disconnectWallet(){
+
+    if(!tonConnectUI){
+
+        return;
+
+    }
+
+
+    if(!tonConnectUI.connected){
+
+        await handleWalletDisconnected();
+
+        return;
+
+    }
+
+
+    /*
+     * IMPORTANT:
+     * Stop local mining BEFORE disconnect request.
+     */
+    state.miningRunning = false;
+
+    state.lastMiningTick = Date.now();
+
+
+    updateUI();
+
+
+    try{
+
+        await tonConnectUI.disconnect();
+
+    }catch(error){
+
+        console.error(
+            "TON DISCONNECT ERROR:",
+            error
+        );
+
+    }
+
+
+    /*
+     * onStatusChange normally calls this too,
+     * but we explicitly clear the local state.
+     */
+    await handleWalletDisconnected();
+
+}
+
+
+/* =========================================================
+   DISCONNECTED
+========================================================= */
+
+async function handleWalletDisconnected(){
+
+    connectedWallet = null;
+
+
+    /*
+     * Critical mining rule:
+     * NO WALLET = NO MINING
+     */
+    state.walletAddress = null;
+
+    state.walletBalance = 0;
+
+    state.miningRunning = false;
+
+    state.lastMiningTick = Date.now();
+
+
+    updateUI();
+
+
+    /*
+     * Tell backend.
+     */
+    if(state.telegram_id){
+
+        try{
+
+            await apiRequest(
+                "/wallet/disconnect",
+                {
+
+                    telegram_id:
+                        state.telegram_id
+
+                }
+            );
+
+        }catch(error){
+
+            console.warn(
+                "Backend disconnect:",
+                error
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   TON ERROR
+========================================================= */
+
+function getTonErrorMessage(error){
+
+    const message =
+        String(
+            error?.message ||
+            error?.code ||
+            error ||
+            ""
+        ).toLowerCase();
+
+
+    if(
+        message.includes("manifest_not_found") ||
+        message.includes("manifest not found")
+    ){
+
+        return "Manifest پیدا نشد. آدرس tonconnect-manifest.json را بررسی کن.";
+
+    }
+
+
+    if(
+        message.includes("manifest_content") ||
+        message.includes("manifest content")
+    ){
+
+        return "محتوای Manifest مشکل دارد.";
+
+    }
+
+
+    if(
+        message.includes("user_rejected") ||
+        message.includes("rejected")
+    ){
+
+        return "اتصال توسط کاربر لغو شد.";
+
+    }
+
+
+    if(
+        message.includes("timeout")
+    ){
+
+        return "زمان اتصال کیف پول تمام شد. دوباره امتحان کن.";
+
+    }
+
+
+    return "اتصال کیف پول انجام نشد.";
+
+}
+
+
+/* =========================================================
+   TELEGRAM USER
+========================================================= */
+
+function initTelegramUser(){
+
+    const user =
+        tg?.initDataUnsafe?.user;
+
+
+    if(!user){
+
+        state.telegram_id =
+            localStorage.getItem(
+                "lunaro_demo_telegram_id"
+            );
+
+        return;
+
+    }
+
+
+    state.telegram_id =
+        user.id;
+
+    state.username =
+        user.username ||
+        null;
+
+    state.first_name =
+        user.first_name ||
+        "User";
+
+
+    document.getElementById(
+        "telegramName"
+    ).textContent =
+        user.username
+            ? "@" + user.username
+            : state.first_name;
+
+
+    document.getElementById(
+        "telegramId"
+    ).textContent =
+        user.id;
+
+}
+
+
+/* =========================================================
+   API
+========================================================= */
+
+async function apiRequest(
+    endpoint,
+    data = {},
+    method = "POST"
+){
+
+    const options = {
+
+        method,
+
+        headers:{
+            "Content-Type":
+                "application/json"
+        }
+
+    };
+
+
+    if(method !== "GET"){
+
+        options.body =
+            JSON.stringify(data);
+
+    }
+
+
+    const response =
+        await fetch(
+            API_URL + endpoint,
+            options
+        );
+
+
+    const text =
+        await response.text();
+
+
+    let result;
+
+
+    try{
+
+        result =
+            text
+                ? JSON.parse(text)
+                : {};
+
+    }catch(e){
+
+        result = {
+            raw:text
+        };
 
     }
 
 
     if(!response.ok){
 
-      throw new Error(
-        data.error ||
-        data.message ||
-        "API request failed"
-      );
+        throw new Error(
+            result?.error ||
+            result?.message ||
+            `HTTP ${response.status}`
+        );
 
     }
 
 
-    return data;
-
-  }finally{
-
-    clearTimeout(timeout);
-
-  }
+    return result;
 
 }
 
@@ -1975,693 +1965,292 @@ async function apiRequest(
 
 async function loadUser(){
 
-  if(
-    state.loadingUser ||
-    !state.telegram_id
-  ){
+    if(!state.telegram_id){
 
-    return;
+        return;
 
-  }
+    }
 
 
-  state.loadingUser = true;
+    try{
+
+        const user =
+            await apiRequest(
+                "/user",
+                {
+
+                    telegram_id:
+                        state.telegram_id,
+
+                    username:
+                        state.username,
+
+                    first_name:
+                        state.first_name,
+
+                    wallet_address:
+                        state.walletAddress
+
+                }
+            );
 
 
-  try{
+        /*
+         * Backend is authoritative.
+         */
 
-    const data =
-      await apiRequest(
-        "/user",
-        {
+        if(user){
 
-          telegram_id:
-            state.telegram_id,
+            state.balance =
+                Number(
+                    user.balance ??
+                    user.wallet_balance ??
+                    0
+                );
 
-          username:
-            state.username,
 
-          first_name:
-            state.first_name,
+            state.mined =
+                Number(
+                    user.mined ??
+                    0
+                );
 
-          wallet_address:
-            state.walletAddress,
 
-          referred_by:
-            state.referred_by
+            state.walletBalance =
+                Number(
+                    user.wallet_balance ??
+                    user.walletBalance ??
+                    0
+                );
+
+
+            state.mining_rate =
+                Number(
+                    user.mining_rate ??
+                    .70
+                );
+
+
+            state.level =
+                Number(
+                    user.level ??
+                    1
+                );
+
+
+            state.referral_code =
+                user.referral_code ??
+                state.referral_code;
+
+
+            state.referred_by =
+                user.referred_by ??
+                null;
+
+
+            state.referral_earned =
+                Number(
+                    user.referral_earned ??
+                    0
+                );
+
+
+            state.friend_count =
+                Number(
+                    user.friend_count ??
+                    0
+                );
+
+
+            /*
+             * If backend returns a connected wallet,
+             * keep it only if TON Connect actually
+             * says the wallet is connected.
+             */
+            if(
+                connectedWallet &&
+                connectedWallet.account
+            ){
+
+                state.walletAddress =
+                    connectedWallet.account.address;
+
+                state.miningRunning =
+                    true;
+
+            }else{
+
+                state.walletAddress =
+                    null;
+
+                state.miningRunning =
+                    false;
+
+            }
 
         }
-      );
 
 
-    const user =
-      data.user ||
-      data;
+        updateUI();
 
 
-    if(user){
+    }catch(error){
 
-      state.balance =
-        Number(user.balance || 0);
-
-      state.mined =
-        Number(user.mined || 0);
-
-      state.mining_rate =
-        Number(
-          user.mining_rate ||
-          DEFAULT_MINING_RATE
+        console.error(
+            "LOAD USER ERROR:",
+            error
         );
 
-      state.level =
-        Number(
-          user.level || 1
-        );
-
-      state.referral_code =
-        user.referral_code ||
-        state.referral_code;
-
-      state.referred_by =
-        user.referred_by ||
-        state.referred_by;
-
-      state.referral_earned =
-        Number(
-          user.referral_earned || 0
-        );
-
-      state.friend_count =
-        Number(
-          user.friend_count || 0
-        );
-
-
-      /*
-       If backend knows wallet balance,
-       use it.
-      */
-
-      if(
-        typeof user.wallet_balance !==
-        "undefined"
-      ){
-
-        state.walletBalance =
-          Number(
-            user.wallet_balance || 0
-          );
-
-      }
-
-
-      /*
-       Server mining rate wins.
-      */
-
-      if(
-        typeof user.mining_rate !==
-        "undefined"
-      ){
-
-        state.mining_rate =
-          Number(
-            user.mining_rate
-          );
-
-      }
+        updateUI();
 
     }
-
-
-    state.lastMiningTimestamp =
-      Date.now();
-
-
-    updateUI();
-
-    updateProfileUI();
-
-    loadWithdrawals();
-
-  }catch(error){
-
-    console.error(
-      "loadUser:",
-      error
-    );
-
-    /*
-     Keep the app usable if API is temporarily
-     unavailable.
-    */
-
-    if(!state.mining_rate){
-
-      state.mining_rate =
-        DEFAULT_MINING_RATE;
-
-    }
-
-    updateUI();
-
-    showToast(
-      "Account sync is temporarily unavailable.",
-      true
-    );
-
-  }finally{
-
-    state.loadingUser = false;
-
-  }
 
 }
 
 
 /* =========================================================
-   MINING ENGINE
+   REAL-TIME LOCAL MINING
 ========================================================= */
+
+/*
+ * This only animates / accumulates the current session.
+ *
+ * The backend MUST also validate elapsed mining time
+ * before accepting Claim.
+ */
 
 function miningTick(){
 
-  /*
-   NEVER mine without a wallet.
-  */
+    /*
+     * HARD STOP:
+     * No wallet => absolutely no mining.
+     */
+    if(
+        !state.miningRunning ||
+        !state.walletAddress
+    ){
 
-  if(
-    !walletReady ||
-    !state.walletAddress ||
-    !state.miningRunning
-  ){
+        state.lastMiningTick =
+            Date.now();
 
-    state.lastMiningTimestamp =
-      Date.now();
+        return;
 
-    return;
-
-  }
-
-
-  const now =
-    Date.now();
+    }
 
 
-  const elapsed =
-    (now -
-      state.lastMiningTimestamp) /
-    3600000;
+    const now =
+        Date.now();
 
 
-  /*
-   Ignore abnormal time jumps.
-  */
-
-  if(
-    elapsed <= 0 ||
-    elapsed > 0.1
-  ){
-
-    state.lastMiningTimestamp =
-      now;
-
-    return;
-
-  }
+    let elapsed =
+        (now - state.lastMiningTick) /
+        3600000;
 
 
-  const rate =
-    Number(
-      state.mining_rate || 0
-    );
+    /*
+     * Prevent huge jumps after phone sleep/background.
+     */
+    if(elapsed < 0){
+        elapsed = 0;
+    }
 
+    if(elapsed > 0.0167){
+        elapsed = 0.0167;
+    }
 
-  const earned =
-    elapsed * rate;
-
-
-  if(earned > 0){
 
     state.mined +=
-      earned;
-
-  }
-
-
-  state.lastMiningTimestamp =
-    now;
+        elapsed *
+        state.mining_rate;
 
 
-  updateUI();
+    state.lastMiningTick =
+        now;
+
+
+    updateMiningUI();
 
 }
 
 
 /*
- Sync mining with backend periodically.
-
- The backend should eventually calculate the
- authoritative mined amount.
-*/
-
-let lastMiningSync = 0;
-
-async function syncMining(){
-
-  if(
-    !walletReady ||
-    !state.walletAddress ||
-    !state.telegram_id
-  ){
-
-    return;
-
-  }
+ * Run every second.
+ */
+setInterval(
+    miningTick,
+    1000
+);
 
 
-  const now =
+/* =========================================================
+   PERIODIC BACKEND SYNC
+========================================================= */
+
+let lastSync =
     Date.now();
 
 
-  if(
-    now - lastMiningSync <
-    30000
-  ){
+setInterval(
 
-    return;
+    async()=>{
 
-  }
+        if(
+            !state.miningRunning ||
+            !state.walletAddress
+        ){
 
-
-  lastMiningSync =
-    now;
-
-
-  try{
-
-    const data =
-      await apiRequest(
-        "/mining/sync",
-        {
-
-          telegram_id:
-            state.telegram_id,
-
-          wallet_address:
-            state.walletAddress,
-
-          mined_client:
-            state.mined
+            return;
 
         }
-      );
 
 
-    /*
-     Backend may return authoritative
-     values.
-    */
+        if(
+            Date.now() -
+            lastSync <
+            30000
+        ){
 
-    if(
-      data.mined !==
-      undefined
-    ){
+            return;
 
-      state.mined =
-        Number(data.mined);
+        }
 
-    }
 
+        lastSync =
+            Date.now();
 
-    if(
-      data.mining_rate !==
-      undefined
-    ){
 
-      state.mining_rate =
-        Number(
-          data.mining_rate
-        );
+        try{
 
-    }
+            await apiRequest(
+                "/mining/sync",
+                {
 
+                    telegram_id:
+                        state.telegram_id,
 
-    if(
-      data.wallet_balance !==
-      undefined
-    ){
+                    wallet_address:
+                        state.walletAddress,
 
-      state.walletBalance =
-        Number(
-          data.wallet_balance
-        );
+                    mined:
+                        state.mined
 
-    }
+                }
+            );
 
+        }catch(error){
 
-    updateUI();
+            console.warn(
+                "Mining sync:",
+                error
+            );
 
-  }catch(error){
+        }
 
-    console.warn(
-      "Mining sync:",
-      error
-    );
+    },
 
-  }
+    5000
 
-}
-
-
-/* =========================================================
-   UI UPDATE
-========================================================= */
-
-function formatNumber(
-  value,
-  decimals = 2
-){
-
-  const n =
-    Number(value || 0);
-
-  return n.toLocaleString(
-    "en-US",
-    {
-      minimumFractionDigits:
-        decimals,
-
-      maximumFractionDigits:
-        decimals
-    }
-  );
-
-}
-
-
-function shortAddress(address){
-
-  if(!address){
-
-    return "OFFLINE";
-
-  }
-
-  if(address.length < 16){
-
-    return address;
-
-  }
-
-  return (
-    address.slice(0,6) +
-    "..." +
-    address.slice(-6)
-  );
-
-}
-
-
-function updateUI(){
-
-  document.getElementById(
-    "balance"
-  ).textContent =
-    formatNumber(
-      state.balance
-    );
-
-
-  document.getElementById(
-    "minedBalance"
-  ).textContent =
-    formatNumber(
-      state.mined
-    );
-
-
-  document.getElementById(
-    "walletBalance"
-  ).textContent =
-    formatNumber(
-      state.walletBalance
-    );
-
-
-  document.getElementById(
-    "miningSpeed"
-  ).textContent =
-    formatNumber(
-      state.mining_rate,
-      4
-    );
-
-
-  document.getElementById(
-    "minerRateLarge"
-  ).textContent =
-    formatNumber(
-      state.mining_rate,
-      4
-    );
-
-
-  document.getElementById(
-    "minerLevel"
-  ).textContent =
-    state.level;
-
-
-  document.getElementById(
-    "levelPill"
-  ).textContent =
-    "LVL " + state.level;
-
-
-  /*
-   Claim requires wallet and mined amount.
-  */
-
-  const claim =
-    document.getElementById(
-      "claimButton"
-    );
-
-
-  if(!walletReady){
-
-    claim.disabled = true;
-
-    claim.textContent =
-      "CONNECT WALLET TO CLAIM";
-
-  }else if(state.claiming){
-
-    claim.disabled = true;
-
-    claim.innerHTML =
-      '<span class="spinner"></span>CLAIMING...';
-
-  }else if(state.mined <= 0){
-
-    claim.disabled = true;
-
-    claim.textContent =
-      "NOTHING TO CLAIM";
-
-  }else{
-
-    claim.disabled = false;
-
-    claim.textContent =
-      "CLAIM " +
-      formatNumber(
-        state.mined
-      ) +
-      " LNR";
-
-  }
-
-
-  /*
-   Mining progress is visual only.
-  */
-
-  const progress =
-    Math.min(
-      100,
-      Math.max(
-        0,
-        (state.mined % 10) * 10
-      )
-    );
-
-
-  document.getElementById(
-    "miningProgress"
-  ).style.width =
-    progress + "%";
-
-
-  updateMiningStatus();
-
-}
-
-
-function updateMiningStatus(){
-
-  const el =
-    document.getElementById(
-      "miningState"
-    );
-
-
-  if(walletReady){
-
-    el.className =
-      "miningState active";
-
-    el.textContent =
-      state.miningRunning
-        ? "AUTOMATIC MINING ACTIVE"
-        : "MINING PAUSED";
-
-  }else{
-
-    el.className =
-      "miningState wait";
-
-    el.textContent =
-      "CONNECT WALLET TO START MINING";
-
-  }
-
-}
-
-
-/* =========================================================
-   WALLET UI
-========================================================= */
-
-function updateWalletUI(){
-
-  const address =
-    state.walletAddress;
-
-
-  document.getElementById(
-    "walletAddress"
-  ).textContent =
-    shortAddress(address);
-
-
-  document.getElementById(
-    "connectedAddress"
-  ).textContent =
-    address
-      ? shortAddress(address)
-      : "No wallet connected";
-
-
-  document.getElementById(
-    "profileWallet"
-  ).textContent =
-    address ||
-    "No wallet connected";
-
-
-  const dot =
-    document.getElementById(
-      "walletDot"
-    );
-
-
-  if(address){
-
-    dot.classList.add(
-      "connected"
-    );
-
-  }else{
-
-    dot.classList.remove(
-      "connected"
-    );
-
-  }
-
-
-  const connectBtn =
-    document.getElementById(
-      "customConnectButton"
-    );
-
-
-  const disconnectBtn =
-    document.getElementById(
-      "disconnectButton"
-    );
-
-
-  const copyBtn =
-    document.getElementById(
-      "copyWalletButton"
-    );
-
-
-  const withdrawBtn =
-    document.getElementById(
-      "withdrawButton"
-    );
-
-
-  if(address){
-
-    connectBtn.textContent =
-      "CHANGE";
-
-    disconnectBtn.style.display =
-      "block";
-
-    copyBtn.disabled =
-      false;
-
-    withdrawBtn.disabled =
-      false;
-
-  }else{
-
-    connectBtn.textContent =
-      "CONNECT";
-
-    disconnectBtn.style.display =
-      "none";
-
-    copyBtn.disabled =
-      true;
-
-    withdrawBtn.disabled =
-      true;
-
-  }
-
-
-  document.getElementById(
-    "walletStatusText"
-  ).textContent =
-    address
-      ? "Connected"
-      : "Disconnected";
-
-
-  document.getElementById(
-    "walletStatusText"
-  ).style.color =
-    address
-      ? "var(--green)"
-      : "var(--muted)";
-
-}
+);
 
 
 /* =========================================================
@@ -2670,169 +2259,155 @@ function updateWalletUI(){
 
 async function claimMining(){
 
-  if(!walletReady){
+    if(state.claiming){
 
-    showToast(
-      "Connect your TON wallet first.",
-      true
-    );
+        return;
 
-    return;
-
-  }
+    }
 
 
-  if(state.claiming){
+    if(
+        !state.walletAddress ||
+        !state.miningRunning
+    ){
 
-    return;
+        showToast(
+            "ابتدا کیف پول را متصل کن"
+        );
 
-  }
+        return;
 
-
-  const amount =
-    Number(
-      state.mined
-    );
-
-
-  if(
-    !amount ||
-    amount <= 0
-  ){
-
-    showToast(
-      "There is nothing to claim.",
-      true
-    );
-
-    return;
-
-  }
+    }
 
 
-  state.claiming = true;
+    const amount =
+        Number(
+            state.mined
+        );
 
-  updateUI();
+
+    if(
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ){
+
+        showToast(
+            "مقداری برای Claim وجود ندارد"
+        );
+
+        return;
+
+    }
 
 
-  try{
+    state.claiming = true;
 
-    const data =
-      await apiRequest(
-        "/claim",
-        {
+    updateUI();
 
-          telegram_id:
-            state.telegram_id,
 
-          wallet_address:
-            state.walletAddress,
+    try{
 
-          amount:
-            amount
+        /*
+         * IMPORTANT:
+         * Backend must independently validate
+         * the user's real claimable amount.
+         */
+        const result =
+            await apiRequest(
+                "/claim",
+                {
+
+                    telegram_id:
+                        state.telegram_id,
+
+                    wallet_address:
+                        state.walletAddress,
+
+                    amount:
+                        amount
+
+                }
+            );
+
+
+        /*
+         * Prefer backend values.
+         */
+        if(result){
+
+            if(
+                result.balance !== undefined
+            ){
+
+                state.balance =
+                    Number(
+                        result.balance
+                    );
+
+            }else{
+
+                state.balance += amount;
+
+            }
+
+
+            if(
+                result.mined !== undefined
+            ){
+
+                state.mined =
+                    Number(
+                        result.mined
+                    );
+
+            }else{
+
+                state.mined = 0;
+
+            }
+
+
+            if(
+                result.wallet_balance !== undefined
+            ){
+
+                state.walletBalance =
+                    Number(
+                        result.wallet_balance
+                    );
+
+            }
 
         }
-      );
 
 
-    /*
-     Server is authoritative.
-
-     Never simply do:
-     state.balance += amount
-
-     unless server confirms it.
-    */
-
-    if(
-      data.balance !==
-      undefined
-    ){
-
-      state.balance =
-        Number(data.balance);
-
-    }else{
-
-      /*
-       Compatibility fallback for the old API.
-      */
-
-      state.balance +=
-        amount;
-
-    }
-
-
-    if(
-      data.mined !==
-      undefined
-    ){
-
-      state.mined =
-        Number(data.mined);
-
-    }else{
-
-      state.mined = 0;
-
-    }
-
-
-    if(
-      data.wallet_balance !==
-      undefined
-    ){
-
-      state.walletBalance =
-        Number(
-          data.wallet_balance
+        showToast(
+            "Claim با موفقیت ثبت شد"
         );
 
-    }
+
+        await loadUser();
 
 
-    if(
-      data.referral_earned !==
-      undefined
-    ){
+    }catch(error){
 
-      state.referral_earned =
-        Number(
-          data.referral_earned
+        console.error(
+            "CLAIM ERROR:",
+            error
         );
 
+        showToast(
+            "Claim انجام نشد: " +
+            error.message
+        );
+
+    }finally{
+
+        state.claiming = false;
+
+        updateUI();
+
     }
-
-
-    updateUI();
-
-    updateProfileUI();
-
-    showToast(
-      "Claim completed successfully."
-    );
-
-  }catch(error){
-
-    console.error(
-      "Claim:",
-      error
-    );
-
-    showToast(
-      error.message ||
-      "Claim failed.",
-      true
-    );
-
-  }finally{
-
-    state.claiming = false;
-
-    updateUI();
-
-  }
 
 }
 
@@ -2841,275 +2416,71 @@ async function claimMining(){
    TASKS
 ========================================================= */
 
-async function completeTask(
-  taskId,
-  button
-){
+async function completeTask(taskId){
 
-  if(
-    !state.telegram_id
-  ){
+    if(!state.walletAddress){
 
-    showToast(
-      "Telegram account not available.",
-      true
-    );
-
-    return;
-
-  }
-
-
-  if(
-    button.dataset.loading === "1"
-  ){
-
-    return;
-
-  }
-
-
-  button.dataset.loading =
-    "1";
-
-  button.disabled =
-    true;
-
-  button.innerHTML =
-    '<span class="spinner"></span>';
-
-
-  try{
-
-    const data =
-      await apiRequest(
-        "/tasks/complete",
-        {
-
-          telegram_id:
-            state.telegram_id,
-
-          wallet_address:
-            state.walletAddress,
-
-          task_id:
-            taskId
-
-        }
-      );
-
-
-    if(
-      data.balance !==
-      undefined
-    ){
-
-      state.balance =
-        Number(
-          data.balance
+        showToast(
+            "برای دریافت پاداش، کیف پول را متصل کن"
         );
+
+        return;
 
     }
 
 
-    state.tasks[taskId] =
-      true;
+    try{
 
+        const result =
+            await apiRequest(
+                "/tasks/complete",
+                {
 
-    button.classList.add(
-      "done"
-    );
+                    telegram_id:
+                        state.telegram_id,
 
-    button.textContent =
-      "DONE";
+                    wallet_address:
+                        state.walletAddress,
 
+                    task_id:
+                        taskId
 
-    updateUI();
+                }
+            );
 
-    showToast(
-      data.message ||
-      "Task completed."
-    );
 
-  }catch(error){
+        if(
+            result?.balance !== undefined
+        ){
 
-    button.disabled =
-      false;
+            state.balance =
+                Number(
+                    result.balance
+                );
 
-    button.textContent =
-      "+ LNR";
+        }
 
-    showToast(
-      error.message ||
-      "Task could not be completed.",
-      true
-    );
 
-  }finally{
+        showToast(
+            "Task با موفقیت ثبت شد"
+        );
 
-    button.dataset.loading =
-      "0";
 
-  }
+        await loadUser();
 
-}
 
+    }catch(error){
 
-/* =========================================================
-   REFERRAL
-========================================================= */
+        console.error(
+            "TASK ERROR:",
+            error
+        );
 
-function updateReferralUI(){
+        showToast(
+            "این Task قابل دریافت نیست"
+        );
 
-  document.getElementById(
-    "refCode"
-  ).textContent =
-    state.referral_code ||
-    "—";
-
-
-  const botUsername =
-    window.LUNARO_BOT_USERNAME ||
-    "";
-
-
-  if(
-    botUsername &&
-    state.referral_code
-  ){
-
-    const link =
-      "https://t.me/" +
-      botUsername +
-      "?start=" +
-      encodeURIComponent(
-        state.referral_code
-      );
-
-
-    document.getElementById(
-      "refLink"
-    ).textContent =
-      link;
-
-  }else{
-
-    document.getElementById(
-      "refLink"
-    ).textContent =
-      "Referral link will appear after BOT username is configured.";
-
-  }
-
-
-  document.getElementById(
-    "friendCount"
-  ).textContent =
-    state.friend_count;
-
-
-  document.getElementById(
-    "refEarned"
-  ).textContent =
-    formatNumber(
-      state.referral_earned
-    );
-
-}
-
-
-function getReferralLink(){
-
-  const botUsername =
-    window.LUNARO_BOT_USERNAME ||
-    "";
-
-
-  if(
-    !botUsername ||
-    !state.referral_code
-  ){
-
-    return "";
-
-  }
-
-
-  return (
-    "https://t.me/" +
-    botUsername +
-    "?start=" +
-    encodeURIComponent(
-      state.referral_code
-    )
-  );
-
-}
-
-
-async function copyReferral(){
-
-  const link =
-    getReferralLink();
-
-
-  if(!link){
-
-    showToast(
-      "Referral link is not configured yet.",
-      true
-    );
-
-    return;
-
-  }
-
-
-  await copyText(link);
-
-  showToast(
-    "Referral link copied."
-  );
-
-}
-
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-function updateProfileUI(){
-
-  const name =
-    state.first_name ||
-    "User";
-
-
-  document.getElementById(
-    "profileName"
-  ).textContent =
-    name;
-
-
-  document.getElementById(
-    "avatar"
-  ).textContent =
-    name
-      .charAt(0)
-      .toUpperCase();
-
-
-  document.getElementById(
-    "profileId"
-  ).textContent =
-    "Telegram ID: " +
-    (
-      state.telegram_id ||
-      "—"
-    );
-
-
-  updateReferralUI();
+    }
 
 }
 
@@ -3118,491 +2489,515 @@ function updateProfileUI(){
    WITHDRAW
 ========================================================= */
 
-let pendingWithdrawAmount = 0;
+const WITHDRAW_MIN =
+    500;
+
+const WITHDRAW_FEE =
+    70;
 
 
 function requestWithdraw(){
 
-  if(!walletReady){
+    if(!state.walletAddress){
 
-    showToast(
-      "Connect your wallet first.",
-      true
-    );
+        showToast(
+            "ابتدا کیف پول را متصل کن"
+        );
 
-    return;
+        return;
 
-  }
-
-
-  if(state.withdrawing){
-
-    return;
-
-  }
+    }
 
 
-  const input =
+    if(
+        Number(state.balance) <
+        WITHDRAW_MIN
+    ){
+
+        showToast(
+            "حداقل برداشت 500 LNR است"
+        );
+
+        return;
+
+    }
+
+
     document.getElementById(
-      "withdrawAmount"
+        "withdrawAddress"
+    ).textContent =
+        shortAddress(
+            state.walletAddress
+        );
+
+
+    document.getElementById(
+        "withdrawModal"
+    ).classList.add(
+        "show"
     );
-
-
-  const amount =
-    Number(input.value);
-
-
-  if(
-    !amount ||
-    amount < MIN_WITHDRAW
-  ){
-
-    showToast(
-      "Minimum withdrawal is 500 LNR.",
-      true
-    );
-
-    return;
-
-  }
-
-
-  if(
-    amount > state.balance
-  ){
-
-    showToast(
-      "Insufficient LNR balance.",
-      true
-    );
-
-    return;
-
-  }
-
-
-  pendingWithdrawAmount =
-    amount;
-
-
-  const receive =
-    Math.max(
-      0,
-      amount - WITHDRAW_FEE
-    );
-
-
-  document.getElementById(
-    "withdrawSummary"
-  ).innerHTML =
-    "You are requesting <b>" +
-    formatNumber(amount) +
-    " LNR</b>.<br><br>" +
-
-    "Network/platform fee: <b>" +
-    formatNumber(WITHDRAW_FEE) +
-    " LNR</b><br>" +
-
-    "You receive: <b>" +
-    formatNumber(receive) +
-    " LNR</b><br><br>" +
-
-    "Destination:<br>" +
-
-    "<span style='color:var(--green);word-break:break-all'>" +
-    escapeHtml(
-      state.walletAddress
-    ) +
-    "</span>";
-
-
-  document.getElementById(
-    "withdrawModal"
-  ).classList.add(
-    "show"
-  );
 
 }
 
 
 function closeWithdrawModal(){
 
-  document.getElementById(
-    "withdrawModal"
-  ).classList.remove(
-    "show"
-  );
-
-  pendingWithdrawAmount =
-    0;
+    document.getElementById(
+        "withdrawModal"
+    ).classList.remove(
+        "show"
+    );
 
 }
 
 
 async function confirmWithdraw(){
 
-  if(
-    !pendingWithdrawAmount ||
-    state.withdrawing
-  ){
+    if(state.withdrawing){
 
-    return;
+        return;
 
-  }
+    }
 
-
-  const amount =
-    pendingWithdrawAmount;
-
-
-  closeWithdrawModal();
-
-
-  state.withdrawing =
-    true;
-
-
-  const button =
-    document.getElementById(
-      "withdrawButton"
-    );
-
-
-  button.disabled =
-    true;
-
-  button.innerHTML =
-    '<span class="spinner"></span>PROCESSING...';
-
-
-  try{
-
-    const data =
-      await apiRequest(
-        "/withdraw",
-        {
-
-          telegram_id:
-            state.telegram_id,
-
-          wallet_address:
-            state.walletAddress,
-
-          amount:
-            amount,
-
-          fee:
-            WITHDRAW_FEE
-
-        }
-      );
-
-
-    /*
-     Server must return the authoritative balance.
-    */
 
     if(
-      data.balance !==
-      undefined
+        !state.walletAddress
     ){
 
-      state.balance =
-        Number(
-          data.balance
+        closeWithdrawModal();
+
+        showToast(
+            "کیف پول متصل نیست"
         );
 
-    }else{
-
-      /*
-       Compatibility fallback only.
-      */
-
-      state.balance -=
-        amount;
+        return;
 
     }
 
 
     if(
-      Array.isArray(
-        data.withdrawals
-      )
+        Number(state.balance) <
+        WITHDRAW_MIN
     ){
 
-      state.withdrawals =
-        data.withdrawals;
+        closeWithdrawModal();
+
+        showToast(
+            "موجودی کافی نیست"
+        );
+
+        return;
 
     }
 
 
-    document.getElementById(
-      "withdrawAmount"
-    ).value =
-      "";
+    state.withdrawing = true;
 
-
-    await loadWithdrawals();
-
+    closeWithdrawModal();
 
     updateUI();
 
 
-    showToast(
-      data.message ||
-      "Withdrawal request submitted."
-    );
+    try{
 
-  }catch(error){
+        const result =
+            await apiRequest(
+                "/withdraw",
+                {
 
-    console.error(
-      "Withdraw:",
-      error
-    );
+                    telegram_id:
+                        state.telegram_id,
 
-    showToast(
-      error.message ||
-      "Withdrawal failed.",
-      true
-    );
+                    wallet_address:
+                        state.walletAddress,
 
-  }finally{
+                    amount:
+                        WITHDRAW_MIN,
 
-    state.withdrawing =
-      false;
+                    fee:
+                        WITHDRAW_FEE,
 
-    button.disabled =
-      !walletReady;
+                    received:
+                        WITHDRAW_MIN -
+                        WITHDRAW_FEE
 
-    button.textContent =
-      "WITHDRAW";
+                }
+            );
 
-  }
+
+        if(
+            result?.balance !== undefined
+        ){
+
+            state.balance =
+                Number(
+                    result.balance
+                );
+
+        }
+
+
+        showToast(
+            "درخواست برداشت ثبت شد"
+        );
+
+
+        await loadUser();
+
+
+    }catch(error){
+
+        console.error(
+            "WITHDRAW ERROR:",
+            error
+        );
+
+        showToast(
+            "برداشت انجام نشد: " +
+            error.message
+        );
+
+    }finally{
+
+        state.withdrawing = false;
+
+        updateUI();
+
+    }
 
 }
 
 
 /* =========================================================
-   WITHDRAW HISTORY
+   REFERRAL
 ========================================================= */
 
-async function loadWithdrawals(){
+function referralLink(){
 
-  if(!state.telegram_id){
-
-    return;
-
-  }
+    const code =
+        state.referral_code;
 
 
-  try{
-
-    const data =
-      await apiRequest(
-        "/withdrawals",
-        {
-
-          telegram_id:
-            state.telegram_id,
-
-          wallet_address:
-            state.walletAddress
-
-        }
-      );
+    const bot =
+        window.LUNARO_BOT_USERNAME;
 
 
     if(
-      Array.isArray(
-        data.withdrawals
-      )
+        !bot ||
+        !code
     ){
 
-      state.withdrawals =
-        data.withdrawals;
+        return "";
 
     }
 
 
-    renderWithdrawals();
-
-  }catch(error){
-
-    console.warn(
-      "Withdrawal history:",
-      error
+    return (
+        "https://t.me/" +
+        bot +
+        "?start=" +
+        encodeURIComponent(code)
     );
-
-    renderWithdrawals();
-
-  }
 
 }
 
 
-function renderWithdrawals(){
+async function copyReferral(){
 
-  const container =
-    document.getElementById(
-      "withdrawHistory"
-    );
+    const link =
+        referralLink();
 
 
-  const history =
-    Array.isArray(
-      state.withdrawals
-    )
-      ? state.withdrawals
-      : [];
+    if(!link){
+
+        showToast(
+            "Referral link هنوز تنظیم نشده"
+        );
+
+        return;
+
+    }
 
 
-  document.getElementById(
-    "historyCount"
-  ).textContent =
-    history.length;
+    try{
 
+        await navigator.clipboard.writeText(
+            link
+        );
 
-  if(!history.length){
+        showToast(
+            "Referral link کپی شد"
+        );
 
-    container.innerHTML =
-      '<div class="empty">No withdrawals yet</div>';
+    }catch(error){
 
-    return;
+        showToast(
+            link
+        );
 
-  }
-
-
-  container.innerHTML =
-    history
-      .slice(0,30)
-      .map(item => {
-
-        const amount =
-          Number(
-            item.amount || 0
-          );
-
-        const fee =
-          Number(
-            item.fee ??
-            WITHDRAW_FEE
-          );
-
-        const received =
-          Number(
-            item.received ??
-            Math.max(
-              0,
-              amount - fee
-            )
-          );
-
-        const status =
-          item.status ||
-          "Pending";
-
-        const date =
-          item.created_at ||
-          item.date ||
-          "";
-
-
-        return `
-
-          <div class="historyItem">
-
-            <div class="historyLeft">
-
-              <strong>
-                ${formatNumber(amount)} LNR
-              </strong>
-
-              <small>
-                Fee ${formatNumber(fee)}
-                • Receive ${formatNumber(received)}
-              </small>
-
-              <small>
-                ${escapeHtml(String(date))}
-              </small>
-
-            </div>
-
-            <div class="status">
-              ${escapeHtml(String(status))}
-            </div>
-
-          </div>
-
-        `;
-
-      })
-      .join("");
+    }
 
 }
 
 
 /* =========================================================
-   COPY WALLET
+   UI
 ========================================================= */
 
-async function copyWallet(){
+function updateMiningUI(){
 
-  if(!state.walletAddress){
-
-    return;
-
-  }
-
-
-  await copyText(
-    state.walletAddress
-  );
-
-  showToast(
-    "Wallet address copied."
-  );
+    document.getElementById(
+        "minedBalance"
+    ).textContent =
+        formatNumber(
+            state.mined
+        );
 
 }
 
 
-async function copyText(text){
+function updateUI(){
 
-  try{
+    document.getElementById(
+        "balance"
+    ).textContent =
+        formatNumber(
+            state.balance
+        );
 
-    await navigator.clipboard.writeText(
-      text
-    );
 
-  }catch{
+    document.getElementById(
+        "minedBalance"
+    ).textContent =
+        formatNumber(
+            state.mined
+        );
 
-    const textarea =
-      document.createElement(
-        "textarea"
-      );
 
-    textarea.value =
-      text;
+    document.getElementById(
+        "walletBalance"
+    ).textContent =
+        formatNumber(
+            state.walletBalance
+        );
 
-    textarea.style.position =
-      "fixed";
 
-    textarea.style.opacity =
-      "0";
+    document.getElementById(
+        "miningSpeed"
+    ).textContent =
+        Number(
+            state.mining_rate
+        ).toFixed(2);
 
-    document.body.appendChild(
-      textarea
-    );
 
-    textarea.select();
+    document.getElementById(
+        "level"
+    ).textContent =
+        state.level;
 
-    document.execCommand(
-      "copy"
-    );
 
-    textarea.remove();
+    document.getElementById(
+        "minerLevel"
+    ).textContent =
+        state.level;
 
-  }
+
+    document.getElementById(
+        "minerRate"
+    ).textContent =
+        Number(
+            state.mining_rate
+        ).toFixed(2);
+
+
+    document.getElementById(
+        "withdrawable"
+    ).textContent =
+        formatNumber(
+            state.balance
+        );
+
+
+    document.getElementById(
+        "friendCount"
+    ).textContent =
+        state.friend_count;
+
+
+    document.getElementById(
+        "referralEarned"
+    ).textContent =
+        formatNumber(
+            state.referral_earned
+        );
+
+
+    document.getElementById(
+        "referralCode"
+    ).textContent =
+        state.referral_code ||
+        "—";
+
+
+    document.getElementById(
+        "profileReferral"
+    ).textContent =
+        state.referral_code ||
+        "—";
+
+
+    /*
+     * Wallet UI
+     */
+
+    const connectButton =
+        document.getElementById(
+            "connectButton"
+        );
+
+
+    const disconnectButton =
+        document.getElementById(
+            "disconnectButton"
+        );
+
+
+    const status =
+        document.getElementById(
+            "walletStatus"
+        );
+
+
+    const statusText =
+        document.getElementById(
+            "walletStatusText"
+        );
+
+
+    const miningStatus =
+        document.getElementById(
+            "miningStatus"
+        );
+
+
+    const claimButton =
+        document.getElementById(
+            "claimButton"
+        );
+
+
+    const withdrawButton =
+        document.getElementById(
+            "withdrawButton"
+        );
+
+
+    if(state.walletAddress){
+
+        connectButton.style.display =
+            "none";
+
+        disconnectButton.style.display =
+            "block";
+
+
+        status.classList.add(
+            "connected"
+        );
+
+
+        statusText.textContent =
+            shortAddress(
+                state.walletAddress
+            );
+
+
+        miningStatus.textContent =
+            state.miningRunning
+                ? "MINING ACTIVE"
+                : "MINING STOPPED";
+
+
+        miningStatus.className =
+            state.miningRunning
+                ? "mining-active"
+                : "mining-stopped";
+
+
+        claimButton.disabled =
+            !state.miningRunning ||
+            state.mined <= 0 ||
+            state.claiming;
+
+
+        withdrawButton.disabled =
+            state.balance <
+                WITHDRAW_MIN ||
+            state.withdrawing;
+
+
+        document.getElementById(
+            "profileWallet"
+        ).textContent =
+            shortAddress(
+                state.walletAddress
+            );
+
+    }else{
+
+        connectButton.style.display =
+            "block";
+
+        disconnectButton.style.display =
+            "none";
+
+
+        status.classList.remove(
+            "connected"
+        );
+
+
+        statusText.textContent =
+            "Wallet not connected";
+
+
+        miningStatus.textContent =
+            "WALLET REQUIRED";
+
+
+        miningStatus.className =
+            "mining-stopped";
+
+
+        claimButton.disabled =
+            true;
+
+
+        withdrawButton.disabled =
+            true;
+
+
+        document.getElementById(
+            "profileWallet"
+        ).textContent =
+            "Not connected";
+
+    }
+
+
+    document.getElementById(
+        "telegramName"
+    ).textContent =
+        state.username
+            ? "@" + state.username
+            : state.first_name;
+
+
+    document.getElementById(
+        "telegramId"
+    ).textContent =
+        state.telegram_id ||
+        "—";
 
 }
 
@@ -3612,212 +3007,176 @@ async function copyText(text){
 ========================================================= */
 
 function showPage(
-  page,
-  button
+    page,
+    button
 ){
 
-  document
-    .querySelectorAll(".page")
-    .forEach(
-      el =>
-        el.classList.remove(
-          "active"
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            el=>{
+                el.classList.remove(
+                    "active"
+                );
+            }
+        );
+
+
+    document
+        .getElementById(
+            "page-" + page
         )
-    );
+        .classList.add(
+            "active"
+        );
 
 
-  const target =
-    document.getElementById(
-      page
-    );
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(
+            el=>{
+                el.classList.remove(
+                    "active"
+                );
+            }
+        );
 
 
-  if(target){
+    if(button){
 
-    target.classList.add(
-      "active"
-    );
+        button.classList.add(
+            "active"
+        );
 
-  }
-
-
-  document
-    .querySelectorAll(".navBtn")
-    .forEach(
-      el =>
-        el.classList.remove(
-          "active"
-        )
-    );
-
-
-  if(button){
-
-    button.classList.add(
-      "active"
-    );
-
-  }
-
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+    }
 
 }
 
 
 /* =========================================================
-   TOAST
+   HELPERS
 ========================================================= */
+
+function shortAddress(address){
+
+    if(!address){
+
+        return "Not connected";
+
+    }
+
+
+    return (
+        address.slice(0,6) +
+        "..." +
+        address.slice(-6)
+    );
+
+}
+
+
+function formatNumber(value){
+
+    const number =
+        Number(value);
+
+
+    if(
+        !Number.isFinite(number)
+    ){
+
+        return "0.0000";
+
+    }
+
+
+    return number.toFixed(4);
+
+}
+
 
 let toastTimer = null;
 
 
-function showToast(
-  message,
-  error = false
-){
+function showToast(message){
 
-  const toast =
-    document.getElementById(
-      "toast"
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
     );
 
 
-  toast.textContent =
-    message;
-
-
-  toast.classList.toggle(
-    "error",
-    !!error
-  );
-
-
-  toast.classList.add(
-    "show"
-  );
-
-
-  clearTimeout(
-    toastTimer
-  );
-
-
-  toastTimer =
-    setTimeout(
-      () =>
-        toast.classList.remove(
-          "show"
-        ),
-      3200
+    clearTimeout(
+        toastTimer
     );
+
+
+    toastTimer =
+        setTimeout(
+            ()=>{
+                toast.classList.remove(
+                    "show"
+                );
+            },
+            3000
+        );
 
 }
 
 
 /* =========================================================
-   SECURITY HELPERS
+   STARTUP
 ========================================================= */
 
-function escapeHtml(value){
+async function startup(){
 
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+    initTelegramUser();
+
+    updateUI();
+
+
+    /*
+     * Initialize TON Connect.
+     * This also attempts connection restore.
+     */
+    try{
+
+        await initTonConnect();
+
+    }catch(error){
+
+        console.error(
+            "TON startup:",
+            error
+        );
+
+    }
+
+
+    /*
+     * Load backend user.
+     */
+    await loadUser();
+
+
+    updateUI();
 
 }
 
 
-/* =========================================================
-   APP START
-========================================================= */
-
-async function boot(){
-
-  initTelegram();
-
-  updateWalletUI();
-
-  updateUI();
-
-  updateProfileUI();
-
-  renderWithdrawals();
-
-  /*
-   Initialize TON Connect before loading user,
-   so restored wallet can be detected.
-  */
-
-  initTonConnect();
-
-
-  /*
-   Load Telegram account.
-  */
-
-  await loadUser();
-
-
-  /*
-   Start local mining timer.
-
-   It does NOT mine unless walletReady === true.
-  */
-
-  setInterval(
-    () => {
-
-      miningTick();
-
-    },
-    1000
-  );
-
-
-  /*
-   Periodic backend synchronization.
-  */
-
-  setInterval(
-    () => {
-
-      syncMining();
-
-    },
-    10000
-  );
-
-
-  /*
-   Refresh user data every few minutes.
-  */
-
-  setInterval(
-    () => {
-
-      if(
-        state.telegram_id
-      ){
-
-        loadUser();
-
-      }
-
-    },
-    180000
-  );
-
-}
-
-
-boot();
+/*
+ * Start application.
+ */
+startup();
 
 </script>
 
