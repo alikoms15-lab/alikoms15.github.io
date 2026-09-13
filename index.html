@@ -2,847 +2,993 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>LUNARO — LNR</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7f5">
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+<title>LUNARO — LNR Mining</title>
 
 <style>
+:root{
+  --bg:#f5f7f5;
+  --card:#ffffff;
+  --ink:#101714;
+  --muted:#748079;
+  --line:#e4e9e6;
+  --green:#16a36a;
+  --green2:#0d8756;
+  --soft:#e9f8f1;
+  --gold:#c99b36;
+  --danger:#d9534f;
+  --shadow:0 12px 32px rgba(16,23,20,.07);
+  --radius:22px;
+}
+
 *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    -webkit-tap-highlight-color:transparent;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
-    width:100%;
-    min-height:100%;
-    font-family:Inter,Arial,sans-serif;
-    background:#eafaf4;
-    color:#123d32;
+  margin:0;
+  min-height:100%;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background:var(--bg);
+  color:var(--ink);
 }
 
-body{
-    overflow-x:hidden;
+button,input{
+  font:inherit;
 }
 
 button{
-    font-family:inherit;
-    border:0;
-    cursor:pointer;
+  border:0;
+  cursor:pointer;
 }
 
 .app{
-    width:100%;
-    max-width:520px;
-    min-height:100vh;
-    margin:auto;
-    position:relative;
-    padding:10px 12px 76px;
+  width:100%;
+  max-width:520px;
+  margin:auto;
+  min-height:100vh;
+  padding:
+    env(safe-area-inset-top)
+    15px
+    calc(88px + env(safe-area-inset-bottom));
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
 
-.header{
-    height:56px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    position:relative;
-    z-index:20;
+header{
+  min-height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
 }
 
 .brand{
-    display:flex;
-    align-items:center;
-    gap:8px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:-.7px;
 }
 
-.brand-logo{
-    width:38px;
-    height:38px;
-    border-radius:13px;
-    background:linear-gradient(145deg,#ffffff,#c9f5e4);
-    box-shadow:
-        0 5px 15px rgba(25,155,116,.18),
-        inset 0 1px 2px rgba(255,255,255,.9);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:14px;
-    font-weight:900;
-    color:#0c8060;
-}
-
-.brand-name{
-    font-weight:900;
-    font-size:19px;
-    letter-spacing:-.7px;
-}
-
-.brand-name span{
-    color:#16a978;
+.logo{
+  width:37px;
+  height:37px;
+  border-radius:12px;
+  background:#101714;
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-weight:950;
 }
 
 .header-right{
-    display:flex;
-    align-items:center;
-    gap:7px;
+  display:flex;
+  align-items:center;
+  gap:7px;
 }
 
-/* WALLET SINGLE BUTTON */
-
 .wallet-wrap{
-    position:relative;
+  position:relative;
 }
 
 .wallet-button{
-    min-width:116px;
-    max-width:150px;
-    height:40px;
-    padding:5px 9px;
-    border-radius:14px;
-    background:rgba(255,255,255,.9);
-    border:1px solid rgba(24,145,105,.12);
-    box-shadow:0 5px 15px rgba(31,132,102,.09);
-    display:flex;
-    align-items:center;
-    gap:7px;
-    text-align:left;
+  min-width:122px;
+  min-height:43px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:7px 10px;
+  box-shadow:0 4px 14px rgba(16,23,20,.04);
+  text-align:left;
 }
 
 .wallet-dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#b5c7c0;
-    flex-shrink:0;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#a8b0ac;
+  flex:none;
 }
 
 .wallet-dot.connected{
-    background:#18b878;
-    box-shadow:0 0 0 4px rgba(24,184,120,.1);
+  background:var(--green);
+  box-shadow:0 0 0 4px var(--soft);
 }
 
 .wallet-info{
-    min-width:0;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
 }
 
 .wallet-address{
-    display:block;
-    font-size:10px;
-    font-weight:800;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+  font-size:11px;
+  font-weight:850;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:90px;
 }
 
 .telegram-name{
-    display:block;
-    font-size:8px;
-    color:#91a59f;
-    margin-top:1px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+  font-size:8px;
+  color:#929b96;
+  margin-top:2px;
+  white-space:nowrap;
+  max-width:90px;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .wallet-menu{
-    display:none;
-    position:absolute;
-    right:0;
-    top:46px;
-    width:145px;
-    padding:7px;
-    background:#fff;
-    border:1px solid rgba(24,145,105,.1);
-    border-radius:14px;
-    box-shadow:0 12px 30px rgba(23,88,68,.18);
-    z-index:50;
+  display:none;
+  position:absolute;
+  right:0;
+  top:50px;
+  width:145px;
+  padding:6px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:15px;
+  box-shadow:0 15px 35px rgba(0,0,0,.13);
+  z-index:50;
 }
 
 .wallet-menu.show{
-    display:block;
+  display:block;
 }
 
 .wallet-menu button{
-    width:100%;
-    padding:10px;
-    border-radius:10px;
-    background:#f1faf6;
-    color:#167457;
-    font-weight:800;
-    font-size:11px;
+  width:100%;
+  background:none;
+  padding:11px;
+  border-radius:10px;
+  text-align:left;
+  font-size:11px;
+  font-weight:800;
 }
 
-.wallet-menu button + button{
-    margin-top:5px;
+.wallet-menu button:hover{
+  background:var(--soft);
 }
 
-/* LEVEL */
+.wallet-menu .disconnect{
+  color:var(--danger);
+}
 
 .level-pill{
-    height:40px;
-    padding:0 10px;
-    border-radius:14px;
-    background:#143f34;
-    color:white;
-    display:flex;
-    align-items:center;
-    gap:6px;
-    box-shadow:0 6px 16px rgba(18,61,50,.18);
+  min-height:43px;
+  padding:0 11px;
+  border-radius:14px;
+  background:#101714;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:10px;
+  font-weight:900;
 }
 
 .level-icon{
-    font-size:12px;
+  color:#72d8ae;
+  font-size:12px;
 }
 
-.level-text{
-    font-size:10px;
-    font-weight:900;
-}
-
-/* PAGES */
+/* ================= PAGES ================= */
 
 .page{
-    display:none;
+  display:none;
+  animation:pageIn .22s ease;
 }
 
 .page.active{
-    display:block;
+  display:block;
 }
 
-/* HOME */
-
-.home{
-    padding-top:3px;
+@keyframes pageIn{
+  from{
+    opacity:0;
+    transform:translateY(5px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
+
+.eyebrow{
+  text-transform:uppercase;
+  letter-spacing:1.15px;
+  font-size:9px;
+  color:var(--muted);
+  font-weight:900;
+}
+
+h1{
+  font-size:28px;
+  letter-spacing:-1.3px;
+  margin:6px 0 3px;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* ================= HERO ================= */
 
 .hero{
-    text-align:center;
+  margin-top:10px;
+  text-align:center;
 }
 
 .crystal-box{
-    width:132px;
-    height:132px;
-    margin:5px auto 2px;
-    position:relative;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.orbit{
-    position:absolute;
-    border:1px solid rgba(20,164,117,.28);
-    border-radius:50%;
-    transform:rotate(-20deg);
-}
-
-.orbit.one{
-    width:128px;
-    height:48px;
-}
-
-.orbit.two{
-    width:128px;
-    height:48px;
-    transform:rotate(55deg);
-}
-
-.orbit.three{
-    width:105px;
-    height:105px;
-    border-style:dashed;
+  position:relative;
+  width:150px;
+  height:130px;
+  margin:0 auto 2px;
+  display:grid;
+  place-items:center;
 }
 
 .crystal{
-    width:84px;
-    height:84px;
-    border-radius:28px;
-    background:
-        linear-gradient(145deg,#ffffff 5%,#9deed0 48%,#16a875 100%);
-    box-shadow:
-        0 16px 32px rgba(17,145,103,.22),
-        inset 5px 5px 12px rgba(255,255,255,.8);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transform:rotate(0deg);
-    position:relative;
-    z-index:3;
+  width:82px;
+  height:82px;
+  position:relative;
+  display:grid;
+  place-items:center;
+  transform:rotate(45deg);
+  border-radius:17px;
+  background:
+    linear-gradient(
+      135deg,
+      #19b875 0%,
+      #0f8757 45%,
+      #07553a 100%
+    );
+  box-shadow:
+    0 18px 35px rgba(22,163,106,.25),
+    inset 5px 5px 10px rgba(255,255,255,.2),
+    inset -8px -8px 15px rgba(0,0,0,.15);
+  z-index:3;
 }
 
 .crystal:before{
-    content:"";
-    position:absolute;
-    inset:9px;
-    border-radius:21px;
-    border:1px solid rgba(255,255,255,.65);
+  content:"";
+  position:absolute;
+  inset:9px;
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:12px;
 }
 
 .crystal-text{
-    font-size:26px;
-    font-weight:1000;
-    color:white;
-    letter-spacing:-1px;
-    text-shadow:0 2px 8px rgba(0,85,62,.3);
-    position:relative;
+  transform:rotate(-45deg);
+  font-size:28px;
+  font-weight:1000;
+  letter-spacing:1px;
+  color:#fff;
+  text-shadow:
+    0 2px 0 #8c6a20,
+    0 4px 10px rgba(0,0,0,.35);
+}
+
+.orbit{
+  position:absolute;
+  border:2px solid rgba(22,163,106,.45);
+  border-radius:50%;
+  transform:rotate(-25deg);
+}
+
+.orbit.one{
+  width:145px;
+  height:48px;
+  animation:orbitMove 5s linear infinite;
+}
+
+.orbit.two{
+  width:128px;
+  height:42px;
+  transform:rotate(35deg);
+  opacity:.7;
+  animation:orbitMove 6s linear infinite reverse;
+}
+
+.orbit.three{
+  width:155px;
+  height:58px;
+  transform:rotate(75deg);
+  opacity:.35;
+}
+
+@keyframes orbitMove{
+  from{transform:rotate(0deg) scale(1)}
+  to{transform:rotate(360deg) scale(1.02)}
 }
 
 .mining-status{
-    font-size:9px;
-    font-weight:800;
-    color:#7b9890;
-    margin-top:0;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:10px;
+  font-weight:850;
+  color:var(--muted);
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:7px 11px;
 }
 
 .mining-status.active{
-    color:#12a66f;
+  color:var(--green2);
 }
 
-/* TOTAL */
+.mining-status.active:before{
+  content:"";
+  width:7px;
+  height:7px;
+  background:var(--green);
+  border-radius:50%;
+  box-shadow:0 0 0 5px var(--soft);
+}
+
+/* ================= TOTAL ================= */
 
 .total-card{
-    margin:6px auto 7px;
-    text-align:center;
+  margin-top:8px;
+  text-align:center;
+  background:#101714;
+  color:#fff;
+  border-radius:20px;
+  padding:13px 15px;
+  box-shadow:var(--shadow);
 }
 
 .total-label{
-    font-size:9px;
-    font-weight:800;
-    color:#79958d;
-    text-transform:uppercase;
-    letter-spacing:1px;
+  font-size:9px;
+  letter-spacing:1.3px;
+  color:#aeb8b3;
+  font-weight:900;
 }
 
 .total-value{
-    font-size:30px;
-    line-height:34px;
-    font-weight:950;
-    letter-spacing:-1.5px;
-    color:#103e32;
+  margin-top:3px;
+  font-size:31px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:-1.5px;
 }
 
 .total-unit{
-    font-size:10px;
-    font-weight:800;
-    color:#15a675;
+  margin-top:4px;
+  font-size:10px;
+  color:#93a19b;
+  font-weight:800;
 }
 
-/* BALANCES */
+/* ================= BALANCES ================= */
 
 .balance-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px;
 }
 
 .balance-card{
-    background:rgba(255,255,255,.78);
-    border:1px solid rgba(30,142,106,.1);
-    border-radius:15px;
-    padding:10px 11px;
-    box-shadow:0 5px 16px rgba(38,115,91,.06);
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:11px;
+  box-shadow:var(--shadow);
 }
 
 .balance-label{
-    font-size:8px;
-    color:#78948c;
-    font-weight:800;
-    text-transform:uppercase;
-    letter-spacing:.6px;
+  font-size:8px;
+  color:var(--muted);
+  font-weight:900;
+  letter-spacing:.5px;
+  text-transform:uppercase;
 }
 
 .balance-value{
-    font-size:17px;
-    font-weight:950;
-    margin-top:3px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+  font-size:17px;
+  font-weight:950;
+  margin-top:5px;
+  letter-spacing:-.4px;
 }
 
 .balance-unit{
-    color:#13a572;
-    font-size:8px;
-    font-weight:800;
+  display:block;
+  font-size:8px;
+  color:var(--muted);
+  margin-top:2px;
 }
 
-/* MINING SPEED */
+/* ================= LIVE SPEED ================= */
 
 .speed-box{
-    margin-top:8px;
-    padding:9px 12px;
-    border-radius:16px;
-    background:linear-gradient(135deg,#123f34,#17644f);
-    color:white;
-    box-shadow:0 8px 20px rgba(19,87,68,.18);
-    text-align:center;
+  margin-top:8px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:11px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+}
+
+.speed-box:before{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:100%;
+  height:2px;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    var(--green),
+    transparent
+  );
+  animation:speedLine 1.6s linear infinite;
+}
+
+@keyframes speedLine{
+  from{transform:translateX(-100%)}
+  to{transform:translateX(100%)}
 }
 
 .speed-label{
-    font-size:8px;
-    opacity:.68;
-    text-transform:uppercase;
-    letter-spacing:1.2px;
-    font-weight:800;
+  font-size:8px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--muted);
+  font-weight:900;
 }
 
 .speed-value{
-    margin-top:1px;
-    font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        Consolas,
-        monospace;
-    font-size:24px;
-    line-height:27px;
-    font-weight:900;
-    letter-spacing:-1px;
-    text-shadow:0 0 12px rgba(123,255,208,.2);
+  margin-top:3px;
+  font-size:27px;
+  line-height:1;
+  font-weight:1000;
+  color:var(--green2);
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-1px;
+}
+
+.speed-value.live{
+  animation:speedPulse .65s ease-in-out infinite alternate;
+}
+
+@keyframes speedPulse{
+  from{
+    transform:scale(1);
+    text-shadow:0 0 0 rgba(22,163,106,0);
+  }
+  to{
+    transform:scale(1.025);
+    text-shadow:0 0 15px rgba(22,163,106,.22);
+  }
 }
 
 .speed-unit{
-    font-size:8px;
-    opacity:.7;
-    font-weight:800;
+  margin-top:3px;
+  font-size:8px;
+  color:var(--muted);
+  font-weight:850;
 }
 
-/* CLAIM */
+/* ================= CLAIM ================= */
 
-.claim-button{
-    width:100%;
-    height:42px;
-    margin-top:8px;
-    border-radius:14px;
-    background:linear-gradient(135deg,#13b77a,#079b68);
-    color:white;
-    font-size:12px;
-    font-weight:950;
-    box-shadow:0 8px 18px rgba(13,166,113,.2);
+.claim{
+  width:100%;
+  margin-top:8px;
+  padding:13px;
+  border-radius:15px;
+  background:var(--green);
+  color:#fff;
+  font-size:12px;
+  font-weight:950;
+  box-shadow:0 8px 20px rgba(22,163,106,.20);
 }
 
-.claim-button:active{
-    transform:scale(.985);
+.claim:disabled{
+  opacity:.45;
+  cursor:not-allowed;
 }
 
-.claim-button:disabled{
-    opacity:.5;
+.claim:not(:disabled):active{
+  transform:scale(.98);
 }
 
-/* INFO */
+/* ================= INFO ================= */
 
-.info-card{
-    margin-top:7px;
-    padding:8px 11px;
-    background:rgba(255,255,255,.58);
-    border-radius:13px;
-    font-size:8px;
-    color:#78958c;
-    line-height:13px;
-    text-align:center;
+.info{
+  margin-top:8px;
+  background:var(--soft);
+  color:var(--green2);
+  border-radius:14px;
+  padding:9px 11px;
+  font-size:9px;
+  line-height:1.45;
+  font-weight:750;
 }
 
-/* GENERAL CARD */
+/* ================= GENERIC ================= */
+
+.section{
+  margin-top:15px;
+}
+
+.sectionHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:9px;
+}
+
+.section h2{
+  margin:0;
+  font-size:15px;
+}
+
+.link{
+  color:var(--green2);
+  font-size:10px;
+  font-weight:900;
+  cursor:pointer;
+}
 
 .card{
-    background:rgba(255,255,255,.8);
-    border:1px solid rgba(24,145,105,.1);
-    border-radius:18px;
-    padding:14px;
-    margin-top:10px;
-    box-shadow:0 7px 20px rgba(35,110,87,.06);
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:14px;
+  box-shadow:var(--shadow);
 }
 
-.page-title{
-    font-size:22px;
-    font-weight:950;
-    margin:5px 2px 2px;
-}
+/* ================= TASKS ================= */
 
-.page-subtitle{
-    color:#79958d;
-    font-size:10px;
-    margin:0 2px 10px;
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
 }
-
-/* TASKS */
 
 .task{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:12px 0;
-    border-bottom:1px solid #edf4f1;
-}
-
-.task:last-child{
-    border-bottom:0;
-}
-
-.task-left{
-    display:flex;
-    align-items:center;
-    gap:10px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:13px;
+  box-shadow:var(--shadow);
 }
 
 .task-icon{
-    width:36px;
-    height:36px;
-    border-radius:11px;
-    background:#e3f8ef;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+  width:31px;
+  height:31px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  background:var(--soft);
+  color:var(--green2);
+  font-weight:950;
 }
 
-.task-name{
-    font-size:11px;
-    font-weight:850;
+.task h3{
+  font-size:12px;
+  margin:9px 0 4px;
 }
 
-.task-reward{
-    font-size:9px;
-    color:#13a572;
-    font-weight:800;
+.task p{
+  margin:0;
+  color:var(--muted);
+  font-size:9px;
+  line-height:1.4;
+}
+
+.reward{
+  color:var(--green2);
+  font-weight:950;
+  font-size:10px;
+  margin-top:9px;
 }
 
 .task-btn{
-    padding:8px 11px;
-    border-radius:10px;
-    background:#123f34;
-    color:white;
-    font-size:9px;
-    font-weight:800;
+  width:100%;
+  margin-top:9px;
+  padding:9px;
+  border-radius:10px;
+  background:#101714;
+  color:#fff;
+  font-size:9px;
+  font-weight:900;
 }
 
-/* MINERS */
-
-.miner-current{
-    padding:14px;
-    border-radius:15px;
-    background:linear-gradient(135deg,#133f34,#1a6b54);
-    color:white;
+.task-btn.disabled{
+  background:#e8ece9;
+  color:#8b948f;
 }
 
-.miner-current-label{
-    font-size:8px;
-    opacity:.7;
+/* ================= MINERS ================= */
+
+.current-miner{
+  background:#101714;
+  color:#fff;
+  border-radius:17px;
+  padding:14px;
 }
 
-.miner-current-level{
-    font-size:22px;
-    font-weight:950;
-    margin-top:2px;
+.current-label{
+  color:#aeb8b3;
+  font-size:8px;
+  letter-spacing:1px;
+  font-weight:900;
 }
 
-.miner-current-speed{
-    font-family:monospace;
-    font-size:13px;
-    margin-top:4px;
-    color:#b7f9df;
+.current-level{
+  font-size:22px;
+  font-weight:950;
+  margin-top:4px;
 }
 
-.miner-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:13px 4px;
-    border-bottom:1px solid #edf4f1;
+.current-speed{
+  color:#72d8ae;
+  font-size:14px;
+  font-weight:900;
+  margin-top:3px;
 }
 
-.miner-row:last-child{
-    border-bottom:0;
+.holding-line{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
+  font-size:10px;
 }
 
-.miner-name{
-    font-size:11px;
-    font-weight:900;
+.level-list{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-top:10px;
 }
 
-.miner-rate{
-    font-family:monospace;
-    font-size:10px;
-    color:#12a572;
-    font-weight:800;
+.level-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px;
 }
 
-.locked{
-    color:#a0b2ac;
-    font-size:10px;
+.level-card.active{
+  border-color:#9ad9bd;
+  box-shadow:0 0 0 2px var(--soft);
 }
 
-/* FRIENDS */
+.level-card.locked{
+  opacity:.58;
+}
 
-.ref-box{
-    text-align:center;
-    padding:16px;
-    background:#effaf5;
-    border-radius:15px;
+.level-name{
+  font-size:10px;
+  font-weight:950;
+}
+
+.level-threshold{
+  margin-top:4px;
+  font-size:8px;
+  color:var(--muted);
+}
+
+.level-rate{
+  margin-top:6px;
+  color:var(--green2);
+  font-size:10px;
+  font-weight:950;
+}
+
+/* ================= FRIENDS ================= */
+
+.ref-hero{
+  background:#101714;
+  color:#fff;
+  border-radius:19px;
+  padding:17px;
+}
+
+.ref-label{
+  color:#aeb8b3;
+  font-size:8px;
+  letter-spacing:1px;
+  font-weight:900;
 }
 
 .ref-code{
-    font-family:monospace;
-    font-size:20px;
-    font-weight:950;
-    color:#117b5d;
-    margin:5px 0 10px;
+  font-size:24px;
+  font-weight:950;
+  letter-spacing:2px;
+  margin:9px 0;
 }
 
 .copy-btn{
-    background:#123f34;
-    color:white;
-    padding:9px 15px;
-    border-radius:10px;
-    font-size:10px;
-    font-weight:850;
+  background:#fff;
+  color:#101714;
+  padding:9px 12px;
+  border-radius:11px;
+  font-size:9px;
+  font-weight:950;
 }
 
-.friend-stats{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    margin-top:9px;
+.ref-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px;
 }
 
-.friend-stat{
-    background:white;
-    border-radius:13px;
-    padding:12px;
-    text-align:center;
+.ref-stat{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:12px;
 }
 
-.friend-stat b{
-    display:block;
-    font-size:19px;
+.ref-stat strong{
+  display:block;
+  font-size:19px;
+  margin-top:3px;
 }
 
-.friend-stat span{
-    color:#819990;
-    font-size:8px;
-}
-
-/* PROFILE */
+/* ================= PROFILE ================= */
 
 .profile-row{
-    padding:12px 0;
-    border-bottom:1px solid #edf4f1;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:11px 0;
+  border-bottom:1px solid var(--line);
 }
 
 .profile-row:last-child{
-    border-bottom:0;
+  border-bottom:0;
 }
 
 .profile-label{
-    color:#849a94;
-    font-size:8px;
-    text-transform:uppercase;
-    font-weight:800;
+  color:var(--muted);
+  font-size:10px;
 }
 
 .profile-value{
-    margin-top:3px;
-    font-size:11px;
-    font-weight:850;
-    word-break:break-all;
+  font-size:11px;
+  font-weight:900;
 }
 
 .withdraw-box{
-    margin-top:10px;
-    padding:13px;
-    background:#f0faf6;
-    border-radius:15px;
+  margin-top:13px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:14px;
 }
 
 .withdraw-title{
-    font-size:12px;
-    font-weight:900;
+  font-size:14px;
+  font-weight:950;
 }
 
 .withdraw-info{
-    margin-top:5px;
-    font-size:9px;
-    line-height:15px;
-    color:#78948c;
+  margin-top:7px;
+  color:var(--muted);
+  font-size:9px;
+  line-height:1.55;
+}
+
+.withdraw-form{
+  display:flex;
+  gap:7px;
+  margin-top:11px;
 }
 
 .withdraw-input{
-    width:100%;
-    height:39px;
-    margin-top:9px;
-    border:1px solid #dcebe5;
-    border-radius:11px;
-    padding:0 11px;
-    outline:none;
-    background:white;
-    font-size:11px;
+  min-width:0;
+  flex:1;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  outline:none;
+  font-size:12px;
+}
+
+.withdraw-input:focus{
+  border-color:var(--green);
+}
+
+.max-btn{
+  width:55px;
+  border-radius:12px;
+  background:#101714;
+  color:#fff;
+  font-size:10px;
+  font-weight:950;
 }
 
 .withdraw-btn{
-    width:100%;
-    height:39px;
-    margin-top:7px;
-    border-radius:11px;
-    background:#123f34;
-    color:white;
-    font-weight:900;
-    font-size:10px;
+  width:100%;
+  margin-top:8px;
+  padding:12px;
+  border-radius:12px;
+  background:var(--green);
+  color:#fff;
+  font-size:10px;
+  font-weight:950;
 }
 
-/* HISTORY */
-
 .history-title{
-    margin-top:15px;
-    font-size:12px;
-    font-weight:900;
+  margin-top:15px;
+  font-size:13px;
+  font-weight:950;
 }
 
 .history-item{
-    margin-top:7px;
-    padding:9px;
-    border-radius:10px;
-    background:#f6faf8;
-    font-size:8px;
-    color:#728c84;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:11px 0;
+  border-bottom:1px solid var(--line);
+  font-size:10px;
 }
 
-/* BOTTOM NAV */
-
-.bottom-nav{
-    position:fixed;
-    left:50%;
-    bottom:7px;
-    transform:translateX(-50%);
-    width:calc(100% - 20px);
-    max-width:500px;
-    height:57px;
-    padding:5px;
-    background:rgba(255,255,255,.94);
-    backdrop-filter:blur(14px);
-    border:1px solid rgba(21,133,99,.1);
-    border-radius:19px;
-    box-shadow:0 9px 30px rgba(26,96,75,.15);
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    z-index:100;
+.pending{
+  color:#a27e18;
+  font-weight:900;
 }
 
-.nav-btn{
-    background:transparent;
-    border-radius:14px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:2px;
-    color:#9aaba5;
+/* ================= BOTTOM NAV ================= */
+
+.bottom{
+  position:fixed;
+  z-index:20;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  width:min(520px,100%);
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(18px);
+  border-top:1px solid var(--line);
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
 }
 
-.nav-btn.active{
-    background:#e7f8f1;
-    color:#0d8d65;
+.nav{
+  background:none;
+  color:#89928d;
+  font-size:9px;
+  font-weight:850;
+  padding:5px 0;
+  display:grid;
+  gap:3px;
+  justify-items:center;
 }
 
-.nav-icon{
-    font-size:16px;
-    line-height:17px;
+.nav span{
+  font-size:17px;
 }
 
-.nav-label{
-    font-size:7px;
-    font-weight:850;
+.nav.active{
+  color:var(--green2);
 }
 
-/* TOAST */
+/* ================= TOAST ================= */
 
 .toast{
-    position:fixed;
-    left:50%;
-    bottom:76px;
-    transform:translateX(-50%) translateY(10px);
-    background:#123f34;
-    color:white;
-    padding:9px 13px;
-    border-radius:11px;
-    font-size:9px;
-    font-weight:800;
-    opacity:0;
-    pointer-events:none;
-    transition:.25s;
-    z-index:200;
+  position:fixed;
+  left:50%;
+  bottom:91px;
+  transform:translate(-50%,15px);
+  background:#101714;
+  color:#fff;
+  padding:11px 15px;
+  border-radius:12px;
+  font-size:10px;
+  font-weight:800;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:100;
+  white-space:nowrap;
 }
 
 .toast.show{
-    opacity:1;
-    transform:translateX(-50%) translateY(0);
+  opacity:1;
+  transform:translate(-50%,0);
 }
 
-/* MOBILE HEIGHT OPTIMIZATION */
+.empty{
+  padding:18px;
+  text-align:center;
+  color:var(--muted);
+  font-size:10px;
+  background:#fff;
+  border:1px dashed #d7ddd9;
+  border-radius:15px;
+}
 
-@media(max-height:700px){
-    .app{
-        padding-top:6px;
-    }
+/* ================= SMALL SCREEN ================= */
 
-    .header{
-        height:49px;
-    }
+@media(max-width:380px){
 
-    .crystal-box{
-        width:108px;
-        height:108px;
-    }
+  .app{
+    padding-left:12px;
+    padding-right:12px;
+  }
 
-    .orbit.one,
-    .orbit.two{
-        width:108px;
-        height:42px;
-    }
+  .wallet-button{
+    min-width:108px;
+    padding:7px 8px;
+  }
 
-    .orbit.three{
-        width:88px;
-        height:88px;
-    }
+  .wallet-address,
+  .telegram-name{
+    max-width:74px;
+  }
 
-    .crystal{
-        width:70px;
-        height:70px;
-        border-radius:23px;
-    }
+  .level-pill{
+    padding:0 8px;
+  }
 
-    .crystal-text{
-        font-size:22px;
-    }
+  .crystal-box{
+    width:140px;
+    height:118px;
+  }
 
-    .total-value{
-        font-size:26px;
-        line-height:29px;
-    }
+  .crystal{
+    width:74px;
+    height:74px;
+  }
 
-    .speed-box{
-        margin-top:6px;
-        padding:7px;
-    }
+  .crystal-text{
+    font-size:25px;
+  }
 
-    .speed-value{
-        font-size:21px;
-        line-height:24px;
-    }
-
-    .claim-button{
-        height:39px;
-        margin-top:6px;
-    }
-
-    .info-card{
-        margin-top:5px;
-        padding:6px;
-    }
+  .total-value{
+    font-size:28px;
+  }
 }
 </style>
 </head>
@@ -851,1801 +997,1957 @@ button{
 
 <div class="app">
 
-<header class="header">
+<header>
 
-    <div class="brand">
-        <div class="brand-logo">LNR</div>
-        <div class="brand-name">LUNA<span>RO</span></div>
-    </div>
+  <div class="brand">
+    <div class="logo">L</div>
+    LUNA<span style="color:var(--green2)">RO</span>
+  </div>
 
-    <div class="header-right">
+  <div class="header-right">
 
-        <div class="wallet-wrap">
+    <div class="wallet-wrap">
 
-            <button class="wallet-button" onclick="walletButtonClick()">
-                <span id="walletDot" class="wallet-dot"></span>
+      <button class="wallet-button" onclick="walletButtonClick()">
 
-                <span class="wallet-info">
-                    <span id="walletAddress" class="wallet-address">
-                        Connect Wallet
-                    </span>
+        <span id="walletDot" class="wallet-dot"></span>
 
-                    <span id="telegramName" class="telegram-name">
-                        @telegram
-                    </span>
-                </span>
-            </button>
+        <span class="wallet-info">
 
-            <div id="walletMenu" class="wallet-menu">
+          <span id="walletAddress" class="wallet-address">
+            Connect Wallet
+          </span>
 
-                <button onclick="openWallet()">
-                    Change Wallet
-                </button>
+          <span id="telegramName" class="telegram-name">
+            @telegram
+          </span>
 
-                <button onclick="disconnectWallet()">
-                    Disconnect
-                </button>
+        </span>
 
-            </div>
+      </button>
 
-        </div>
+      <div id="walletMenu" class="wallet-menu">
 
-        <button class="level-pill" onclick="openMiners()">
-            <span class="level-icon">◆</span>
-            <span id="levelText" class="level-text">LV 1</span>
+        <button onclick="openWallet()">
+          Change Wallet
         </button>
 
+        <button class="disconnect" onclick="disconnectWallet()">
+          Disconnect
+        </button>
+
+      </div>
+
     </div>
+
+    <button
+      class="level-pill"
+      onclick="openMiners()"
+      title="Open Miners"
+    >
+      <span class="level-icon">◆</span>
+      <span id="levelText">LV 1</span>
+    </button>
+
+  </div>
 
 </header>
 
 
-<!-- HOME -->
+<main>
 
-<section id="page-mine" class="page active">
+<!-- ================= HOME ================= -->
 
-    <div class="home">
+<section id="home" class="page active">
 
-        <div class="hero">
+  <div class="hero">
 
-            <div class="crystal-box">
+    <div class="crystal-box">
 
-                <div class="orbit one"></div>
-                <div class="orbit two"></div>
-                <div class="orbit three"></div>
+      <div class="orbit one"></div>
+      <div class="orbit two"></div>
+      <div class="orbit three"></div>
 
-                <div class="crystal">
-                    <span class="crystal-text">LNR</span>
-                </div>
+      <div class="crystal">
+        <span class="crystal-text">LNR</span>
+      </div>
 
-            </div>
+    </div>
 
-            <div id="miningStatus" class="mining-status">
-                Connect wallet to start mining
-            </div>
+    <div id="miningStatus" class="mining-status">
+      Connect wallet to start mining
+    </div>
+
+  </div>
+
+
+  <div class="total-card">
+
+    <div class="total-label">
+      TOTAL BALANCE
+    </div>
+
+    <div id="totalBalance" class="total-value">
+      0.0000
+    </div>
+
+    <div class="total-unit">
+      LNR
+    </div>
+
+  </div>
+
+
+  <div class="balance-grid">
+
+    <div class="balance-card">
+
+      <div class="balance-label">
+        Pool Wallet
+      </div>
+
+      <div id="poolBalance" class="balance-value">
+        0.0000
+      </div>
+
+      <span class="balance-unit">
+        LNR
+      </span>
+
+    </div>
+
+
+    <div class="balance-card">
+
+      <div class="balance-label">
+        Holding Wallet
+      </div>
+
+      <div id="holdingBalance" class="balance-value">
+        0.0000
+      </div>
+
+      <span class="balance-unit">
+        LNR
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <div class="speed-box">
+
+    <div class="speed-label">
+      LIVE MINING SPEED
+    </div>
+
+    <div
+      id="speedValue"
+      class="speed-value live"
+    >
+      0.7000
+    </div>
+
+    <div class="speed-unit">
+      LNR / HOUR
+    </div>
+
+  </div>
+
+
+  <button
+    id="claimBtn"
+    class="claim"
+    onclick="claimMining()"
+    disabled
+  >
+    CLAIM MINED
+  </button>
+
+
+  <div class="info">
+    Mining is automatic while your wallet is connected.
+    Mined LNR stays separate until you press Claim.
+  </div>
+
+
+  <div class="section">
+
+    <div class="sectionHead">
+
+      <h2>
+        Level Journey
+      </h2>
+
+      <span
+        class="link"
+        onclick="openMiners()"
+      >
+        View all
+      </span>
+
+    </div>
+
+    <div class="card">
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+      ">
+
+        <div>
+
+          <div style="
+            font-size:17px;
+            font-weight:950;
+          ">
+            LEVEL
+            <span id="journeyLevel">
+              1
+            </span>
+          </div>
+
+          <div
+            id="journeyThreshold"
+            style="
+              color:var(--muted);
+              font-size:9px;
+              margin-top:4px;
+            "
+          >
+            0 LNR total
+          </div>
 
         </div>
 
-
-        <div class="total-card">
-
-            <div class="total-label">
-                Total Balance
-            </div>
-
-            <div id="totalBalance" class="total-value">
-                0.0000
-            </div>
-
-            <div class="total-unit">
-                LNR
-            </div>
-
+        <div
+          id="journeyRate"
+          style="
+            color:var(--green2);
+            font-size:12px;
+            font-weight:950;
+          "
+        >
+          0.7000 LNR/H
         </div>
 
+      </div>
 
-        <div class="balance-grid">
+      <div style="
+        height:6px;
+        background:#e8ece9;
+        border-radius:10px;
+        overflow:hidden;
+        margin-top:11px;
+      ">
 
-            <div class="balance-card">
+        <div
+          id="levelBar"
+          style="
+            height:100%;
+            width:0%;
+            background:var(--green);
+            border-radius:10px;
+            transition:.3s;
+          "
+        ></div>
 
-                <div class="balance-label">
-                    Pool Wallet
-                </div>
+      </div>
 
-                <div id="poolBalance" class="balance-value">
-                    0.0000
-                </div>
+    </div>
 
-                <span class="balance-unit">LNR</span>
+  </div>
 
-            </div>
-
-
-            <div class="balance-card">
-
-                <div class="balance-label">
-                    Holding Wallet
-                </div>
-
-                <div id="holdingBalance" class="balance-value">
-                    0.0000
-                </div>
-
-                <span class="balance-unit">LNR</span>
-
-            </div>
-
-        </div>
+</section>
 
 
-        <div class="speed-box">
+<!-- ================= TASKS ================= -->
 
-            <div class="speed-label">
-                Mining Speed
-            </div>
+<section id="tasks" class="page">
 
-            <div id="speedValue" class="speed-value">
-                0.0000
-            </div>
+  <div class="eyebrow">
+    EARN LNR
+  </div>
 
-            <div class="speed-unit">
-                LNR / HOUR
-            </div>
+  <h1>
+    Tasks
+  </h1>
 
-        </div>
+  <div class="sub">
+    Complete tasks and earn 3 LNR.
+  </div>
 
 
-        <button id="claimBtn" class="claim-button" onclick="claimMining()" disabled>
-            CLAIM MINED
+  <div class="section grid2">
+
+
+    <div class="task">
+
+      <div class="task-icon">
+        TG
+      </div>
+
+      <h3>
+        Open Telegram Channel
+      </h3>
+
+      <p>
+        Telegram channel task will be enabled later.
+      </p>
+
+      <div class="reward">
+        +3 LNR
+      </div>
+
+      <button
+        class="task-btn disabled"
+        disabled
+      >
+        Coming Soon
+      </button>
+
+    </div>
+
+
+    <div class="task">
+
+      <div class="task-icon">
+        YT
+      </div>
+
+      <h3>
+        Open YouTube
+      </h3>
+
+      <p>
+        YouTube task will be enabled later.
+      </p>
+
+      <div class="reward">
+        +3 LNR
+      </div>
+
+      <button
+        class="task-btn disabled"
+        disabled
+      >
+        Coming Soon
+      </button>
+
+    </div>
+
+
+    <div class="task">
+
+      <div class="task-icon">
+        ✓
+      </div>
+
+      <h3>
+        Daily Login
+      </h3>
+
+      <p>
+        Visit LUNARO once every day.
+      </p>
+
+      <div class="reward">
+        +3 LNR
+      </div>
+
+      <button
+        id="dailyTaskBtn"
+        class="task-btn"
+        onclick="completeDailyLogin()"
+      >
+        Claim
+      </button>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+<!-- ================= MINERS ================= -->
+
+<section id="miners" class="page">
+
+  <div class="eyebrow">
+    MINING SYSTEM
+  </div>
+
+  <h1>
+    Miners
+  </h1>
+
+  <div class="sub">
+    Your level and mining speed are calculated from your total balance.
+  </div>
+
+
+  <div class="section">
+
+    <div class="current-miner">
+
+      <div class="current-label">
+        CURRENT LEVEL
+      </div>
+
+      <div
+        id="minerLevel"
+        class="current-level"
+      >
+        Level 1
+      </div>
+
+      <div
+        id="minerSpeed"
+        class="current-speed"
+      >
+        0.7000 LNR / H
+      </div>
+
+
+      <div class="holding-line">
+
+        <span>
+          Total Balance
+        </span>
+
+        <b id="minerTotal">
+          0.0000 LNR
+        </b>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="sectionHead">
+
+      <h2>
+        100 Level Journey
+      </h2>
+
+      <span
+        id="minerCount"
+        class="link"
+      >
+        100 Levels
+      </span>
+
+    </div>
+
+
+    <div
+      id="levelList"
+      class="level-list"
+    >
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= FRIENDS ================= -->
+
+<section id="friends" class="page">
+
+  <div class="eyebrow">
+    COMMUNITY
+  </div>
+
+  <h1>
+    Friends
+  </h1>
+
+  <div class="sub">
+    Invite friends and earn referral rewards.
+  </div>
+
+
+  <div class="section ref-hero">
+
+    <div class="ref-label">
+      YOUR REFERRAL CODE
+    </div>
+
+    <div
+      id="refCode"
+      class="ref-code"
+    >
+      LNR000000
+    </div>
+
+    <button
+      class="copy-btn"
+      onclick="copyRef()"
+    >
+      COPY REFERRAL LINK
+    </button>
+
+  </div>
+
+
+  <div class="ref-stats">
+
+    <div class="ref-stat">
+
+      <small class="muted">
+        Friends Joined
+      </small>
+
+      <strong id="friendsCount">
+        0
+      </strong>
+
+    </div>
+
+
+    <div class="ref-stat">
+
+      <small class="muted">
+        Referral Rewards
+      </small>
+
+      <strong id="refRewards">
+        0.0000
+      </strong>
+
+      <small class="muted">
+        LNR
+      </small>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= PROFILE ================= -->
+
+<section id="profile" class="page">
+
+  <div class="eyebrow">
+    ACCOUNT
+  </div>
+
+  <h1>
+    Profile
+  </h1>
+
+  <div class="sub">
+    Your account and withdrawal settings.
+  </div>
+
+
+  <div class="section card">
+
+    <div class="profile-row">
+
+      <div class="profile-label">
+        Telegram
+      </div>
+
+      <div
+        id="profileTelegram"
+        class="profile-value"
+      >
+        -
+      </div>
+
+    </div>
+
+
+    <div class="profile-row">
+
+      <div class="profile-label">
+        Pool Wallet
+      </div>
+
+      <div
+        id="profilePool"
+        class="profile-value"
+      >
+        0.0000 LNR
+      </div>
+
+    </div>
+
+
+    <div class="profile-row">
+
+      <div class="profile-label">
+        Holding Wallet
+      </div>
+
+      <div
+        id="profileHolding"
+        class="profile-value"
+      >
+        0.0000 LNR
+      </div>
+
+    </div>
+
+
+    <div class="profile-row">
+
+      <div class="profile-label">
+        Total Balance
+      </div>
+
+      <div
+        id="profileTotal"
+        class="profile-value"
+      >
+        0.0000 LNR
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="sectionHead">
+
+      <h2>
+        Withdrawal
+      </h2>
+
+      <span class="eyebrow">
+        DEMO
+      </span>
+
+    </div>
+
+
+    <div class="withdraw-box">
+
+      <div class="withdraw-title">
+        Withdraw LNR
+      </div>
+
+      <div class="withdraw-info">
+        Enter the amount you want to withdraw
+        from your Pool Wallet.
+      </div>
+
+
+      <div class="withdraw-form">
+
+        <input
+          id="withdrawAmount"
+          class="withdraw-input"
+          type="number"
+          min="0"
+          step="0.0001"
+          placeholder="Amount LNR"
+        >
+
+        <button
+          class="max-btn"
+          onclick="setMaxWithdraw()"
+        >
+          MAX
         </button>
 
-
-        <div class="info-card">
-            Mining starts automatically after your wallet is connected.
-            Disconnecting your wallet stops mining immediately.
-        </div>
-
-    </div>
-
-</section>
+      </div>
 
 
-<!-- TASKS -->
-
-<section id="page-tasks" class="page">
-
-    <h2 class="page-title">Tasks</h2>
-    <p class="page-subtitle">Complete simple tasks and earn LNR.</p>
-
-    <div class="card">
-
-        <div class="task">
-
-            <div class="task-left">
-                <div class="task-icon">🚀</div>
-                <div>
-                    <div class="task-name">Open LUNARO</div>
-                    <div class="task-reward">+10 LNR</div>
-                </div>
-            </div>
-
-            <button class="task-btn" onclick="completeTask(10)">
-                Claim
-            </button>
-
-        </div>
-
-
-        <div class="task">
-
-            <div class="task-left">
-                <div class="task-icon">⛏️</div>
-                <div>
-                    <div class="task-name">Check Mining</div>
-                    <div class="task-reward">+15 LNR</div>
-                </div>
-            </div>
-
-            <button class="task-btn" onclick="completeTask(15)">
-                Claim
-            </button>
-
-        </div>
-
-
-        <div class="task">
-
-            <div class="task-left">
-                <div class="task-icon">🎁</div>
-                <div>
-                    <div class="task-name">Daily Login</div>
-                    <div class="task-reward">+25 LNR</div>
-                </div>
-            </div>
-
-            <button class="task-btn" onclick="completeTask(25)">
-                Claim
-            </button>
-
-        </div>
+      <button
+        class="withdraw-btn"
+        onclick="withdrawDemo()"
+      >
+        WITHDRAW
+      </button>
 
     </div>
 
-</section>
+  </div>
 
 
-<!-- MINERS -->
+  <div class="history-title">
+    Withdrawal History
+  </div>
 
-<section id="page-miners" class="page">
-
-    <h2 class="page-title">Miners</h2>
-    <p class="page-subtitle">
-        Your level and mining speed are based on your balance.
-    </p>
-
-    <div class="card">
-
-        <div class="miner-current">
-
-            <div class="miner-current-label">
-                CURRENT MINER
-            </div>
-
-            <div id="minerLevel" class="miner-current-level">
-                Level 1
-            </div>
-
-            <div id="minerSpeed" class="miner-current-speed">
-                0.7000 LNR/H
-            </div>
-
-        </div>
-
-
-        <div class="miner-row">
-
-            <div>
-                <div class="miner-name">Starter</div>
-                <div class="locked">Unlocked</div>
-            </div>
-
-            <div class="miner-rate">
-                0.7000 LNR/H
-            </div>
-
-        </div>
-
-
-        <div class="miner-row">
-
-            <div>
-                <div class="miner-name">Silver</div>
-                <div class="locked">Level 2</div>
-            </div>
-
-            <div class="miner-rate">
-                1.2000 LNR/H
-            </div>
-
-        </div>
-
-
-        <div class="miner-row">
-
-            <div>
-                <div class="miner-name">Gold</div>
-                <div class="locked">Level 3</div>
-            </div>
-
-            <div class="miner-rate">
-                2.5000 LNR/H
-            </div>
-
-        </div>
-
-
-        <div class="miner-row">
-
-            <div>
-                <div class="miner-name">Diamond</div>
-                <div class="locked">Level 4</div>
-            </div>
-
-            <div class="miner-rate">
-                5.0000 LNR/H
-            </div>
-
-        </div>
-
-    </div>
+  <div
+    id="history"
+    class="section"
+  >
+  </div>
 
 </section>
 
-
-<!-- FRIENDS -->
-
-<section id="page-friends" class="page">
-
-    <h2 class="page-title">Friends</h2>
-    <p class="page-subtitle">
-        Invite friends and earn 10% of their claimed rewards.
-    </p>
-
-    <div class="card">
-
-        <div class="ref-box">
-
-            <div style="font-size:9px;color:#80968f;font-weight:800;">
-                YOUR REFERRAL CODE
-            </div>
-
-            <div id="refCode" class="ref-code">
-                LNR000000
-            </div>
-
-            <button class="copy-btn" onclick="copyReferral()">
-                Copy Referral Link
-            </button>
-
-        </div>
-
-
-        <div class="friend-stats">
-
-            <div class="friend-stat">
-                <b id="friendsCount">0</b>
-                <span>Friends</span>
-            </div>
-
-            <div class="friend-stat">
-                <b id="refEarned">0.0000</b>
-                <span>LNR Earned</span>
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- PROFILE -->
-
-<section id="page-profile" class="page">
-
-    <h2 class="page-title">Profile</h2>
-    <p class="page-subtitle">Your account and withdrawal settings.</p>
-
-    <div class="card">
-
-        <div class="profile-row">
-
-            <div class="profile-label">
-                Telegram
-            </div>
-
-            <div id="profileTelegram" class="profile-value">
-                -
-            </div>
-
-        </div>
-
-
-        <div class="profile-row">
-
-            <div class="profile-label">
-                Connected Wallet
-            </div>
-
-            <div id="profileWallet" class="profile-value">
-                Not connected
-            </div>
-
-        </div>
-
-
-        <div class="profile-row">
-
-            <div class="profile-label">
-                Pool Wallet
-            </div>
-
-            <div id="profilePool" class="profile-value">
-                0.0000 LNR
-            </div>
-
-        </div>
-
-
-        <div class="withdraw-box">
-
-            <div class="withdraw-title">
-                Withdraw LNR
-            </div>
-
-            <div class="withdraw-info">
-                Minimum withdrawal: <b>500 LNR</b><br>
-                Fee: <b>70 LNR</b><br>
-                Example: withdraw 500 LNR → receive 430 LNR
-                in your connected wallet.
-            </div>
-
-            <input
-                id="withdrawAmount"
-                class="withdraw-input"
-                type="number"
-                min="500"
-                placeholder="Amount LNR"
-            >
-
-            <button class="withdraw-btn" onclick="withdrawLNR()">
-                WITHDRAW TO CONNECTED WALLET
-            </button>
-
-        </div>
-
-
-        <div class="history-title">
-            Withdrawal History
-        </div>
-
-        <div id="withdrawHistory">
-            <div class="history-item">
-                No withdrawals yet.
-            </div>
-        </div>
-
-    </div>
-
-</section>
+</main>
 
 </div>
 
 
-<!-- NAVIGATION -->
+<!-- ================= NAV ================= -->
 
-<nav class="bottom-nav">
+<nav class="bottom">
 
-    <button class="nav-btn active" data-page="mine" onclick="showPage('mine',this)">
-        <span class="nav-icon">⛏</span>
-        <span class="nav-label">Mine</span>
-    </button>
+  <button
+    class="nav active"
+    data-page="home"
+    onclick="nav('home')"
+  >
+    <span>⌂</span>
+    Mine
+  </button>
 
-    <button class="nav-btn" data-page="tasks" onclick="showPage('tasks',this)">
-        <span class="nav-icon">✓</span>
-        <span class="nav-label">Tasks</span>
-    </button>
 
-    <button class="nav-btn" data-page="miners" onclick="showPage('miners',this)">
-        <span class="nav-icon">◆</span>
-        <span class="nav-label">Miners</span>
-    </button>
+  <button
+    class="nav"
+    data-page="tasks"
+    onclick="nav('tasks')"
+  >
+    <span>✓</span>
+    Tasks
+  </button>
 
-    <button class="nav-btn" data-page="friends" onclick="showPage('friends',this)">
-        <span class="nav-icon">♧</span>
-        <span class="nav-label">Friends</span>
-    </button>
 
-    <button class="nav-btn" data-page="profile" onclick="showPage('profile',this)">
-        <span class="nav-icon">●</span>
-        <span class="nav-label">Profile</span>
-    </button>
+  <button
+    class="nav"
+    data-page="miners"
+    onclick="nav('miners')"
+  >
+    <span>◆</span>
+    Miners
+  </button>
+
+
+  <button
+    class="nav"
+    data-page="friends"
+    onclick="nav('friends')"
+  >
+    <span>♧</span>
+    Friends
+  </button>
+
+
+  <button
+    class="nav"
+    data-page="profile"
+    onclick="nav('profile')"
+  >
+    <span>●</span>
+    Profile
+  </button>
 
 </nav>
 
 
-<div id="toast" class="toast"></div>
+<div
+  id="toast"
+  class="toast"
+></div>
 
 
 <script>
 
-/* =========================================
-   CONFIG
-========================================= */
+/* =========================================================
+   LUNARO LOCAL DEMO STATE
+========================================================= */
 
-const API_URL =
-    "https://lunaro-api.alikoms15.workers.dev";
-
-const MANIFEST_URL =
-    "https://alikoms15-lab.github.io/alikoms15.github.io/tonconnect-manifest.json";
-
-/*
- IMPORTANT:
- Put the real LNR Jetton Master address here
- when you have it.
-
- Example:
- const LNR_JETTON_MASTER = "EQ....";
-*/
-
-const LNR_JETTON_MASTER = "";
+const STORAGE_KEY = "lunaro_v4_state";
 
 
-/* =========================================
-   TELEGRAM
-========================================= */
+const defaultState = {
 
-const tg = window.Telegram?.WebApp;
+  pool: 0,
 
-if(tg){
-    tg.ready();
-    tg.expand();
-}
+  holding: 0,
 
+  mined: 0,
 
-/* =========================================
-   STATE
-========================================= */
+  lastMiningTime: Date.now(),
 
-const state = {
+  telegramName: "",
 
-    telegram_id:null,
-    username:"",
-    first_name:"",
+  telegramId: "",
 
-    pool:0,
-    holding:0,
+  level: 1,
 
-    mined:0,
+  rate: 0.7000,
 
-    level:1,
+  referralCode: "LNR000000",
 
-    mining_rate:0.7000,
+  friends: 0,
 
-    walletAddress:"",
+  refRewards: 0,
 
-    walletConnected:false,
+  history: [],
 
-    miningActive:false,
-
-    lastMiningTime:null
+  dailyClaimDate: ""
 
 };
 
 
-/* =========================================
-   TON CONNECT
-========================================= */
+let state =
+  JSON.parse(
+    localStorage.getItem(STORAGE_KEY) || "null"
+  ) || defaultState;
 
-let tonConnectUI = null;
 
-function initTonConnect(){
+/* =========================================================
+   HELPERS
+========================================================= */
 
-    if(!window.TON_CONNECT_UI){
-        console.warn("TON Connect UI not loaded");
-        return;
+function $(id){
+  return document.getElementById(id);
+}
+
+
+function saveState(){
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(state)
+  );
+
+}
+
+
+function fmt(n, decimals=4){
+
+  return Number(n || 0).toLocaleString(
+    "en-US",
+    {
+      minimumFractionDigits:decimals,
+      maximumFractionDigits:decimals
+    }
+  );
+
+}
+
+
+function shortWallet(address){
+
+  if(!address) return "Connect Wallet";
+
+  if(address.length < 12) return address;
+
+  return (
+    address.slice(0,5) +
+    "..." +
+    address.slice(-4)
+  );
+
+}
+
+
+/* =========================================================
+   100 LEVEL SYSTEM
+========================================================= */
+
+/*
+   Total balance = Pool + Holding
+
+   100 levels.
+   Each level increases the mining rate gradually.
+*/
+
+function levelThreshold(level){
+
+  if(level <= 1) return 0;
+
+  /*
+    Smooth progression:
+    Level 2 = 100 LNR
+    Level 3 = 250 LNR
+    ...
+  */
+
+  return Math.round(
+    100 *
+    Math.pow(level - 1, 1.35)
+  );
+
+}
+
+
+function levelRate(level){
+
+  /*
+    Starts at 0.7000
+    Slowly increases through 100 levels.
+  */
+
+  return 0.7000 +
+    ((level - 1) * 0.0500);
+
+}
+
+
+function calculateLevel(total){
+
+  let lvl = 1;
+
+  for(let i=1;i<=100;i++){
+
+    if(total >= levelThreshold(i)){
+      lvl = i;
+    }else{
+      break;
     }
 
-    tonConnectUI =
-        new TON_CONNECT_UI.TonConnectUI({
+  }
 
-            manifestUrl:MANIFEST_URL,
+  return Math.min(100,lvl);
 
-            restoreConnection:true
-
-        });
+}
 
 
-    tonConnectUI.onStatusChange(function(wallet){
+function updateLevel(){
 
-        if(wallet && wallet.account){
+  const total =
+    Number(state.pool) +
+    Number(state.holding);
 
-            setConnectedWallet(
-                wallet.account.address
-            );
+  state.level =
+    calculateLevel(total);
 
-        }else{
+  state.rate =
+    levelRate(state.level);
 
-            setDisconnectedWallet();
-
-        }
-
-    });
+}
 
 
-    if(tonConnectUI.connectionRestored){
+/* =========================================================
+   MINING
+========================================================= */
 
-        if(tonConnectUI.wallet &&
-           tonConnectUI.wallet.account){
+function accrueMining(){
 
-            setConnectedWallet(
-                tonConnectUI.wallet.account.address
-            );
+  if(state.rate <= 0){
 
-        }
+    state.lastMiningTime = Date.now();
 
-    }
+    return;
+
+  }
+
+
+  const now = Date.now();
+
+  const seconds =
+    (now - state.lastMiningTime) / 1000;
+
+
+  if(seconds <= 0) return;
+
+
+  /*
+    Mining continues automatically.
+
+    IMPORTANT:
+    mined is NOT pool.
+    It becomes pool only after Claim.
+  */
+
+  state.mined +=
+    (seconds / 3600) *
+    state.rate;
+
+
+  state.lastMiningTime = now;
+
+
+  saveState();
+
+}
+
+
+/* =========================================================
+   LIVE SPEED DISPLAY
+========================================================= */
+
+function updateLiveSpeed(){
+
+  const speed =
+    Number(state.rate || 0.7);
+
+
+  /*
+    The real rate remains state.rate.
+
+    The final digits animate visually so the
+    mining meter feels alive.
+  */
+
+  const micro =
+    (Date.now() % 1000) / 10000000;
+
+
+  const live =
+    speed + micro;
+
+
+  $("speedValue").textContent =
+    live.toFixed(4);
+
+
+  $("speedValue").classList.add("live");
+
+}
+
+
+/* =========================================================
+   TELEGRAM USER
+========================================================= */
+
+function initTelegram(){
+
+  const tg =
+    window.Telegram?.WebApp;
+
+
+  if(!tg) return;
+
+
+  tg.ready();
+  tg.expand();
+
+
+  const user =
+    tg.initDataUnsafe?.user;
+
+
+  if(!user) return;
+
+
+  state.telegramId =
+    String(user.id || "");
+
+
+  state.telegramName =
+    user.username
+      ? "@" + user.username
+      : (user.first_name || "Telegram User");
+
+
+  saveState();
+
+}
+
+
+/* =========================================================
+   WALLET UI
+========================================================= */
+
+let connectedWallet = null;
+
+
+function walletButtonClick(){
+
+  const menu =
+    $("walletMenu");
+
+
+  menu.classList.toggle("show");
 
 }
 
 
 function openWallet(){
 
-    closeWalletMenu();
-
-    if(!tonConnectUI){
-        showToast("Wallet system is loading...");
-        return;
-    }
-
-    tonConnectUI.openModal();
-
-}
+  $("walletMenu")
+    .classList.remove("show");
 
 
-function walletButtonClick(){
+  /*
+    TON Connect integration remains here.
+    When connectedWallet exists, it will be replaced
+    with the real TON address.
+  */
 
-    if(!state.walletConnected){
+  if(window.tonConnectUI){
 
-        openWallet();
+    window.tonConnectUI.openModal();
 
-        return;
-    }
+    return;
 
-    const menu =
-        document.getElementById("walletMenu");
-
-    menu.classList.toggle("show");
-
-}
+  }
 
 
-function closeWalletMenu(){
+  /*
+    Temporary demo connection.
+  */
 
-    document
-        .getElementById("walletMenu")
-        .classList.remove("show");
+  const demo =
+    "UQCN...iD7";
+
+
+  setConnectedWallet(demo);
 
 }
 
 
-async function disconnectWallet(){
+function disconnectWallet(){
 
-    closeWalletMenu();
+  $("walletMenu")
+    .classList.remove("show");
 
-    if(!tonConnectUI){
-        return;
-    }
 
-    try{
+  if(
+    window.tonConnectUI &&
+    typeof window.tonConnectUI.disconnect === "function"
+  ){
 
-        await tonConnectUI.disconnect();
+    window.tonConnectUI.disconnect();
 
-        setDisconnectedWallet();
+  }
 
-        showToast("Wallet disconnected");
 
-    }catch(error){
+  connectedWallet = null;
 
-        console.error(error);
 
-    }
+  $("walletAddress").textContent =
+    "Connect Wallet";
+
+
+  $("walletDot").classList.remove(
+    "connected"
+  );
+
+
+  $("miningStatus").textContent =
+    "Connect wallet to start mining";
+
+
+  $("miningStatus").classList.remove(
+    "active"
+  );
+
+
+  $("claimBtn").disabled = true;
+
+
+  /*
+    We DO NOT delete pool/mined data.
+    User data stays.
+  */
+
+  state.lastMiningTime = Date.now();
+
+  saveState();
+
+  toast("Wallet disconnected.");
 
 }
 
 
 function setConnectedWallet(address){
 
-    if(!address){
-        return;
-    }
+  connectedWallet = address;
 
-    state.walletAddress = address;
-    state.walletConnected = true;
-    state.miningActive = true;
-    state.lastMiningTime = Date.now();
 
-    const shortAddress =
-        address.slice(0,5) +
-        "..." +
-        address.slice(-5);
+  $("walletAddress").textContent =
+    shortWallet(address);
 
-    document
-        .getElementById("walletAddress")
-        .textContent = shortAddress;
 
-    document
-        .getElementById("walletDot")
-        .classList.add("connected");
+  $("walletDot").classList.add(
+    "connected"
+  );
 
-    document
-        .getElementById("profileWallet")
-        .textContent = address;
 
-    document
-        .getElementById("miningStatus")
-        .textContent = "● Mining is active";
+  $("miningStatus").textContent =
+    "Mining active";
 
-    document
-        .getElementById("miningStatus")
-        .classList.add("active");
 
-    document
-        .getElementById("claimBtn")
-        .disabled = false;
+  $("miningStatus").classList.add(
+    "active"
+  );
 
-    loadHoldingBalance();
 
-    showToast("Wallet connected");
+  $("claimBtn").disabled = false;
+
+
+  state.lastMiningTime = Date.now();
+
+
+  saveState();
 
 }
 
 
-function setDisconnectedWallet(){
+/* =========================================================
+   CLAIM
+========================================================= */
 
-    state.walletAddress = "";
-    state.walletConnected = false;
-    state.miningActive = false;
-    state.lastMiningTime = null;
+function claimMining(){
 
-    document
-        .getElementById("walletAddress")
-        .textContent = "Connect Wallet";
+  if(!connectedWallet){
 
-    document
-        .getElementById("walletDot")
-        .classList.remove("connected");
+    toast("Connect your wallet first.");
 
-    document
-        .getElementById("profileWallet")
-        .textContent = "Not connected";
+    return;
 
-    document
-        .getElementById("miningStatus")
-        .textContent =
-        "Connect wallet to start mining";
+  }
 
-    document
-        .getElementById("miningStatus")
-        .classList.remove("active");
 
-    document
-        .getElementById("claimBtn")
-        .disabled = true;
+  accrueMining();
 
-    updateUI();
+
+  if(state.mined <= 0){
+
+    toast("Nothing to claim yet.");
+
+    return;
+
+  }
+
+
+  const amount =
+    Number(state.mined);
+
+
+  /*
+    Mined -> Pool Wallet
+  */
+
+  state.pool += amount;
+
+  state.mined = 0;
+
+
+  updateLevel();
+
+
+  state.lastMiningTime = Date.now();
+
+
+  saveState();
+
+
+  render();
+
+
+  toast(
+    fmt(amount) +
+    " LNR added to Pool Wallet."
+  );
 
 }
 
 
-/* =========================================
-   TELEGRAM USER
-========================================= */
+/* =========================================================
+   TOTAL BALANCE
+========================================================= */
 
-function loadTelegramUser(){
+function totalBalance(){
 
-    let user = null;
+  return (
+    Number(state.pool) +
+    Number(state.holding)
+  );
 
-    if(tg && tg.initDataUnsafe){
+}
 
-        user = tg.initDataUnsafe.user;
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render(){
+
+  accrueMining();
+
+  updateLevel();
+
+
+  /* balances */
+
+  $("poolBalance").textContent =
+    fmt(state.pool);
+
+
+  $("holdingBalance").textContent =
+    fmt(state.holding);
+
+
+  $("totalBalance").textContent =
+    fmt(totalBalance());
+
+
+  $("minerTotal").textContent =
+    fmt(totalBalance()) +
+    " LNR";
+
+
+  $("minerLevel").textContent =
+    "Level " + state.level;
+
+
+  $("minerSpeed").textContent =
+    state.rate.toFixed(4) +
+    " LNR / H";
+
+
+  $("journeyLevel").textContent =
+    state.level;
+
+
+  $("journeyRate").textContent =
+    state.rate.toFixed(4) +
+    " LNR/H";
+
+
+  $("journeyThreshold").textContent =
+    fmt(levelThreshold(state.level),0) +
+    " LNR total";
+
+
+  $("levelText").textContent =
+    "LV " + state.level;
+
+
+  $("profilePool").textContent =
+    fmt(state.pool) +
+    " LNR";
+
+
+  $("profileHolding").textContent =
+    fmt(state.holding) +
+    " LNR";
+
+
+  $("profileTotal").textContent =
+    fmt(totalBalance()) +
+    " LNR";
+
+
+  $("profileTelegram").textContent =
+    state.telegramName || "-";
+
+
+  $("refCode").textContent =
+    state.referralCode;
+
+
+  $("friendsCount").textContent =
+    state.friends;
+
+
+  $("refRewards").textContent =
+    fmt(state.refRewards);
+
+
+  /*
+    Level progress toward next level.
+  */
+
+  const current =
+    levelThreshold(state.level);
+
+
+  const next =
+    state.level >= 100
+      ? current + 1
+      : levelThreshold(state.level + 1);
+
+
+  const total =
+    totalBalance();
+
+
+  let progress = 0;
+
+
+  if(state.level < 100){
+
+    progress =
+      ((total - current) /
+      Math.max(1,next-current)) * 100;
+
+  }else{
+
+    progress = 100;
+
+  }
+
+
+  $("levelBar").style.width =
+    Math.max(
+      0,
+      Math.min(100,progress)
+    ) + "%";
+
+
+  $("claimBtn").disabled =
+    !connectedWallet ||
+    state.mined <= 0;
+
+
+  $("profileTelegram").textContent =
+    state.telegramName || "-";
+
+
+  renderHistory();
+
+
+  renderDailyTask();
+
+
+  saveState();
+
+}
+
+
+/* =========================================================
+   MINERS — 100 LEVELS
+========================================================= */
+
+function renderMiners(){
+
+  const list =
+    $("levelList");
+
+
+  list.innerHTML = "";
+
+
+  const total =
+    totalBalance();
+
+
+  for(let i=1;i<=100;i++){
+
+    const threshold =
+      levelThreshold(i);
+
+
+    const rate =
+      levelRate(i);
+
+
+    const card =
+      document.createElement("div");
+
+
+    card.className =
+      "level-card";
+
+
+    if(i === state.level){
+
+      card.classList.add("active");
 
     }
 
-    if(user){
 
-        state.telegram_id = user.id;
+    if(i > state.level){
 
-        state.username =
-            user.username
-            ? "@" + user.username
-            : user.first_name || "Telegram User";
+      card.classList.add("locked");
 
-        state.first_name =
-            user.first_name || "";
+    }
+
+
+    let status = "";
+
+
+    if(i === state.level){
+
+      status = "CURRENT";
+
+    }else if(i < state.level){
+
+      status = "UNLOCKED";
 
     }else{
 
-        /*
-         Browser testing fallback.
-         */
-
-        state.telegram_id = "demo";
-
-        state.username = "@demo";
-
-        state.first_name = "Demo";
-
-    }
-
-    document
-        .getElementById("telegramName")
-        .textContent = state.username;
-
-    document
-        .getElementById("profileTelegram")
-        .textContent = state.username;
-
-}
-
-
-/* =========================================
-   API USER
-========================================= */
-
-async function loadUser(){
-
-    try{
-
-        const response =
-            await fetch(API_URL + "/user",{
-
-                method:"POST",
-
-                headers:{
-                    "Content-Type":"application/json"
-                },
-
-                body:JSON.stringify({
-
-                    telegram_id:state.telegram_id,
-
-                    username:
-                        state.username.replace("@",""),
-
-                    first_name:
-                        state.first_name
-
-                })
-
-            });
-
-
-        if(!response.ok){
-            return;
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if(!data || !data.user){
-            return;
-        }
-
-
-        const user = data.user;
-
-
-        state.pool =
-            Number(user.balance || 0);
-
-        state.mined =
-            Number(user.mined || 0);
-
-        state.mining_rate =
-            Number(user.mining_rate || 0.7000);
-
-        state.level =
-            Number(user.level || 1);
-
-
-        if(user.referral_code){
-
-            document
-                .getElementById("refCode")
-                .textContent =
-                user.referral_code;
-
-        }
-
-
-        document
-            .getElementById("levelText")
-            .textContent =
-            "LV " + state.level;
-
-
-        document
-            .getElementById("friendsCount")
-            .textContent =
-            user.referral_count || 0;
-
-
-        document
-            .getElementById("refEarned")
-            .textContent =
-            Number(
-                user.referral_earned || 0
-            ).toFixed(4);
-
-
-        updateUI();
-
-    }catch(error){
-
-        console.error("User API error:",error);
-
-    }
-
-}
-
-
-/* =========================================
-   HOLDING WALLET
-========================================= */
-
-async function loadHoldingBalance(){
-
-    if(!state.walletConnected ||
-       !state.walletAddress){
-
-        state.holding = 0;
-
-        updateUI();
-
-        return;
-    }
-
-
-    /*
-     The real LNR contract address is required
-     before the chain balance can be read.
-    */
-
-    if(!LNR_JETTON_MASTER){
-
-        state.holding = 0;
-
-        updateUI();
-
-        console.log(
-            "LNR_JETTON_MASTER is not configured."
-        );
-
-        return;
-
-    }
-
-
-    /*
-     Your Worker can later expose:
-
-     GET /wallet/holding?wallet_address=...
-
-     and return:
-
-     {
-        "success":true,
-        "balance":123.4567
-     }
-
-     Keeping this call here means we can connect
-     the real blockchain balance without changing
-     the Home UI later.
-    */
-
-    try{
-
-        const url =
-            API_URL +
-            "/wallet/holding?wallet_address=" +
-            encodeURIComponent(
-                state.walletAddress
-            ) +
-            "&jetton_master=" +
-            encodeURIComponent(
-                LNR_JETTON_MASTER
-            );
-
-
-        const response =
-            await fetch(url);
-
-
-        if(!response.ok){
-            return;
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if(data && data.success){
-
-            state.holding =
-                Number(data.balance || 0);
-
-            updateUI();
-
-        }
-
-    }catch(error){
-
-        console.error(
-            "Holding balance error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================
-   BALANCE + MINING SPEED
-========================================= */
-
-function getTotalBalance(){
-
-    /*
-     IMPORTANT:
-
-     Total Balance is ALWAYS:
-
-     Pool Wallet + Holding Wallet
-
-     Therefore whenever Pool Wallet grows,
-     Total Balance grows automatically.
-    */
-
-    return (
-        Number(state.pool || 0) +
-        Number(state.holding || 0)
-    );
-
-}
-
-
-/*
- Level/speed calculation.
-
- These thresholds are configurable.
-
- The backend mining_rate is used as the base
- when available, while balance/level can
- increase the displayed mining tier.
-*/
-
-function calculateMiningSpeed(){
-
-    const total =
-        getTotalBalance();
-
-
-    let speed =
-        Number(state.mining_rate || 0.7000);
-
-
-    /*
-     Minimum base speed
-    */
-
-    if(speed < 0.7000){
-        speed = 0.7000;
-    }
-
-
-    /*
-     Balance-based bonuses.
-
-     This is intentionally modest until we
-     define the final LNR tokenomics.
-    */
-
-    if(total >= 1000){
-        speed = Math.max(speed,1.2000);
-    }
-
-    if(total >= 5000){
-        speed = Math.max(speed,2.5000);
-    }
-
-    if(total >= 15000){
-        speed = Math.max(speed,5.0000);
-    }
-
-
-    return speed;
-
-}
-
-
-function calculateLevel(){
-
-    const total =
-        getTotalBalance();
-
-
-    if(total >= 15000){
-        return 4;
-    }
-
-    if(total >= 5000){
-        return 3;
-    }
-
-    if(total >= 1000){
-        return 2;
-    }
-
-    return 1;
-
-}
-
-
-/* =========================================
-   LIVE MINING
-========================================= */
-
-function miningLoop(){
-
-    if(!state.miningActive ||
-       !state.walletConnected){
-
-        state.lastMiningTime =
-            Date.now();
-
-        return;
-
-    }
-
-
-    const now = Date.now();
-
-
-    if(!state.lastMiningTime){
-
-        state.lastMiningTime = now;
-
-        return;
-
-    }
-
-
-    const elapsed =
-        (now - state.lastMiningTime) / 1000;
-
-
-    state.lastMiningTime = now;
-
-
-    const speed =
-        calculateMiningSpeed();
-
-
-    /*
-     LNR per second
-    */
-
-    const perSecond =
-        speed / 3600;
-
-
-    const earned =
-        perSecond * elapsed;
-
-
-    if(earned > 0){
-
-        state.mined += earned;
-
-    }
-
-
-    updateUI();
-
-}
-
-
-setInterval(miningLoop,1000);
-
-
-/* =========================================
-   UI
-========================================= */
-
-function updateUI(){
-
-    const total =
-        getTotalBalance();
-
-
-    const speed =
-        calculateMiningSpeed();
-
-
-    const level =
-        calculateLevel();
-
-
-    document
-        .getElementById("poolBalance")
-        .textContent =
-        Number(state.pool).toFixed(4);
-
-
-    document
-        .getElementById("holdingBalance")
-        .textContent =
-        Number(state.holding).toFixed(4);
-
-
-    document
-        .getElementById("totalBalance")
-        .textContent =
-        Number(total).toFixed(4);
-
-
-    /*
-     Four decimal places.
-    */
-
-    document
-        .getElementById("speedValue")
-        .textContent =
-        Number(speed).toFixed(4);
-
-
-    document
-        .getElementById("minerSpeed")
-        .textContent =
-        Number(speed).toFixed(4) +
-        " LNR/H";
-
-
-    document
-        .getElementById("minerLevel")
-        .textContent =
-        "Level " + level;
-
-
-    document
-        .getElementById("levelText")
-        .textContent =
-        "LV " + level;
-
-
-    document
-        .getElementById("profilePool")
-        .textContent =
-        Number(state.pool).toFixed(4) +
+      status =
+        fmt(threshold,0) +
         " LNR";
 
-}
-
-
-/* =========================================
-   CLAIM
-========================================= */
-
-async function claimMining(){
-
-    if(!state.walletConnected){
-
-        showToast(
-            "Connect your wallet first"
-        );
-
-        return;
-
     }
 
 
-    if(state.mined <= 0){
+    card.innerHTML = `
 
-        showToast(
-            "Nothing to claim yet"
-        );
+      <div class="level-name">
+        LVL ${i}
+      </div>
 
-        return;
+      <div class="level-threshold">
+        ${status}
+      </div>
 
-    }
+      <div class="level-rate">
+        ${rate.toFixed(4)} LNR/H
+      </div>
 
+    `;
 
-    const amount =
-        Number(state.mined);
 
+    list.appendChild(card);
 
-    try{
-
-        const response =
-            await fetch(API_URL + "/claim",{
-
-                method:"POST",
-
-                headers:{
-                    "Content-Type":"application/json"
-                },
-
-                body:JSON.stringify({
-
-                    telegram_id:
-                        state.telegram_id,
-
-                    amount:amount,
-
-                    wallet_address:
-                        state.walletAddress
-
-                })
-
-            });
-
-
-        const data =
-            await response.json();
-
-
-        if(!response.ok ||
-           data.success === false){
-
-            throw new Error(
-                data.message ||
-                "Claim failed"
-            );
-
-        }
-
-
-        /*
-         Mined → Pool Wallet
-
-         Therefore:
-
-         Pool Wallet increases
-         Total Balance increases
-         */
-
-        state.pool += amount;
-
-        state.mined = 0;
-
-
-        updateUI();
-
-        showToast(
-            amount.toFixed(4) +
-            " LNR added to Pool Wallet"
-        );
-
-
-    }catch(error){
-
-        console.error(error);
-
-        showToast(
-            "Claim failed"
-        );
-
-    }
-
-}
-
-
-/* =========================================
-   TASKS
-========================================= */
-
-function completeTask(amount){
-
-    state.pool += Number(amount);
-
-    updateUI();
-
-    showToast(
-        "+" +
-        Number(amount).toFixed(0) +
-        " LNR added to Pool Wallet"
-    );
-
-}
-
-
-/* =========================================
-   PAGE NAVIGATION
-========================================= */
-
-function showPage(page,button){
-
-    document
-        .querySelectorAll(".page")
-        .forEach(function(el){
-
-            el.classList.remove("active");
-
-        });
-
-
-    const target =
-        document.getElementById(
-            "page-" + page
-        );
-
-
-    if(target){
-
-        target.classList.add("active");
-
-    }
-
-
-    document
-        .querySelectorAll(".nav-btn")
-        .forEach(function(el){
-
-            el.classList.remove("active");
-
-        });
-
-
-    if(button){
-
-        button.classList.add("active");
-
-    }else{
-
-        const nav =
-            document.querySelector(
-                '.nav-btn[data-page="' +
-                page +
-                '"]'
-            );
-
-        if(nav){
-            nav.classList.add("active");
-        }
-
-    }
-
-
-    closeWalletMenu();
+  }
 
 }
 
 
 function openMiners(){
 
-    showPage("miners");
+  renderMiners();
+
+  nav("miners");
 
 }
 
 
-/* =========================================
+/* =========================================================
+   DAILY LOGIN
+========================================================= */
+
+function todayKey(){
+
+  const d =
+    new Date();
+
+  return (
+    d.getFullYear() +
+    "-" +
+    (d.getMonth()+1) +
+    "-" +
+    d.getDate()
+  );
+
+}
+
+
+function renderDailyTask(){
+
+  const btn =
+    $("dailyTaskBtn");
+
+
+  if(!btn) return;
+
+
+  if(state.dailyClaimDate === todayKey()){
+
+    btn.textContent =
+      "Claimed";
+
+
+    btn.classList.add(
+      "disabled"
+    );
+
+
+    btn.disabled = true;
+
+  }else{
+
+    btn.textContent =
+      "Claim +3";
+
+
+    btn.classList.remove(
+      "disabled"
+    );
+
+
+    btn.disabled = false;
+
+  }
+
+}
+
+
+function completeDailyLogin(){
+
+  if(
+    state.dailyClaimDate === todayKey()
+  ){
+
+    toast("Daily login already claimed.");
+
+    return;
+
+  }
+
+
+  state.pool += 3;
+
+
+  state.dailyClaimDate =
+    todayKey();
+
+
+  updateLevel();
+
+
+  saveState();
+
+
+  render();
+
+
+  toast("+3 LNR added to Pool Wallet.");
+
+}
+
+
+/* =========================================================
    REFERRAL
-========================================= */
+========================================================= */
 
-async function copyReferral(){
+function copyRef(){
 
-    const code =
-        document
-            .getElementById("refCode")
-            .textContent
-            .trim();
+  const link =
+    "https://t.me/lunaro_bot?start=" +
+    state.referralCode;
 
 
-    /*
-     Replace BOT_USERNAME with the actual
-     Telegram bot username later.
-    */
+  if(
+    navigator.clipboard &&
+    navigator.clipboard.writeText
+  ){
 
-    const botUsername =
-        "YOUR_LUNARO_BOT";
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
 
+        toast("Referral link copied.");
 
-    const link =
-        "https://t.me/" +
-        botUsername +
-        "?start=" +
-        code;
+      })
+      .catch(() => {
 
+        toast(state.referralCode);
 
-    try{
+      });
 
-        await navigator.clipboard.writeText(link);
+  }else{
 
-        showToast(
-            "Referral link copied"
-        );
+    toast(state.referralCode);
 
-    }catch(error){
-
-        showToast(
-            link
-        );
-
-    }
+  }
 
 }
 
 
-/* =========================================
-   WITHDRAW
-========================================= */
+/* =========================================================
+   WITHDRAWAL
+========================================================= */
 
-async function withdrawLNR(){
+function setMaxWithdraw(){
 
-    if(!state.walletConnected){
-
-        showToast(
-            "Connect your wallet first"
-        );
-
-        return;
-
-    }
-
-
-    const input =
-        document.getElementById(
-            "withdrawAmount"
-        );
-
-
-    const amount =
-        Number(input.value);
-
-
-    const MIN_WITHDRAW = 500;
-    const FEE = 70;
-
-
-    if(!amount ||
-       amount < MIN_WITHDRAW){
-
-        showToast(
-            "Minimum withdrawal is 500 LNR"
-        );
-
-        return;
-
-    }
-
-
-    if(amount > state.pool){
-
-        showToast(
-            "Insufficient Pool Wallet balance"
-        );
-
-        return;
-
-    }
-
-
-    const received =
-        amount - FEE;
-
-
-    if(received <= 0){
-
-        showToast(
-            "Invalid withdrawal amount"
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        const response =
-            await fetch(API_URL + "/withdraw",{
-
-                method:"POST",
-
-                headers:{
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body:JSON.stringify({
-
-                    telegram_id:
-                        state.telegram_id,
-
-                    wallet_address:
-                        state.walletAddress,
-
-                    amount:amount,
-
-                    fee:FEE,
-
-                    received:received
-
-                })
-
-            });
-
-
-        const data =
-            await response.json();
-
-
-        if(!response.ok ||
-           data.success === false){
-
-            throw new Error(
-                data.message ||
-                "Withdrawal failed"
-            );
-
-        }
-
-
-        state.pool -= amount;
-
-        input.value = "";
-
-        updateUI();
-
-        loadWithdrawalHistory();
-
-        showToast(
-            "Withdrawal requested"
-        );
-
-
-    }catch(error){
-
-        console.error(error);
-
-        showToast(
-            "Withdrawal failed"
-        );
-
-    }
+  $("withdrawAmount").value =
+    Number(state.pool).toFixed(4);
 
 }
 
 
-/* =========================================
-   WITHDRAWAL HISTORY
-========================================= */
+function withdrawDemo(){
 
-async function loadWithdrawalHistory(){
-
-    if(!state.telegram_id){
-        return;
-    }
+  const amount =
+    Number(
+      $("withdrawAmount").value
+    );
 
 
-    try{
+  if(!amount || amount <= 0){
 
-        const response =
-            await fetch(
-                API_URL +
-                "/withdrawals?telegram_id=" +
-                encodeURIComponent(
-                    state.telegram_id
-                )
-            );
+    toast("Enter an amount.");
+
+    return;
+
+  }
 
 
-        if(!response.ok){
-            return;
-        }
+  if(amount > state.pool){
+
+    toast("Insufficient Pool Wallet balance.");
+
+    return;
+
+  }
 
 
-        const data =
-            await response.json();
+  /*
+    Demo only.
+    No real blockchain transaction.
+  */
+
+  state.pool -= amount;
 
 
-        const container =
-            document.getElementById(
-                "withdrawHistory"
-            );
+  state.history.unshift({
+
+    time:Date.now(),
+
+    amount:amount,
+
+    status:"Pending"
+
+  });
 
 
-        if(!data.withdrawals ||
-           !data.withdrawals.length){
-
-            container.innerHTML =
-                '<div class="history-item">' +
-                'No withdrawals yet.' +
-                '</div>';
-
-            return;
-
-        }
+  $("withdrawAmount").value = "";
 
 
-        container.innerHTML =
-            data.withdrawals
-                .map(function(item){
+  updateLevel();
 
-                    return `
-                        <div class="history-item">
-                            ${Number(item.amount || 0).toFixed(4)}
-                            LNR →
-                            ${Number(item.received || 0).toFixed(4)}
-                            LNR received
-                        </div>
-                    `;
+  saveState();
 
-                })
-                .join("");
+  render();
 
-    }catch(error){
 
-        console.error(
-            "History error:",
-            error
-        );
-
-    }
+  toast(
+    "Withdrawal request recorded."
+  );
 
 }
 
 
-/* =========================================
+/* =========================================================
+   HISTORY
+========================================================= */
+
+function renderHistory(){
+
+  const el =
+    $("history");
+
+
+  if(!state.history.length){
+
+    el.innerHTML =
+      '<div class="empty">No withdrawals yet.</div>';
+
+    return;
+
+  }
+
+
+  el.innerHTML =
+    state.history
+      .slice(0,8)
+      .map(h => `
+
+        <div class="history-item">
+
+          <div>
+            <b>
+              ${fmt(h.amount)} LNR
+            </b>
+
+            <div
+              style="
+                color:var(--muted);
+                margin-top:3px;
+                font-size:8px;
+              "
+            >
+              ${new Date(h.time).toLocaleString()}
+            </div>
+
+          </div>
+
+          <span class="pending">
+            ${h.status}
+          </span>
+
+        </div>
+
+      `)
+      .join("");
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function nav(id){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(page => {
+
+      page.classList.toggle(
+        "active",
+        page.id === id
+      );
+
+    });
+
+
+  document
+    .querySelectorAll(".nav")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.page === id
+      );
+
+    });
+
+
+  if(id === "miners"){
+
+    renderMiners();
+
+  }
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+
+  render();
+
+}
+
+
+/* =========================================================
    TOAST
-========================================= */
+========================================================= */
 
-let toastTimer = null;
+function toast(message){
 
-function showToast(message){
-
-    const toast =
-        document.getElementById("toast");
+  const el =
+    $("toast");
 
 
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-
-    clearTimeout(toastTimer);
+  el.textContent =
+    message;
 
 
-    toastTimer =
-        setTimeout(function(){
+  el.classList.add(
+    "show"
+  );
 
-            toast.classList.remove("show");
 
-        },2200);
+  clearTimeout(
+    window.toastTimer
+  );
+
+
+  window.toastTimer =
+    setTimeout(() => {
+
+      el.classList.remove(
+        "show"
+      );
+
+    },2300);
 
 }
 
 
-/* =========================================
-   CLOSE WALLET MENU OUTSIDE
-========================================= */
+/* =========================================================
+   CLOSE WALLET MENU
+========================================================= */
 
 document.addEventListener(
-    "click",
-    function(event){
+  "click",
+  function(e){
 
-        const wrap =
-            document.querySelector(
-                ".wallet-wrap"
-            );
+    const wrap =
+      document.querySelector(
+        ".wallet-wrap"
+      );
 
 
-        if(wrap &&
-           !wrap.contains(event.target)){
+    if(
+      wrap &&
+      !wrap.contains(e.target)
+    ){
 
-            closeWalletMenu();
-
-        }
+      $("walletMenu")
+        .classList.remove("show");
 
     }
+
+  }
 );
 
 
-/* =========================================
-   INIT
-========================================= */
+/* =========================================================
+   INITIALIZATION
+========================================================= */
 
-async function init(){
+initTelegram();
 
-    loadTelegramUser();
 
-    initTonConnect();
+/*
+  If Telegram username was already saved,
+  show it immediately.
+*/
 
-    await loadUser();
+if(state.telegramName){
 
-    loadWithdrawalHistory();
-
-    updateUI();
+  $("telegramName").textContent =
+    state.telegramName;
 
 }
 
 
-init();
+/*
+  Restore demo wallet appearance if it was
+  connected in this browser.
+*/
+
+if(connectedWallet){
+
+  setConnectedWallet(
+    connectedWallet
+  );
+
+}
+
+
+render();
+
+renderMiners();
+
+
+/*
+  Main live loop.
+
+  Every 250ms:
+  - mining accrues
+  - mined amount changes
+  - live speed display animates
+  - UI refreshes
+*/
+
+setInterval(() => {
+
+  if(connectedWallet){
+
+    accrueMining();
+
+  }
+
+  updateLiveSpeed();
+
+  render();
+
+},250);
 
 </script>
 
