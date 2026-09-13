@@ -1,26 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5f7f5">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
+
+<meta
+  name="theme-color"
+  content="#10251f"
+>
 
 <title>LUNARO — LNR Mining</title>
 
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+
 <style>
+
 :root{
-  --bg:#f5f7f5;
+  --bg:#eef3f0;
   --card:#ffffff;
-  --ink:#101714;
-  --muted:#748079;
-  --line:#e4e9e6;
-  --green:#16a36a;
-  --green2:#0d8756;
-  --soft:#e9f8f1;
-  --gold:#c99b36;
+  --ink:#10211c;
+  --muted:#718078;
+  --line:#dce5e0;
+
+  --green:#169866;
+  --green2:#08734d;
+  --green3:#0d5c43;
+
+  --dark:#10251f;
+  --dark2:#16352b;
+  --dark3:#1b4235;
+
+  --soft:#e2f2eb;
+  --soft2:#d5ebe1;
+
+  --gold:#c89b38;
   --danger:#d9534f;
-  --shadow:0 12px 32px rgba(16,23,20,.07);
-  --radius:22px;
+
+  --shadow:
+    0 10px 28px rgba(16,37,31,.08);
+
+  --radius:20px;
 }
 
 *{
@@ -28,9 +54,13 @@
   -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
   margin:0;
   min-height:100%;
+  background:var(--bg);
+  color:var(--ink);
+
   font-family:
     Inter,
     ui-sans-serif,
@@ -39,11 +69,14 @@ html,body{
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  background:var(--bg);
-  color:var(--ink);
 }
 
-button,input{
+body{
+  overflow-x:hidden;
+}
+
+button,
+input{
   font:inherit;
 }
 
@@ -56,47 +89,71 @@ button{
   width:100%;
   max-width:520px;
   margin:auto;
+
   min-height:100vh;
+
   padding:
     env(safe-area-inset-top)
-    15px
-    calc(88px + env(safe-area-inset-bottom));
+    13px
+    calc(76px + env(safe-area-inset-bottom));
 }
 
-/* ================= HEADER ================= */
+/* =========================================================
+   HEADER
+========================================================= */
 
 header{
-  min-height:68px;
+  height:58px;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:8px;
+
+  gap:7px;
 }
 
 .brand{
   display:flex;
   align-items:center;
-  gap:9px;
-  font-size:20px;
-  font-weight:900;
-  letter-spacing:-.7px;
+
+  gap:8px;
+
+  font-size:19px;
+  font-weight:950;
+
+  letter-spacing:-.8px;
 }
 
 .logo{
-  width:37px;
-  height:37px;
-  border-radius:12px;
-  background:#101714;
-  color:#fff;
+  width:35px;
+  height:35px;
+
   display:grid;
   place-items:center;
-  font-weight:950;
+
+  border-radius:11px;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--dark3),
+      var(--dark)
+    );
+
+  color:#fff;
+
+  font-size:17px;
+  font-weight:1000;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.1),
+    0 6px 15px rgba(16,37,31,.16);
 }
 
 .header-right{
   display:flex;
   align-items:center;
-  gap:7px;
+  gap:6px;
 }
 
 .wallet-wrap{
@@ -104,69 +161,100 @@ header{
 }
 
 .wallet-button{
-  min-width:122px;
-  min-height:43px;
+  min-width:115px;
+  height:39px;
+
   display:flex;
   align-items:center;
+
   gap:7px;
+
   background:#fff;
+
   border:1px solid var(--line);
-  border-radius:14px;
-  padding:7px 10px;
-  box-shadow:0 4px 14px rgba(16,23,20,.04);
+
+  border-radius:13px;
+
+  padding:5px 8px;
+
+  box-shadow:
+    0 4px 13px rgba(16,37,31,.05);
+
   text-align:left;
 }
 
 .wallet-dot{
   width:8px;
   height:8px;
-  border-radius:50%;
-  background:#a8b0ac;
+
   flex:none;
+
+  border-radius:50%;
+
+  background:#a8b2ad;
 }
 
 .wallet-dot.connected{
-  background:var(--green);
-  box-shadow:0 0 0 4px var(--soft);
+  background:#1bb878;
+
+  box-shadow:
+    0 0 0 4px var(--soft);
 }
 
 .wallet-info{
   display:flex;
   flex-direction:column;
+
   min-width:0;
 }
 
 .wallet-address{
-  font-size:11px;
-  font-weight:850;
+  max-width:84px;
+
+  font-size:10px;
+  font-weight:900;
+
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  max-width:90px;
 }
 
 .telegram-name{
-  font-size:8px;
-  color:#929b96;
-  margin-top:2px;
+  max-width:84px;
+
+  margin-top:1px;
+
+  font-size:7px;
+
+  color:#8b9791;
+
   white-space:nowrap;
-  max-width:90px;
   overflow:hidden;
   text-overflow:ellipsis;
 }
 
 .wallet-menu{
   display:none;
+
   position:absolute;
+
   right:0;
-  top:50px;
+  top:44px;
+
   width:145px;
-  padding:6px;
+
+  padding:5px;
+
   background:#fff;
+
   border:1px solid var(--line);
-  border-radius:15px;
-  box-shadow:0 15px 35px rgba(0,0,0,.13);
-  z-index:50;
+
+  border-radius:14px;
+
+  box-shadow:
+    0 14px 32px rgba(0,0,0,.15);
+
+  z-index:100;
 }
 
 .wallet-menu.show{
@@ -175,12 +263,17 @@ header{
 
 .wallet-menu button{
   width:100%;
+
   background:none;
-  padding:11px;
-  border-radius:10px;
+
+  padding:10px;
+
+  border-radius:9px;
+
   text-align:left;
-  font-size:11px;
-  font-weight:800;
+
+  font-size:10px;
+  font-weight:850;
 }
 
 .wallet-menu button:hover{
@@ -192,28 +285,47 @@ header{
 }
 
 .level-pill{
-  min-height:43px;
-  padding:0 11px;
-  border-radius:14px;
-  background:#101714;
-  color:#fff;
+  min-height:39px;
+
+  padding:0 10px;
+
+  border-radius:13px;
+
   display:flex;
   align-items:center;
-  gap:6px;
-  font-size:10px;
-  font-weight:900;
+
+  gap:5px;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--dark2),
+      var(--dark)
+    );
+
+  color:#fff;
+
+  font-size:9px;
+  font-weight:950;
+
+  box-shadow:
+    0 5px 13px rgba(16,37,31,.14);
 }
 
 .level-icon{
-  color:#72d8ae;
-  font-size:12px;
+  color:#74d7ad;
+  font-size:11px;
 }
 
-/* ================= PAGES ================= */
+/* =========================================================
+   PAGES
+========================================================= */
 
 .page{
   display:none;
-  animation:pageIn .22s ease;
+
+  animation:
+    pageIn .2s ease;
 }
 
 .page.active{
@@ -221,136 +333,232 @@ header{
 }
 
 @keyframes pageIn{
+
   from{
     opacity:0;
-    transform:translateY(5px);
+    transform:translateY(4px);
   }
+
   to{
     opacity:1;
     transform:none;
   }
+
 }
 
 .eyebrow{
   text-transform:uppercase;
-  letter-spacing:1.15px;
-  font-size:9px;
+
+  letter-spacing:1px;
+
+  font-size:8px;
+
   color:var(--muted);
-  font-weight:900;
+
+  font-weight:950;
 }
 
 h1{
-  font-size:28px;
-  letter-spacing:-1.3px;
-  margin:6px 0 3px;
+  font-size:26px;
+
+  letter-spacing:-1.2px;
+
+  margin:5px 0 2px;
 }
 
 .sub{
   color:var(--muted);
-  font-size:12px;
+
+  font-size:11px;
 }
 
-/* ================= HERO ================= */
+/* =========================================================
+   HERO
+========================================================= */
 
 .hero{
-  margin-top:10px;
+  margin-top:3px;
+
   text-align:center;
 }
 
 .crystal-box{
   position:relative;
-  width:150px;
-  height:130px;
-  margin:0 auto 2px;
+
+  width:140px;
+  height:106px;
+
+  margin:0 auto 1px;
+
   display:grid;
   place-items:center;
 }
 
 .crystal{
-  width:82px;
-  height:82px;
+  width:76px;
+  height:76px;
+
   position:relative;
+
   display:grid;
   place-items:center;
+
   transform:rotate(45deg);
-  border-radius:17px;
+
+  border-radius:16px;
+
   background:
     linear-gradient(
       135deg,
-      #19b875 0%,
-      #0f8757 45%,
-      #07553a 100%
+      #20b77a 0%,
+      #0e8055 48%,
+      #06442f 100%
     );
+
   box-shadow:
-    0 18px 35px rgba(22,163,106,.25),
-    inset 5px 5px 10px rgba(255,255,255,.2),
-    inset -8px -8px 15px rgba(0,0,0,.15);
+
+    0 17px 32px rgba(10,117,78,.25),
+
+    inset
+      5px 5px 10px
+      rgba(255,255,255,.17),
+
+    inset
+      -8px -8px 15px
+      rgba(0,0,0,.17);
+
   z-index:3;
 }
 
 .crystal:before{
   content:"";
+
   position:absolute;
-  inset:9px;
-  border:1px solid rgba(255,255,255,.25);
-  border-radius:12px;
+
+  inset:8px;
+
+  border:1px solid rgba(255,255,255,.24);
+
+  border-radius:11px;
+}
+
+.crystal:after{
+  content:"";
+
+  position:absolute;
+
+  width:22px;
+  height:22px;
+
+  top:10px;
+  left:11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.32),
+      transparent
+    );
+
+  clip-path:polygon(
+    0 0,
+    100% 0,
+    0 100%
+  );
+
+  border-radius:5px;
 }
 
 .crystal-text{
   transform:rotate(-45deg);
-  font-size:28px;
+
+  font-size:27px;
+
   font-weight:1000;
+
   letter-spacing:1px;
+
   color:#fff;
+
   text-shadow:
-    0 2px 0 #8c6a20,
+    0 2px 0 #85651e,
     0 4px 10px rgba(0,0,0,.35);
 }
 
 .orbit{
   position:absolute;
-  border:2px solid rgba(22,163,106,.45);
+
+  border:
+    2px solid
+    rgba(15,139,91,.42);
+
   border-radius:50%;
-  transform:rotate(-25deg);
 }
 
 .orbit.one{
-  width:145px;
-  height:48px;
-  animation:orbitMove 5s linear infinite;
+  width:138px;
+  height:45px;
+
+  animation:
+    orbitMove 5s linear infinite;
 }
 
 .orbit.two{
-  width:128px;
-  height:42px;
+  width:123px;
+  height:39px;
+
   transform:rotate(35deg);
+
   opacity:.7;
-  animation:orbitMove 6s linear infinite reverse;
+
+  animation:
+    orbitMove 6s linear infinite reverse;
 }
 
 .orbit.three{
-  width:155px;
-  height:58px;
+  width:148px;
+  height:54px;
+
   transform:rotate(75deg);
-  opacity:.35;
+
+  opacity:.3;
 }
 
 @keyframes orbitMove{
-  from{transform:rotate(0deg) scale(1)}
-  to{transform:rotate(360deg) scale(1.02)}
+
+  from{
+    transform:rotate(0deg) scale(1);
+  }
+
+  to{
+    transform:rotate(360deg) scale(1.02);
+  }
+
 }
 
 .mining-status{
   display:inline-flex;
+
   align-items:center;
+
   gap:6px;
-  font-size:10px;
-  font-weight:850;
+
+  font-size:9px;
+
+  font-weight:900;
+
   color:var(--muted);
+
   background:#fff;
+
   border:1px solid var(--line);
+
   border-radius:999px;
-  padding:7px 11px;
+
+  padding:6px 10px;
+
+  box-shadow:
+    0 4px 12px rgba(16,37,31,.04);
 }
 
 .mining-status.active{
@@ -359,429 +567,840 @@ h1{
 
 .mining-status.active:before{
   content:"";
-  width:7px;
-  height:7px;
-  background:var(--green);
+
+  width:6px;
+  height:6px;
+
+  background:#19b778;
+
   border-radius:50%;
-  box-shadow:0 0 0 5px var(--soft);
+
+  box-shadow:
+    0 0 0 4px var(--soft);
+
+  animation:
+    statusPulse 1.3s ease-in-out infinite;
 }
 
-/* ================= TOTAL ================= */
+@keyframes statusPulse{
+
+  50%{
+    transform:scale(.7);
+    opacity:.55;
+  }
+
+}
+
+/* =========================================================
+   TOTAL
+========================================================= */
 
 .total-card{
-  margin-top:8px;
+  margin-top:6px;
+
   text-align:center;
-  background:#101714;
+
+  background:
+    linear-gradient(
+      145deg,
+      #183b30,
+      #10251f
+    );
+
   color:#fff;
-  border-radius:20px;
-  padding:13px 15px;
-  box-shadow:var(--shadow);
+
+  border-radius:18px;
+
+  padding:11px 14px;
+
+  box-shadow:
+    0 9px 23px rgba(16,37,31,.14);
+
+  border:
+    1px solid
+    rgba(255,255,255,.05);
 }
 
 .total-label{
-  font-size:9px;
+  font-size:8px;
+
   letter-spacing:1.3px;
-  color:#aeb8b3;
-  font-weight:900;
+
+  color:#aebdb6;
+
+  font-weight:950;
 }
 
 .total-value{
   margin-top:3px;
-  font-size:31px;
+
+  font-size:29px;
+
   line-height:1;
-  font-weight:950;
-  letter-spacing:-1.5px;
+
+  font-weight:1000;
+
+  letter-spacing:-1.4px;
+
+  font-variant-numeric:
+    tabular-nums;
 }
 
 .total-unit{
-  margin-top:4px;
-  font-size:10px;
-  color:#93a19b;
-  font-weight:800;
+  margin-top:3px;
+
+  font-size:9px;
+
+  color:#91a69e;
+
+  font-weight:850;
 }
 
-/* ================= BALANCES ================= */
+/* =========================================================
+   BALANCES
+========================================================= */
 
 .balance-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:8px;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:7px;
+
+  margin-top:7px;
 }
 
 .balance-card{
   background:#fff;
-  border:1px solid var(--line);
-  border-radius:17px;
-  padding:11px;
+
+  border:
+    1px solid
+    var(--line);
+
+  border-radius:15px;
+
+  padding:9px 10px;
+
   box-shadow:var(--shadow);
 }
 
 .balance-label{
-  font-size:8px;
+  font-size:7px;
+
   color:var(--muted);
-  font-weight:900;
-  letter-spacing:.5px;
+
+  font-weight:950;
+
+  letter-spacing:.55px;
+
   text-transform:uppercase;
 }
 
 .balance-value{
-  font-size:17px;
-  font-weight:950;
-  margin-top:5px;
+  font-size:16px;
+
+  font-weight:1000;
+
+  margin-top:4px;
+
   letter-spacing:-.4px;
+
+  font-variant-numeric:
+    tabular-nums;
 }
 
 .balance-unit{
   display:block;
-  font-size:8px;
+
+  font-size:7px;
+
   color:var(--muted);
-  margin-top:2px;
+
+  margin-top:1px;
 }
 
-/* ================= LIVE SPEED ================= */
+/* =========================================================
+   MINED CARD
+========================================================= */
+
+.mined-card{
+  margin-top:7px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e6f5ee,
+      #dcefe7
+    );
+
+  border:
+    1px solid
+    #cde5da;
+
+  border-radius:15px;
+
+  padding:9px 11px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  box-shadow:
+    0 6px 17px rgba(16,37,31,.055);
+}
+
+.mined-left{
+  display:flex;
+  flex-direction:column;
+}
+
+.mined-label{
+  font-size:7px;
+
+  text-transform:uppercase;
+
+  letter-spacing:.8px;
+
+  color:var(--green2);
+
+  font-weight:950;
+}
+
+.mined-value{
+  margin-top:3px;
+
+  font-size:20px;
+
+  line-height:1;
+
+  font-weight:1000;
+
+  color:var(--green3);
+
+  font-variant-numeric:
+    tabular-nums;
+}
+
+.mined-unit{
+  margin-top:2px;
+
+  font-size:7px;
+
+  color:var(--muted);
+
+  font-weight:800;
+}
+
+.mining-wave{
+  width:64px;
+  height:27px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:3px;
+}
+
+.mining-wave i{
+  display:block;
+
+  width:3px;
+
+  height:8px;
+
+  border-radius:5px;
+
+  background:var(--green);
+
+  animation:
+    wave .8s ease-in-out infinite;
+}
+
+.mining-wave i:nth-child(2){
+  animation-delay:.12s;
+}
+
+.mining-wave i:nth-child(3){
+  animation-delay:.24s;
+}
+
+.mining-wave i:nth-child(4){
+  animation-delay:.36s;
+}
+
+.mining-wave i:nth-child(5){
+  animation-delay:.48s;
+}
+
+@keyframes wave{
+
+  0%,100%{
+    height:7px;
+    opacity:.45;
+  }
+
+  50%{
+    height:22px;
+    opacity:1;
+  }
+
+}
+
+/* =========================================================
+   LIVE SPEED
+========================================================= */
 
 .speed-box{
-  margin-top:8px;
+  margin-top:7px;
+
   background:#fff;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:11px;
+
+  border:
+    1px solid
+    var(--line);
+
+  border-radius:15px;
+
+  padding:8px;
+
   text-align:center;
+
   box-shadow:var(--shadow);
+
   position:relative;
+
   overflow:hidden;
 }
 
 .speed-box:before{
   content:"";
+
   position:absolute;
+
   left:0;
   bottom:0;
+
   width:100%;
   height:2px;
-  background:linear-gradient(
-    90deg,
-    transparent,
-    var(--green),
-    transparent
-  );
-  animation:speedLine 1.6s linear infinite;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--green),
+      transparent
+    );
+
+  animation:
+    speedLine 1.5s linear infinite;
 }
 
 @keyframes speedLine{
-  from{transform:translateX(-100%)}
-  to{transform:translateX(100%)}
+
+  from{
+    transform:translateX(-100%);
+  }
+
+  to{
+    transform:translateX(100%);
+  }
+
 }
 
 .speed-label{
-  font-size:8px;
+  font-size:7px;
+
   text-transform:uppercase;
+
   letter-spacing:1px;
+
   color:var(--muted);
-  font-weight:900;
+
+  font-weight:950;
 }
 
 .speed-value{
   margin-top:3px;
-  font-size:27px;
+
+  font-size:24px;
+
   line-height:1;
+
   font-weight:1000;
+
   color:var(--green2);
-  font-variant-numeric:tabular-nums;
-  letter-spacing:-1px;
+
+  font-variant-numeric:
+    tabular-nums;
 }
 
 .speed-value.live{
-  animation:speedPulse .65s ease-in-out infinite alternate;
+  animation:
+    speedPulse .7s
+    ease-in-out infinite alternate;
 }
 
 @keyframes speedPulse{
+
   from{
     transform:scale(1);
-    text-shadow:0 0 0 rgba(22,163,106,0);
   }
+
   to{
-    transform:scale(1.025);
-    text-shadow:0 0 15px rgba(22,163,106,.22);
+    transform:scale(1.018);
   }
+
 }
 
 .speed-unit{
-  margin-top:3px;
-  font-size:8px;
+  margin-top:2px;
+
+  font-size:7px;
+
   color:var(--muted);
+
   font-weight:850;
 }
 
-/* ================= CLAIM ================= */
+/* =========================================================
+   CLAIM
+========================================================= */
 
 .claim{
   width:100%;
-  margin-top:8px;
-  padding:13px;
-  border-radius:15px;
-  background:var(--green);
+
+  margin-top:7px;
+
+  padding:11px;
+
+  border-radius:13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #19a66d,
+      #087c51
+    );
+
   color:#fff;
-  font-size:12px;
-  font-weight:950;
-  box-shadow:0 8px 20px rgba(22,163,106,.20);
+
+  font-size:11px;
+
+  font-weight:1000;
+
+  box-shadow:
+    0 7px 18px
+    rgba(12,130,83,.2);
 }
 
 .claim:disabled{
-  opacity:.45;
+  opacity:.42;
+
   cursor:not-allowed;
+
+  box-shadow:none;
 }
 
 .claim:not(:disabled):active{
-  transform:scale(.98);
+  transform:scale(.985);
 }
 
-/* ================= INFO ================= */
+/* =========================================================
+   INFO
+========================================================= */
 
 .info{
-  margin-top:8px;
-  background:var(--soft);
+  margin-top:6px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e4f4ed,
+      #dcefe7
+    );
+
   color:var(--green2);
-  border-radius:14px;
-  padding:9px 11px;
-  font-size:9px;
-  line-height:1.45;
-  font-weight:750;
+
+  border-radius:12px;
+
+  padding:7px 9px;
+
+  font-size:7.5px;
+
+  line-height:1.4;
+
+  font-weight:800;
 }
 
-/* ================= GENERIC ================= */
+/* =========================================================
+   GENERIC
+========================================================= */
 
 .section{
-  margin-top:15px;
+  margin-top:13px;
 }
 
 .sectionHead{
   display:flex;
+
   justify-content:space-between;
+
   align-items:center;
-  margin-bottom:9px;
+
+  margin-bottom:7px;
 }
 
 .section h2{
   margin:0;
-  font-size:15px;
+
+  font-size:14px;
 }
 
 .link{
   color:var(--green2);
-  font-size:10px;
-  font-weight:900;
+
+  font-size:9px;
+
+  font-weight:950;
+
   cursor:pointer;
 }
 
 .card{
   background:#fff;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:14px;
+
+  border:
+    1px solid
+    var(--line);
+
+  border-radius:16px;
+
+  padding:12px;
+
   box-shadow:var(--shadow);
 }
 
-/* ================= TASKS ================= */
+/* =========================================================
+   TASKS
+========================================================= */
 
 .grid2{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:7px;
 }
 
 .task{
   background:#fff;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:13px;
+
+  border:
+    1px solid
+    var(--line);
+
+  border-radius:16px;
+
+  padding:11px;
+
   box-shadow:var(--shadow);
 }
 
 .task-icon{
-  width:31px;
-  height:31px;
-  border-radius:10px;
+  width:29px;
+  height:29px;
+
+  border-radius:9px;
+
   display:grid;
   place-items:center;
+
   background:var(--soft);
+
   color:var(--green2);
-  font-weight:950;
+
+  font-size:9px;
+
+  font-weight:1000;
 }
 
 .task h3{
-  font-size:12px;
-  margin:9px 0 4px;
+  font-size:11px;
+
+  margin:8px 0 3px;
 }
 
 .task p{
   margin:0;
+
   color:var(--muted);
-  font-size:9px;
+
+  font-size:8px;
+
   line-height:1.4;
 }
 
 .reward{
   color:var(--green2);
-  font-weight:950;
-  font-size:10px;
-  margin-top:9px;
+
+  font-weight:1000;
+
+  font-size:9px;
+
+  margin-top:8px;
 }
 
 .task-btn{
   width:100%;
-  margin-top:9px;
-  padding:9px;
-  border-radius:10px;
-  background:#101714;
+
+  margin-top:7px;
+
+  padding:8px;
+
+  border-radius:9px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--dark2),
+      var(--dark)
+    );
+
   color:#fff;
-  font-size:9px;
-  font-weight:900;
+
+  font-size:8px;
+
+  font-weight:950;
 }
 
 .task-btn.disabled{
-  background:#e8ece9;
-  color:#8b948f;
+  background:#e6ebe8;
+
+  color:#87928c;
 }
 
-/* ================= MINERS ================= */
+/* =========================================================
+   MINERS
+========================================================= */
 
 .current-miner{
-  background:#101714;
+  background:
+    linear-gradient(
+      145deg,
+      #183b30,
+      #10251f
+    );
+
   color:#fff;
-  border-radius:17px;
-  padding:14px;
+
+  border-radius:16px;
+
+  padding:12px;
 }
 
 .current-label{
-  color:#aeb8b3;
-  font-size:8px;
+  color:#aebdb6;
+
+  font-size:7px;
+
   letter-spacing:1px;
-  font-weight:900;
+
+  font-weight:950;
 }
 
 .current-level{
-  font-size:22px;
-  font-weight:950;
-  margin-top:4px;
+  font-size:20px;
+
+  font-weight:1000;
+
+  margin-top:3px;
 }
 
 .current-speed{
   color:#72d8ae;
-  font-size:14px;
-  font-weight:900;
-  margin-top:3px;
+
+  font-size:13px;
+
+  font-weight:950;
+
+  margin-top:2px;
 }
 
 .holding-line{
   display:flex;
+
   justify-content:space-between;
-  margin-top:10px;
-  font-size:10px;
+
+  margin-top:8px;
+
+  font-size:9px;
 }
 
 .level-list{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-  margin-top:10px;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:6px;
+
+  margin-top:8px;
 }
 
 .level-card{
   background:#fff;
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:10px;
+
+  border:
+    1px solid
+    var(--line);
+
+  border-radius:12px;
+
+  padding:8px;
 }
 
 .level-card.active{
-  border-color:#9ad9bd;
-  box-shadow:0 0 0 2px var(--soft);
+  border-color:#88cdae;
+
+  box-shadow:
+    0 0 0 2px var(--soft);
 }
 
 .level-card.locked{
-  opacity:.58;
+  opacity:.55;
 }
 
 .level-name{
-  font-size:10px;
-  font-weight:950;
+  font-size:9px;
+
+  font-weight:1000;
 }
 
 .level-threshold{
-  margin-top:4px;
-  font-size:8px;
+  margin-top:3px;
+
+  font-size:7px;
+
   color:var(--muted);
 }
 
 .level-rate{
-  margin-top:6px;
+  margin-top:5px;
+
   color:var(--green2);
-  font-size:10px;
-  font-weight:950;
+
+  font-size:9px;
+
+  font-weight:1000;
 }
 
-/* ================= FRIENDS ================= */
+/* =========================================================
+   FRIENDS
+========================================================= */
 
 .ref-hero{
-  background:#101714;
+  background:
+    linear-gradient(
+      145deg,
+      #183b30,
+      #10251f
+    );
+
   color:#fff;
-  border-radius:19px;
-  padding:17px;
+
+  border-radius:17px;
+
+  padding:14px;
 }
 
 .ref-label{
-  color:#aeb8b3;
-  font-size:8px;
+  color:#aebdb6;
+
+  font-size:7px;
+
   letter-spacing:1px;
-  font-weight:900;
+
+  font-weight:950;
 }
 
 .ref-code{
-  font-size:24px;
-  font-weight:950;
-  letter-spacing:2px;
-  margin:9px 0;
+  font-size:22px;
+
+  font-weight:1000;
+
+  letter-spacing:1.5px;
+
+  margin:7px 0;
 }
 
 .copy-btn{
   background:#fff;
-  color:#101714;
-  padding:9px 12px;
-  border-radius:11px;
-  font-size:9px;
-  font-weight:950;
+
+  color:var(--dark);
+
+  padding:8px 11px;
+
+  border-radius:10px;
+
+  font-size:8px;
+
+  font-weight:1000;
 }
 
 .ref-stats{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:8px;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:7px;
+
+  margin-top:7px;
 }
 
 .ref-stat{
   background:#fff;
-  border:1px solid var(--line);
-  border-radius:15px;
-  padding:12px;
+
+  border:
+    1px solid
+    var(--line);
+
+  border-radius:14px;
+
+  padding:10px;
 }
 
 .ref-stat strong{
   display:block;
-  font-size:19px;
+
+  font-size:18px;
+
   margin-top:3px;
 }
 
-/* ================= PROFILE ================= */
+/* =========================================================
+   PROFILE
+========================================================= */
 
 .profile-row{
   display:flex;
+
   justify-content:space-between;
+
   align-items:center;
-  padding:11px 0;
-  border-bottom:1px solid var(--line);
+
+  padding:9px 0;
+
+  border-bottom:
+    1px solid
+    var(--line);
 }
 
 .profile-row:last-child{
@@ -790,48 +1409,70 @@ h1{
 
 .profile-label{
   color:var(--muted);
-  font-size:10px;
+
+  font-size:9px;
 }
 
 .profile-value{
-  font-size:11px;
-  font-weight:900;
-}
+  font-size:10px;
 
-.withdraw-box{
-  margin-top:13px;
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:14px;
-}
-
-.withdraw-title{
-  font-size:14px;
   font-weight:950;
 }
 
+.withdraw-box{
+  margin-top:10px;
+
+  background:#fff;
+
+  border:
+    1px solid
+    var(--line);
+
+  border-radius:16px;
+
+  padding:12px;
+}
+
+.withdraw-title{
+  font-size:13px;
+
+  font-weight:1000;
+}
+
 .withdraw-info{
-  margin-top:7px;
+  margin-top:5px;
+
   color:var(--muted);
-  font-size:9px;
-  line-height:1.55;
+
+  font-size:8px;
+
+  line-height:1.45;
 }
 
 .withdraw-form{
   display:flex;
-  gap:7px;
-  margin-top:11px;
+
+  gap:6px;
+
+  margin-top:9px;
 }
 
 .withdraw-input{
   min-width:0;
+
   flex:1;
-  padding:12px;
-  border:1px solid var(--line);
-  border-radius:12px;
+
+  padding:10px;
+
+  border:
+    1px solid
+    var(--line);
+
+  border-radius:10px;
+
   outline:none;
-  font-size:12px;
+
+  font-size:11px;
 }
 
 .withdraw-input:focus{
@@ -839,133 +1480,258 @@ h1{
 }
 
 .max-btn{
-  width:55px;
-  border-radius:12px;
-  background:#101714;
+  width:52px;
+
+  border-radius:10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--dark2),
+      var(--dark)
+    );
+
   color:#fff;
-  font-size:10px;
-  font-weight:950;
+
+  font-size:9px;
+
+  font-weight:1000;
 }
 
 .withdraw-btn{
   width:100%;
-  margin-top:8px;
-  padding:12px;
-  border-radius:12px;
+
+  margin-top:7px;
+
+  padding:10px;
+
+  border-radius:10px;
+
   background:var(--green);
+
   color:#fff;
-  font-size:10px;
-  font-weight:950;
+
+  font-size:9px;
+
+  font-weight:1000;
 }
 
 .history-title{
-  margin-top:15px;
-  font-size:13px;
-  font-weight:950;
+  margin-top:12px;
+
+  font-size:12px;
+
+  font-weight:1000;
 }
 
 .history-item{
   display:flex;
+
   justify-content:space-between;
+
   align-items:center;
-  padding:11px 0;
-  border-bottom:1px solid var(--line);
-  font-size:10px;
+
+  padding:9px 0;
+
+  border-bottom:
+    1px solid
+    var(--line);
+
+  font-size:9px;
 }
 
 .pending{
-  color:#a27e18;
-  font-weight:900;
+  color:#9b7819;
+
+  font-weight:950;
 }
 
-/* ================= BOTTOM NAV ================= */
+/* =========================================================
+   BOTTOM NAV
+========================================================= */
 
 .bottom{
   position:fixed;
+
   z-index:20;
+
   left:50%;
   bottom:0;
-  transform:translateX(-50%);
+
+  transform:
+    translateX(-50%);
+
   width:min(520px,100%);
-  padding:8px 10px calc(8px + env(safe-area-inset-bottom));
-  background:rgba(255,255,255,.95);
-  backdrop-filter:blur(18px);
-  border-top:1px solid var(--line);
+
+  padding:
+    6px
+    8px
+    calc(6px + env(safe-area-inset-bottom));
+
+  background:
+    rgba(255,255,255,.96);
+
+  backdrop-filter:
+    blur(18px);
+
+  border-top:
+    1px solid
+    var(--line);
+
   display:grid;
-  grid-template-columns:repeat(5,1fr);
+
+  grid-template-columns:
+    repeat(5,1fr);
 }
 
 .nav{
+  position:relative;
+
   background:none;
-  color:#89928d;
-  font-size:9px;
-  font-weight:850;
-  padding:5px 0;
+
+  color:#8a9690;
+
+  font-size:8px;
+
+  font-weight:900;
+
+  padding:4px 0;
+
   display:grid;
-  gap:3px;
+
+  gap:2px;
+
   justify-items:center;
 }
 
 .nav span{
-  font-size:17px;
+  font-size:16px;
+
+  line-height:1;
 }
 
 .nav.active{
   color:var(--green2);
 }
 
-/* ================= TOAST ================= */
+.nav.active:after{
+  content:"";
+
+  position:absolute;
+
+  left:27%;
+  right:27%;
+
+  bottom:-2px;
+
+  height:2px;
+
+  border-radius:5px;
+
+  background:var(--green);
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
 
 .toast{
   position:fixed;
+
   left:50%;
-  bottom:91px;
-  transform:translate(-50%,15px);
-  background:#101714;
+
+  bottom:78px;
+
+  transform:
+    translate(-50%,15px);
+
+  background:
+    linear-gradient(
+      135deg,
+      #183b30,
+      #10251f
+    );
+
   color:#fff;
-  padding:11px 15px;
-  border-radius:12px;
-  font-size:10px;
-  font-weight:800;
+
+  padding:10px 13px;
+
+  border-radius:11px;
+
+  font-size:9px;
+
+  font-weight:850;
+
   opacity:0;
+
   pointer-events:none;
+
   transition:.25s;
+
   z-index:100;
+
   white-space:nowrap;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.18);
 }
 
 .toast.show{
   opacity:1;
-  transform:translate(-50%,0);
+
+  transform:
+    translate(-50%,0);
 }
 
 .empty{
-  padding:18px;
+  padding:15px;
+
   text-align:center;
+
   color:var(--muted);
-  font-size:10px;
+
+  font-size:9px;
+
   background:#fff;
-  border:1px dashed #d7ddd9;
-  border-radius:15px;
+
+  border:
+    1px dashed
+    #d4ddd8;
+
+  border-radius:13px;
 }
 
-/* ================= SMALL SCREEN ================= */
+/* =========================================================
+   MOBILE COMPACT
+========================================================= */
 
 @media(max-width:380px){
 
   .app{
-    padding-left:12px;
-    padding-right:12px;
+    padding-left:10px;
+    padding-right:10px;
+  }
+
+  header{
+    height:54px;
+  }
+
+  .brand{
+    font-size:17px;
+  }
+
+  .logo{
+    width:32px;
+    height:32px;
   }
 
   .wallet-button{
-    min-width:108px;
-    padding:7px 8px;
+    min-width:105px;
   }
 
   .wallet-address,
   .telegram-name{
-    max-width:74px;
+    max-width:70px;
   }
 
   .level-pill{
@@ -973,23 +1739,114 @@ h1{
   }
 
   .crystal-box{
-    width:140px;
-    height:118px;
+    width:130px;
+    height:96px;
   }
 
   .crystal{
-    width:74px;
-    height:74px;
+    width:70px;
+    height:70px;
   }
 
   .crystal-text{
-    font-size:25px;
+    font-size:24px;
   }
 
   .total-value{
-    font-size:28px;
+    font-size:27px;
   }
+
+  .balance-value{
+    font-size:15px;
+  }
+
 }
+
+/* =========================================================
+   VERY SHORT MOBILE
+========================================================= */
+
+@media(max-height:700px){
+
+  .app{
+    padding-bottom:
+      calc(68px + env(safe-area-inset-bottom));
+  }
+
+  header{
+    height:51px;
+  }
+
+  .crystal-box{
+    height:82px;
+  }
+
+  .crystal{
+    width:62px;
+    height:62px;
+  }
+
+  .crystal-text{
+    font-size:21px;
+  }
+
+  .orbit.one{
+    width:120px;
+    height:38px;
+  }
+
+  .orbit.two{
+    width:108px;
+    height:34px;
+  }
+
+  .orbit.three{
+    width:130px;
+    height:46px;
+  }
+
+  .total-card{
+    padding:9px 12px;
+  }
+
+  .balance-card{
+    padding:8px;
+  }
+
+  .mined-card{
+    padding:8px 10px;
+  }
+
+  .speed-box{
+    padding:7px;
+  }
+
+  .claim{
+    padding:9px;
+  }
+
+  .info{
+    padding:6px 8px;
+  }
+
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *:before,
+  *:after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+  }
+
+}
+
 </style>
 </head>
 
@@ -1000,39 +1857,67 @@ h1{
 <header>
 
   <div class="brand">
-    <div class="logo">L</div>
-    LUNA<span style="color:var(--green2)">RO</span>
+
+    <div class="logo">
+      L
+    </div>
+
+    LUNA
+    <span style="color:var(--green2)">
+      RO
+    </span>
+
   </div>
+
 
   <div class="header-right">
 
     <div class="wallet-wrap">
 
-      <button class="wallet-button" onclick="walletButtonClick()">
+      <button
+        class="wallet-button"
+        onclick="walletButtonClick()"
+      >
 
-        <span id="walletDot" class="wallet-dot"></span>
+        <span
+          id="walletDot"
+          class="wallet-dot"
+        ></span>
 
         <span class="wallet-info">
 
-          <span id="walletAddress" class="wallet-address">
+          <span
+            id="walletAddress"
+            class="wallet-address"
+          >
             Connect Wallet
           </span>
 
-          <span id="telegramName" class="telegram-name">
-            @telegram
+          <span
+            id="telegramName"
+            class="telegram-name"
+          >
+            Telegram
           </span>
 
         </span>
 
       </button>
 
-      <div id="walletMenu" class="wallet-menu">
+
+      <div
+        id="walletMenu"
+        class="wallet-menu"
+      >
 
         <button onclick="openWallet()">
           Change Wallet
         </button>
 
-        <button class="disconnect" onclick="disconnectWallet()">
+        <button
+          class="disconnect"
+          onclick="disconnectWallet()"
+        >
           Disconnect
         </button>
 
@@ -1040,13 +1925,20 @@ h1{
 
     </div>
 
+
     <button
       class="level-pill"
       onclick="openMiners()"
-      title="Open Miners"
     >
-      <span class="level-icon">◆</span>
-      <span id="levelText">LV 1</span>
+
+      <span class="level-icon">
+        ◆
+      </span>
+
+      <span id="levelText">
+        LV 1
+      </span>
+
     </button>
 
   </div>
@@ -1056,9 +1948,14 @@ h1{
 
 <main>
 
-<!-- ================= HOME ================= -->
+<!-- =======================================================
+     HOME
+======================================================= -->
 
-<section id="home" class="page active">
+<section
+  id="home"
+  class="page active"
+>
 
   <div class="hero">
 
@@ -1069,12 +1966,20 @@ h1{
       <div class="orbit three"></div>
 
       <div class="crystal">
-        <span class="crystal-text">LNR</span>
+
+        <span class="crystal-text">
+          LNR
+        </span>
+
       </div>
 
     </div>
 
-    <div id="miningStatus" class="mining-status">
+
+    <div
+      id="miningStatus"
+      class="mining-status"
+    >
       Connect wallet to start mining
     </div>
 
@@ -1087,7 +1992,10 @@ h1{
       TOTAL BALANCE
     </div>
 
-    <div id="totalBalance" class="total-value">
+    <div
+      id="totalBalance"
+      class="total-value"
+    >
       0.0000
     </div>
 
@@ -1106,7 +2014,10 @@ h1{
         Pool Wallet
       </div>
 
-      <div id="poolBalance" class="balance-value">
+      <div
+        id="poolBalance"
+        class="balance-value"
+      >
         0.0000
       </div>
 
@@ -1123,13 +2034,51 @@ h1{
         Holding Wallet
       </div>
 
-      <div id="holdingBalance" class="balance-value">
+      <div
+        id="holdingBalance"
+        class="balance-value"
+      >
         0.0000
       </div>
 
       <span class="balance-unit">
         LNR
       </span>
+
+    </div>
+
+  </div>
+
+
+  <div class="mined-card">
+
+    <div class="mined-left">
+
+      <div class="mined-label">
+        Mined — Not Claimed
+      </div>
+
+      <div
+        id="minedBalance"
+        class="mined-value"
+      >
+        0.0000
+      </div>
+
+      <div class="mined-unit">
+        LNR waiting for Claim
+      </div>
+
+    </div>
+
+
+    <div class="mining-wave">
+
+      <i></i>
+      <i></i>
+      <i></i>
+      <i></i>
+      <i></i>
 
     </div>
 
@@ -1167,8 +2116,10 @@ h1{
 
 
   <div class="info">
+
     Mining is automatic while your wallet is connected.
-    Mined LNR stays separate until you press Claim.
+    Mined LNR stays separate until Claim.
+
   </div>
 
 
@@ -1189,20 +2140,25 @@ h1{
 
     </div>
 
+
     <div class="card">
 
-      <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-      ">
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+        "
+      >
 
         <div>
 
-          <div style="
-            font-size:17px;
-            font-weight:950;
-          ">
+          <div
+            style="
+              font-size:16px;
+              font-weight:1000;
+            "
+          >
             LEVEL
             <span id="journeyLevel">
               1
@@ -1213,8 +2169,8 @@ h1{
             id="journeyThreshold"
             style="
               color:var(--muted);
-              font-size:9px;
-              margin-top:4px;
+              font-size:8px;
+              margin-top:3px;
             "
           >
             0 LNR total
@@ -1222,12 +2178,13 @@ h1{
 
         </div>
 
+
         <div
           id="journeyRate"
           style="
             color:var(--green2);
-            font-size:12px;
-            font-weight:950;
+            font-size:11px;
+            font-weight:1000;
           "
         >
           0.7000 LNR/H
@@ -1235,13 +2192,16 @@ h1{
 
       </div>
 
-      <div style="
-        height:6px;
-        background:#e8ece9;
-        border-radius:10px;
-        overflow:hidden;
-        margin-top:11px;
-      ">
+
+      <div
+        style="
+          height:5px;
+          background:#e5ebe8;
+          border-radius:10px;
+          overflow:hidden;
+          margin-top:9px;
+        "
+      >
 
         <div
           id="levelBar"
@@ -1263,9 +2223,14 @@ h1{
 </section>
 
 
-<!-- ================= TASKS ================= -->
+<!-- =======================================================
+     TASKS
+======================================================= -->
 
-<section id="tasks" class="page">
+<section
+  id="tasks"
+  class="page"
+>
 
   <div class="eyebrow">
     EARN LNR
@@ -1282,7 +2247,6 @@ h1{
 
   <div class="section grid2">
 
-
     <div class="task">
 
       <div class="task-icon">
@@ -1290,11 +2254,11 @@ h1{
       </div>
 
       <h3>
-        Open Telegram Channel
+        Telegram Channel
       </h3>
 
       <p>
-        Telegram channel task will be enabled later.
+        This task will be enabled later.
       </p>
 
       <div class="reward">
@@ -1318,11 +2282,11 @@ h1{
       </div>
 
       <h3>
-        Open YouTube
+        YouTube
       </h3>
 
       <p>
-        YouTube task will be enabled later.
+        This task will be enabled later.
       </p>
 
       <div class="reward">
@@ -1362,20 +2326,24 @@ h1{
         class="task-btn"
         onclick="completeDailyLogin()"
       >
-        Claim
+        Claim +3
       </button>
 
     </div>
-
 
   </div>
 
 </section>
 
 
-<!-- ================= MINERS ================= -->
+<!-- =======================================================
+     MINERS
+======================================================= -->
 
-<section id="miners" class="page">
+<section
+  id="miners"
+  class="page"
+>
 
   <div class="eyebrow">
     MINING SYSTEM
@@ -1386,7 +2354,7 @@ h1{
   </h1>
 
   <div class="sub">
-    Your level and mining speed are calculated from your total balance.
+    100 levels with gradual mining speed increases.
   </div>
 
 
@@ -1439,7 +2407,6 @@ h1{
       </h2>
 
       <span
-        id="minerCount"
         class="link"
       >
         100 Levels
@@ -1451,17 +2418,21 @@ h1{
     <div
       id="levelList"
       class="level-list"
-    >
-    </div>
+    ></div>
 
   </div>
 
 </section>
 
 
-<!-- ================= FRIENDS ================= -->
+<!-- =======================================================
+     FRIENDS
+======================================================= -->
 
-<section id="friends" class="page">
+<section
+  id="friends"
+  class="page"
+>
 
   <div class="eyebrow">
     COMMUNITY
@@ -1535,9 +2506,14 @@ h1{
 </section>
 
 
-<!-- ================= PROFILE ================= -->
+<!-- =======================================================
+     PROFILE
+======================================================= -->
 
-<section id="profile" class="page">
+<section
+  id="profile"
+  class="page"
+>
 
   <div class="eyebrow">
     ACCOUNT
@@ -1642,8 +2618,7 @@ h1{
       </div>
 
       <div class="withdraw-info">
-        Enter the amount you want to withdraw
-        from your Pool Wallet.
+        Enter the amount you want to withdraw from your Pool Wallet.
       </div>
 
 
@@ -1657,6 +2632,7 @@ h1{
           step="0.0001"
           placeholder="Amount LNR"
         >
+
 
         <button
           class="max-btn"
@@ -1684,11 +2660,11 @@ h1{
     Withdrawal History
   </div>
 
+
   <div
     id="history"
     class="section"
-  >
-  </div>
+  ></div>
 
 </section>
 
@@ -1697,7 +2673,9 @@ h1{
 </div>
 
 
-<!-- ================= NAV ================= -->
+<!-- =======================================================
+     BOTTOM NAV
+======================================================= -->
 
 <nav class="bottom">
 
@@ -1762,47 +2740,110 @@ h1{
 <script>
 
 /* =========================================================
-   LUNARO LOCAL DEMO STATE
+   CONFIG
 ========================================================= */
 
-const STORAGE_KEY = "lunaro_v4_state";
+const STORAGE_KEY =
+  "lunaro_v6_state";
 
+
+/*
+  This is your Cloudflare Worker.
+*/
+
+const API_URL =
+  "https://lunaro-api.alikoms15.workers.dev";
+
+
+/*
+  IMPORTANT:
+  Put tonconnect-manifest.json in the SAME
+  GitHub Pages folder as index.html.
+
+  Example:
+  https://alikoms15-lab.github.io/alikoms15.github.io/tonconnect-manifest.json
+*/
+
+const MANIFEST_URL =
+  "https://alikoms15-lab.github.io/alikoms15.github.io/tonconnect-manifest.json";
+
+
+/* =========================================================
+   DEFAULT STATE
+========================================================= */
 
 const defaultState = {
 
-  pool: 0,
+  pool:0,
 
-  holding: 0,
+  holding:0,
 
-  mined: 0,
+  mined:0,
 
-  lastMiningTime: Date.now(),
+  lastMiningTime:Date.now(),
 
-  telegramName: "",
+  telegramName:"",
 
-  telegramId: "",
+  telegramId:"",
 
-  level: 1,
+  level:1,
 
-  rate: 0.7000,
+  rate:.7000,
 
-  referralCode: "LNR000000",
+  referralCode:"LNR000000",
 
-  friends: 0,
+  friends:0,
 
-  refRewards: 0,
+  refRewards:0,
 
-  history: [],
+  history:[],
 
-  dailyClaimDate: ""
+  dailyClaimDate:""
 
 };
 
 
-let state =
-  JSON.parse(
-    localStorage.getItem(STORAGE_KEY) || "null"
-  ) || defaultState;
+/* =========================================================
+   LOAD STATE
+========================================================= */
+
+let state;
+
+try{
+
+  state =
+    JSON.parse(
+      localStorage.getItem(STORAGE_KEY)
+    ) || {...defaultState};
+
+}catch{
+
+  state =
+    {...defaultState};
+
+}
+
+
+state.pool =
+  Number(state.pool || 0);
+
+state.holding =
+  Number(state.holding || 0);
+
+state.mined =
+  Number(state.mined || 0);
+
+state.lastMiningTime =
+  Number(
+    state.lastMiningTime ||
+    Date.now()
+  );
+
+state.level =
+  Number(state.level || 1);
+
+state.rate =
+  Number(state.rate || .7000);
 
 
 /* =========================================================
@@ -1810,38 +2851,60 @@ let state =
 ========================================================= */
 
 function $(id){
+
   return document.getElementById(id);
+
 }
 
 
 function saveState(){
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(state)
-  );
+  try{
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(state)
+    );
+
+  }catch(e){
+
+    console.warn(
+      "Could not save local state",
+      e
+    );
+
+  }
 
 }
 
 
-function fmt(n, decimals=4){
+function fmt(
+  n,
+  decimals=4
+){
 
-  return Number(n || 0).toLocaleString(
-    "en-US",
-    {
-      minimumFractionDigits:decimals,
-      maximumFractionDigits:decimals
-    }
-  );
+  return Number(n || 0)
+    .toLocaleString(
+      "en-US",
+      {
+        minimumFractionDigits:
+          decimals,
+
+        maximumFractionDigits:
+          decimals
+      }
+    );
 
 }
 
 
 function shortWallet(address){
 
-  if(!address) return "Connect Wallet";
+  if(!address)
+    return "Connect Wallet";
 
-  if(address.length < 12) return address;
+  if(address.length < 12)
+    return address;
 
   return (
     address.slice(0,5) +
@@ -1856,27 +2919,17 @@ function shortWallet(address){
    100 LEVEL SYSTEM
 ========================================================= */
 
-/*
-   Total balance = Pool + Holding
-
-   100 levels.
-   Each level increases the mining rate gradually.
-*/
-
 function levelThreshold(level){
 
-  if(level <= 1) return 0;
-
-  /*
-    Smooth progression:
-    Level 2 = 100 LNR
-    Level 3 = 250 LNR
-    ...
-  */
+  if(level <= 1)
+    return 0;
 
   return Math.round(
     100 *
-    Math.pow(level - 1, 1.35)
+    Math.pow(
+      level - 1,
+      1.35
+    )
   );
 
 }
@@ -1884,13 +2937,10 @@ function levelThreshold(level){
 
 function levelRate(level){
 
-  /*
-    Starts at 0.7000
-    Slowly increases through 100 levels.
-  */
-
-  return 0.7000 +
-    ((level - 1) * 0.0500);
+  return (
+    .7000 +
+    ((level - 1) * .0500)
+  );
 
 }
 
@@ -1899,17 +2949,31 @@ function calculateLevel(total){
 
   let lvl = 1;
 
-  for(let i=1;i<=100;i++){
+  for(
+    let i=1;
+    i<=100;
+    i++
+  ){
 
-    if(total >= levelThreshold(i)){
+    if(
+      total >=
+      levelThreshold(i)
+    ){
+
       lvl = i;
+
     }else{
+
       break;
+
     }
 
   }
 
-  return Math.min(100,lvl);
+  return Math.min(
+    100,
+    lvl
+  );
 
 }
 
@@ -1930,324 +2994,6 @@ function updateLevel(){
 
 
 /* =========================================================
-   MINING
-========================================================= */
-
-function accrueMining(){
-
-  if(state.rate <= 0){
-
-    state.lastMiningTime = Date.now();
-
-    return;
-
-  }
-
-
-  const now = Date.now();
-
-  const seconds =
-    (now - state.lastMiningTime) / 1000;
-
-
-  if(seconds <= 0) return;
-
-
-  /*
-    Mining continues automatically.
-
-    IMPORTANT:
-    mined is NOT pool.
-    It becomes pool only after Claim.
-  */
-
-  state.mined +=
-    (seconds / 3600) *
-    state.rate;
-
-
-  state.lastMiningTime = now;
-
-
-  saveState();
-
-}
-
-
-/* =========================================================
-   LIVE SPEED DISPLAY
-========================================================= */
-
-function updateLiveSpeed(){
-
-  const speed =
-    Number(state.rate || 0.7);
-
-
-  /*
-    The real rate remains state.rate.
-
-    The final digits animate visually so the
-    mining meter feels alive.
-  */
-
-  const micro =
-    (Date.now() % 1000) / 10000000;
-
-
-  const live =
-    speed + micro;
-
-
-  $("speedValue").textContent =
-    live.toFixed(4);
-
-
-  $("speedValue").classList.add("live");
-
-}
-
-
-/* =========================================================
-   TELEGRAM USER
-========================================================= */
-
-function initTelegram(){
-
-  const tg =
-    window.Telegram?.WebApp;
-
-
-  if(!tg) return;
-
-
-  tg.ready();
-  tg.expand();
-
-
-  const user =
-    tg.initDataUnsafe?.user;
-
-
-  if(!user) return;
-
-
-  state.telegramId =
-    String(user.id || "");
-
-
-  state.telegramName =
-    user.username
-      ? "@" + user.username
-      : (user.first_name || "Telegram User");
-
-
-  saveState();
-
-}
-
-
-/* =========================================================
-   WALLET UI
-========================================================= */
-
-let connectedWallet = null;
-
-
-function walletButtonClick(){
-
-  const menu =
-    $("walletMenu");
-
-
-  menu.classList.toggle("show");
-
-}
-
-
-function openWallet(){
-
-  $("walletMenu")
-    .classList.remove("show");
-
-
-  /*
-    TON Connect integration remains here.
-    When connectedWallet exists, it will be replaced
-    with the real TON address.
-  */
-
-  if(window.tonConnectUI){
-
-    window.tonConnectUI.openModal();
-
-    return;
-
-  }
-
-
-  /*
-    Temporary demo connection.
-  */
-
-  const demo =
-    "UQCN...iD7";
-
-
-  setConnectedWallet(demo);
-
-}
-
-
-function disconnectWallet(){
-
-  $("walletMenu")
-    .classList.remove("show");
-
-
-  if(
-    window.tonConnectUI &&
-    typeof window.tonConnectUI.disconnect === "function"
-  ){
-
-    window.tonConnectUI.disconnect();
-
-  }
-
-
-  connectedWallet = null;
-
-
-  $("walletAddress").textContent =
-    "Connect Wallet";
-
-
-  $("walletDot").classList.remove(
-    "connected"
-  );
-
-
-  $("miningStatus").textContent =
-    "Connect wallet to start mining";
-
-
-  $("miningStatus").classList.remove(
-    "active"
-  );
-
-
-  $("claimBtn").disabled = true;
-
-
-  /*
-    We DO NOT delete pool/mined data.
-    User data stays.
-  */
-
-  state.lastMiningTime = Date.now();
-
-  saveState();
-
-  toast("Wallet disconnected.");
-
-}
-
-
-function setConnectedWallet(address){
-
-  connectedWallet = address;
-
-
-  $("walletAddress").textContent =
-    shortWallet(address);
-
-
-  $("walletDot").classList.add(
-    "connected"
-  );
-
-
-  $("miningStatus").textContent =
-    "Mining active";
-
-
-  $("miningStatus").classList.add(
-    "active"
-  );
-
-
-  $("claimBtn").disabled = false;
-
-
-  state.lastMiningTime = Date.now();
-
-
-  saveState();
-
-}
-
-
-/* =========================================================
-   CLAIM
-========================================================= */
-
-function claimMining(){
-
-  if(!connectedWallet){
-
-    toast("Connect your wallet first.");
-
-    return;
-
-  }
-
-
-  accrueMining();
-
-
-  if(state.mined <= 0){
-
-    toast("Nothing to claim yet.");
-
-    return;
-
-  }
-
-
-  const amount =
-    Number(state.mined);
-
-
-  /*
-    Mined -> Pool Wallet
-  */
-
-  state.pool += amount;
-
-  state.mined = 0;
-
-
-  updateLevel();
-
-
-  state.lastMiningTime = Date.now();
-
-
-  saveState();
-
-
-  render();
-
-
-  toast(
-    fmt(amount) +
-    " LNR added to Pool Wallet."
-  );
-
-}
-
-
-/* =========================================================
    TOTAL BALANCE
 ========================================================= */
 
@@ -2262,105 +3008,830 @@ function totalBalance(){
 
 
 /* =========================================================
+   MINING ENGINE
+========================================================= */
+
+function accrueMining(){
+
+  /*
+    No wallet:
+    no mining.
+  */
+
+  if(!connectedWallet){
+
+    state.lastMiningTime =
+      Date.now();
+
+    return 0;
+
+  }
+
+
+  const now =
+    Date.now();
+
+
+  if(
+    !state.lastMiningTime ||
+    state.lastMiningTime > now
+  ){
+
+    state.lastMiningTime =
+      now;
+
+    return 0;
+
+  }
+
+
+  const seconds =
+    (now -
+     state.lastMiningTime) /
+    1000;
+
+
+  if(seconds <= 0)
+    return 0;
+
+
+  /*
+    rate is LNR per hour.
+  */
+
+  const earned =
+    (
+      seconds / 3600
+    ) *
+    Number(
+      state.rate || .7000
+    );
+
+
+  if(
+    Number.isFinite(earned) &&
+    earned > 0
+  ){
+
+    state.mined += earned;
+
+  }
+
+
+  state.lastMiningTime =
+    now;
+
+
+  saveState();
+
+  return earned;
+
+}
+
+
+/* =========================================================
+   LIVE SPEED
+========================================================= */
+
+function updateLiveSpeed(){
+
+  const base =
+    Number(
+      state.rate || .7000
+    );
+
+
+  /*
+    Tiny visual movement only.
+    It does NOT change real mining rate.
+  */
+
+  const micro =
+    (
+      Date.now() % 1000
+    ) / 10000000;
+
+
+  $("speedValue")
+    .textContent =
+      (
+        base + micro
+      ).toFixed(4);
+
+}
+
+
+/* =========================================================
+   TELEGRAM
+========================================================= */
+
+function initTelegram(){
+
+  const tg =
+    window.Telegram?.WebApp;
+
+
+  if(!tg){
+
+    return;
+
+  }
+
+
+  try{
+
+    tg.ready();
+
+    tg.expand();
+
+  }catch(e){
+
+    console.warn(
+      "Telegram init error",
+      e
+    );
+
+  }
+
+
+  const user =
+    tg.initDataUnsafe?.user;
+
+
+  if(!user)
+    return;
+
+
+  state.telegramId =
+    String(
+      user.id || ""
+    );
+
+
+  state.telegramName =
+    user.username
+      ? "@" + user.username
+      : (
+          user.first_name ||
+          "Telegram User"
+        );
+
+
+  saveState();
+
+
+  if(
+    $("telegramName")
+  ){
+
+    $("telegramName")
+      .textContent =
+        state.telegramName;
+
+  }
+
+}
+
+
+/* =========================================================
+   TON CONNECT
+========================================================= */
+
+let tonConnectUI = null;
+
+let connectedWallet = null;
+
+
+/*
+  Initialize TON Connect.
+*/
+
+async function initTonConnect(){
+
+  if(
+    !window.TON_CONNECT_UI
+  ){
+
+    console.warn(
+      "TON Connect UI library not loaded."
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    tonConnectUI =
+      new TON_CONNECT_UI.TonConnectUI({
+
+        manifestUrl:
+          MANIFEST_URL,
+
+        restoreConnection:
+          true
+
+      });
+
+
+    window.tonConnectUI =
+      tonConnectUI;
+
+
+    /*
+      If connection already exists,
+      restore it.
+    */
+
+    tonConnectUI.onStatusChange(
+      wallet => {
+
+        if(wallet){
+
+          const address =
+            wallet.account?.address ||
+            "";
+
+
+          if(address){
+
+            setConnectedWallet(
+              address,
+              false
+            );
+
+          }
+
+        }else{
+
+          connectedWallet =
+            null;
+
+          updateWalletUI();
+
+        }
+
+      }
+    );
+
+
+    /*
+      Wait for automatic restoration.
+    */
+
+    if(
+      tonConnectUI.connectionRestored
+    ){
+
+      await
+        tonConnectUI
+          .connectionRestored;
+
+    }
+
+
+    if(
+      tonConnectUI.wallet
+    ){
+
+      const address =
+        tonConnectUI
+          .wallet
+          ?.account
+          ?.address;
+
+
+      if(address){
+
+        setConnectedWallet(
+          address,
+          false
+        );
+
+      }
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "TON Connect initialization failed:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   WALLET BUTTON
+========================================================= */
+
+function walletButtonClick(){
+
+  $("walletMenu")
+    .classList.toggle(
+      "show"
+    );
+
+}
+
+
+/* =========================================================
+   OPEN WALLET
+========================================================= */
+
+async function openWallet(){
+
+  $("walletMenu")
+    .classList.remove(
+      "show"
+    );
+
+
+  /*
+    Real TON Connect.
+  */
+
+  if(
+    tonConnectUI &&
+    typeof tonConnectUI.openModal ===
+      "function"
+  ){
+
+    try{
+
+      await
+        tonConnectUI.openModal();
+
+    }catch(error){
+
+      console.error(
+        error
+      );
+
+      toast(
+        "Wallet connection failed."
+      );
+
+    }
+
+    return;
+
+  }
+
+
+  /*
+    TON Connect isn't ready.
+  */
+
+  toast(
+    "Wallet connection is loading..."
+  );
+
+}
+
+
+/* =========================================================
+   SET CONNECTED WALLET
+========================================================= */
+
+function setConnectedWallet(
+  address,
+  resetMiningTime=true
+){
+
+  if(!address)
+    return;
+
+
+  connectedWallet =
+    address;
+
+
+  $("walletAddress")
+    .textContent =
+      shortWallet(address);
+
+
+  $("walletDot")
+    .classList.add(
+      "connected"
+    );
+
+
+  $("miningStatus")
+    .textContent =
+      "Mining active";
+
+
+  $("miningStatus")
+    .classList.add(
+      "active"
+    );
+
+
+  $("claimBtn")
+    .disabled =
+      state.mined <= 0;
+
+
+  if(resetMiningTime){
+
+    /*
+      Start counting from connection time.
+    */
+
+    state.lastMiningTime =
+      Date.now();
+
+  }
+
+
+  saveState();
+
+  updateWalletUI();
+
+}
+
+
+/* =========================================================
+   WALLET UI
+========================================================= */
+
+function updateWalletUI(){
+
+  if(connectedWallet){
+
+    $("walletAddress")
+      .textContent =
+        shortWallet(
+          connectedWallet
+        );
+
+    $("walletDot")
+      .classList.add(
+        "connected"
+      );
+
+    $("miningStatus")
+      .textContent =
+        "Mining active";
+
+    $("miningStatus")
+      .classList.add(
+        "active"
+      );
+
+  }else{
+
+    $("walletAddress")
+      .textContent =
+        "Connect Wallet";
+
+    $("walletDot")
+      .classList.remove(
+        "connected"
+      );
+
+    $("miningStatus")
+      .textContent =
+        "Connect wallet to start mining";
+
+    $("miningStatus")
+      .classList.remove(
+        "active"
+      );
+
+    $("claimBtn")
+      .disabled = true;
+
+  }
+
+}
+
+
+/* =========================================================
+   DISCONNECT
+========================================================= */
+
+async function disconnectWallet(){
+
+  $("walletMenu")
+    .classList.remove(
+      "show"
+    );
+
+
+  /*
+    First accrue everything earned
+    up to the disconnect moment.
+  */
+
+  if(connectedWallet){
+
+    accrueMining();
+
+  }
+
+
+  if(
+    tonConnectUI &&
+    typeof tonConnectUI.disconnect ===
+      "function"
+  ){
+
+    try{
+
+      await
+        tonConnectUI.disconnect();
+
+    }catch(error){
+
+      console.warn(
+        "Disconnect error",
+        error
+      );
+
+    }
+
+  }
+
+
+  connectedWallet =
+    null;
+
+
+  state.lastMiningTime =
+    Date.now();
+
+
+  saveState();
+
+  updateWalletUI();
+
+  render();
+
+  toast(
+    "Wallet disconnected."
+  );
+
+}
+
+
+/* =========================================================
+   CLAIM
+========================================================= */
+
+async function claimMining(){
+
+  if(!connectedWallet){
+
+    toast(
+      "Connect your wallet first."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Calculate latest mining amount.
+  */
+
+  accrueMining();
+
+
+  const amount =
+    Number(
+      state.mined || 0
+    );
+
+
+  if(
+    !Number.isFinite(amount) ||
+    amount <= 0
+  ){
+
+    toast(
+      "Nothing to claim yet."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Disable button during operation.
+  */
+
+  $("claimBtn")
+    .disabled = true;
+
+
+  /*
+    Move mined -> pool.
+
+    This is local/prototype accounting.
+    The secure server version will later
+    perform this operation after validating
+    Telegram initData.
+  */
+
+  state.pool += amount;
+
+  state.mined = 0;
+
+
+  updateLevel();
+
+
+  state.lastMiningTime =
+    Date.now();
+
+
+  saveState();
+
+
+  render();
+
+
+  toast(
+    fmt(amount) +
+    " LNR claimed."
+  );
+
+}
+
+
+/* =========================================================
    RENDER
 ========================================================= */
 
 function render(){
 
-  accrueMining();
+  /*
+    Always calculate the latest mined amount
+    before drawing the UI.
+  */
+
+  if(connectedWallet){
+
+    accrueMining();
+
+  }
+
 
   updateLevel();
 
 
-  /* balances */
+  /* Pool */
 
-  $("poolBalance").textContent =
-    fmt(state.pool);
-
-
-  $("holdingBalance").textContent =
-    fmt(state.holding);
+  $("poolBalance")
+    .textContent =
+      fmt(state.pool);
 
 
-  $("totalBalance").textContent =
-    fmt(totalBalance());
+  /* Holding */
+
+  $("holdingBalance")
+    .textContent =
+      fmt(state.holding);
 
 
-  $("minerTotal").textContent =
-    fmt(totalBalance()) +
-    " LNR";
+  /* Mined */
+
+  $("minedBalance")
+    .textContent =
+      fmt(state.mined);
 
 
-  $("minerLevel").textContent =
-    "Level " + state.level;
+  /* Total */
+
+  $("totalBalance")
+    .textContent =
+      fmt(
+        totalBalance()
+      );
 
 
-  $("minerSpeed").textContent =
-    state.rate.toFixed(4) +
-    " LNR / H";
+  /* Miner */
+
+  $("minerTotal")
+    .textContent =
+      fmt(
+        totalBalance()
+      ) +
+      " LNR";
 
 
-  $("journeyLevel").textContent =
-    state.level;
+  $("minerLevel")
+    .textContent =
+      "Level " +
+      state.level;
 
 
-  $("journeyRate").textContent =
-    state.rate.toFixed(4) +
-    " LNR/H";
+  $("minerSpeed")
+    .textContent =
+      state.rate.toFixed(4) +
+      " LNR / H";
 
 
-  $("journeyThreshold").textContent =
-    fmt(levelThreshold(state.level),0) +
-    " LNR total";
+  /* Journey */
+
+  $("journeyLevel")
+    .textContent =
+      state.level;
 
 
-  $("levelText").textContent =
-    "LV " + state.level;
+  $("journeyRate")
+    .textContent =
+      state.rate.toFixed(4) +
+      " LNR/H";
 
 
-  $("profilePool").textContent =
-    fmt(state.pool) +
-    " LNR";
+  $("journeyThreshold")
+    .textContent =
+      fmt(
+        levelThreshold(
+          state.level
+        ),
+        0
+      ) +
+      " LNR total";
 
 
-  $("profileHolding").textContent =
-    fmt(state.holding) +
-    " LNR";
+  $("levelText")
+    .textContent =
+      "LV " +
+      state.level;
 
 
-  $("profileTotal").textContent =
-    fmt(totalBalance()) +
-    " LNR";
+  /* Profile */
+
+  $("profilePool")
+    .textContent =
+      fmt(state.pool) +
+      " LNR";
 
 
-  $("profileTelegram").textContent =
-    state.telegramName || "-";
+  $("profileHolding")
+    .textContent =
+      fmt(state.holding) +
+      " LNR";
 
 
-  $("refCode").textContent =
-    state.referralCode;
+  $("profileTotal")
+    .textContent =
+      fmt(
+        totalBalance()
+      ) +
+      " LNR";
 
 
-  $("friendsCount").textContent =
-    state.friends;
+  $("profileTelegram")
+    .textContent =
+      state.telegramName ||
+      "-";
 
 
-  $("refRewards").textContent =
-    fmt(state.refRewards);
+  /* Referral */
+
+  $("refCode")
+    .textContent =
+      state.referralCode;
 
 
-  /*
-    Level progress toward next level.
-  */
+  $("friendsCount")
+    .textContent =
+      state.friends;
+
+
+  $("refRewards")
+    .textContent =
+      fmt(
+        state.refRewards
+      );
+
+
+  /* Level bar */
 
   const current =
-    levelThreshold(state.level);
+    levelThreshold(
+      state.level
+    );
 
 
   const next =
     state.level >= 100
-      ? current + 1
-      : levelThreshold(state.level + 1);
+      ? current
+      : levelThreshold(
+          state.level + 1
+        );
 
 
   const total =
@@ -2370,11 +3841,22 @@ function render(){
   let progress = 0;
 
 
-  if(state.level < 100){
+  if(
+    state.level < 100
+  ){
+
+    const range =
+      Math.max(
+        1,
+        next - current
+      );
+
 
     progress =
-      ((total - current) /
-      Math.max(1,next-current)) * 100;
+      (
+        (total - current) /
+        range
+      ) * 100;
 
   }else{
 
@@ -2383,24 +3865,28 @@ function render(){
   }
 
 
-  $("levelBar").style.width =
-    Math.max(
-      0,
-      Math.min(100,progress)
-    ) + "%";
+  $("levelBar")
+    .style.width =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          progress
+        )
+      ) + "%";
 
 
-  $("claimBtn").disabled =
-    !connectedWallet ||
-    state.mined <= 0;
+  /*
+    Claim button.
+  */
 
-
-  $("profileTelegram").textContent =
-    state.telegramName || "-";
+  $("claimBtn")
+    .disabled =
+      !connectedWallet ||
+      state.mined <= 0;
 
 
   renderHistory();
-
 
   renderDailyTask();
 
@@ -2411,7 +3897,7 @@ function render(){
 
 
 /* =========================================================
-   MINERS — 100 LEVELS
+   MINERS
 ========================================================= */
 
 function renderMiners(){
@@ -2420,14 +3906,18 @@ function renderMiners(){
     $("levelList");
 
 
+  if(!list)
+    return;
+
+
   list.innerHTML = "";
 
 
-  const total =
-    totalBalance();
-
-
-  for(let i=1;i<=100;i++){
+  for(
+    let i=1;
+    i<=100;
+    i++
+  ){
 
     const threshold =
       levelThreshold(i);
@@ -2438,42 +3928,61 @@ function renderMiners(){
 
 
     const card =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
 
     card.className =
       "level-card";
 
 
-    if(i === state.level){
+    if(
+      i === state.level
+    ){
 
-      card.classList.add("active");
-
-    }
-
-
-    if(i > state.level){
-
-      card.classList.add("locked");
+      card.classList.add(
+        "active"
+      );
 
     }
 
 
-    let status = "";
+    if(
+      i > state.level
+    ){
+
+      card.classList.add(
+        "locked"
+      );
+
+    }
 
 
-    if(i === state.level){
+    let status;
 
-      status = "CURRENT";
 
-    }else if(i < state.level){
+    if(
+      i === state.level
+    ){
 
-      status = "UNLOCKED";
+      status =
+        "CURRENT";
+
+    }else if(
+      i < state.level
+    ){
+
+      status =
+        "UNLOCKED";
 
     }else{
 
       status =
-        fmt(threshold,0) +
+        fmt(
+          threshold,
+          0
+        ) +
         " LNR";
 
     }
@@ -2496,7 +4005,9 @@ function renderMiners(){
     `;
 
 
-    list.appendChild(card);
+    list.appendChild(
+      card
+    );
 
   }
 
@@ -2507,7 +4018,9 @@ function openMiners(){
 
   renderMiners();
 
-  nav("miners");
+  nav(
+    "miners"
+  );
 
 }
 
@@ -2521,12 +4034,17 @@ function todayKey(){
   const d =
     new Date();
 
+
   return (
     d.getFullYear() +
     "-" +
-    (d.getMonth()+1) +
+    String(
+      d.getMonth()+1
+    ).padStart(2,"0") +
     "-" +
-    d.getDate()
+    String(
+      d.getDate()
+    ).padStart(2,"0")
   );
 
 }
@@ -2538,19 +4056,21 @@ function renderDailyTask(){
     $("dailyTaskBtn");
 
 
-  if(!btn) return;
+  if(!btn)
+    return;
 
 
-  if(state.dailyClaimDate === todayKey()){
+  if(
+    state.dailyClaimDate ===
+    todayKey()
+  ){
 
     btn.textContent =
       "Claimed";
 
-
     btn.classList.add(
       "disabled"
     );
-
 
     btn.disabled = true;
 
@@ -2559,11 +4079,9 @@ function renderDailyTask(){
     btn.textContent =
       "Claim +3";
 
-
     btn.classList.remove(
       "disabled"
     );
-
 
     btn.disabled = false;
 
@@ -2575,10 +4093,13 @@ function renderDailyTask(){
 function completeDailyLogin(){
 
   if(
-    state.dailyClaimDate === todayKey()
+    state.dailyClaimDate ===
+    todayKey()
   ){
 
-    toast("Daily login already claimed.");
+    toast(
+      "Daily login already claimed."
+    );
 
     return;
 
@@ -2594,14 +4115,14 @@ function completeDailyLogin(){
 
   updateLevel();
 
-
   saveState();
-
 
   render();
 
 
-  toast("+3 LNR added to Pool Wallet.");
+  toast(
+    "+3 LNR added."
+  );
 
 }
 
@@ -2626,18 +4147,24 @@ function copyRef(){
       .writeText(link)
       .then(() => {
 
-        toast("Referral link copied.");
+        toast(
+          "Referral link copied."
+        );
 
       })
       .catch(() => {
 
-        toast(state.referralCode);
+        toast(
+          state.referralCode
+        );
 
       });
 
   }else{
 
-    toast(state.referralCode);
+    toast(
+      state.referralCode
+    );
 
   }
 
@@ -2645,13 +4172,16 @@ function copyRef(){
 
 
 /* =========================================================
-   WITHDRAWAL
+   WITHDRAWAL DEMO
 ========================================================= */
 
 function setMaxWithdraw(){
 
-  $("withdrawAmount").value =
-    Number(state.pool).toFixed(4);
+  $("withdrawAmount")
+    .value =
+      Number(
+        state.pool
+      ).toFixed(4);
 
 }
 
@@ -2660,22 +4190,32 @@ function withdrawDemo(){
 
   const amount =
     Number(
-      $("withdrawAmount").value
+      $("withdrawAmount")
+        .value
     );
 
 
-  if(!amount || amount <= 0){
+  if(
+    !Number.isFinite(amount) ||
+    amount <= 0
+  ){
 
-    toast("Enter an amount.");
+    toast(
+      "Enter an amount."
+    );
 
     return;
 
   }
 
 
-  if(amount > state.pool){
+  if(
+    amount > state.pool
+  ){
 
-    toast("Insufficient Pool Wallet balance.");
+    toast(
+      "Insufficient Pool balance."
+    );
 
     return;
 
@@ -2683,25 +4223,30 @@ function withdrawDemo(){
 
 
   /*
-    Demo only.
-    No real blockchain transaction.
+    DEMO ONLY.
+    No blockchain transfer.
   */
 
-  state.pool -= amount;
+  state.pool -=
+    amount;
 
 
   state.history.unshift({
 
-    time:Date.now(),
+    time:
+      Date.now(),
 
-    amount:amount,
+    amount:
+      amount,
 
-    status:"Pending"
+    status:
+      "Pending"
 
   });
 
 
-  $("withdrawAmount").value = "";
+  $("withdrawAmount")
+    .value = "";
 
 
   updateLevel();
@@ -2728,10 +4273,16 @@ function renderHistory(){
     $("history");
 
 
-  if(!state.history.length){
+  if(
+    !state.history.length
+  ){
 
     el.innerHTML =
-      '<div class="empty">No withdrawals yet.</div>';
+      `
+      <div class="empty">
+        No withdrawals yet.
+      </div>
+      `;
 
     return;
 
@@ -2741,34 +4292,38 @@ function renderHistory(){
   el.innerHTML =
     state.history
       .slice(0,8)
-      .map(h => `
+      .map(
+        h => `
 
-        <div class="history-item">
+          <div class="history-item">
 
-          <div>
-            <b>
-              ${fmt(h.amount)} LNR
-            </b>
+            <div>
 
-            <div
-              style="
-                color:var(--muted);
-                margin-top:3px;
-                font-size:8px;
-              "
-            >
-              ${new Date(h.time).toLocaleString()}
+              <b>
+                ${fmt(h.amount)} LNR
+              </b>
+
+              <div
+                style="
+                  color:var(--muted);
+                  margin-top:2px;
+                  font-size:7px;
+                "
+              >
+                ${new Date(h.time)
+                  .toLocaleString()}
+              </div>
+
             </div>
+
+            <span class="pending">
+              ${h.status}
+            </span>
 
           </div>
 
-          <span class="pending">
-            ${h.status}
-          </span>
-
-        </div>
-
-      `)
+        `
+      )
       .join("");
 
 }
@@ -2804,17 +4359,24 @@ function nav(id){
     });
 
 
-  if(id === "miners"){
+  if(
+    id === "miners"
+  ){
 
     renderMiners();
 
   }
 
 
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  /*
+    We don't need smooth scrolling
+    because the design is compact.
+  */
+
+  window.scrollTo(
+    0,
+    0
+  );
 
 
   render();
@@ -2847,13 +4409,16 @@ function toast(message){
 
 
   window.toastTimer =
-    setTimeout(() => {
+    setTimeout(
+      () => {
 
-      el.classList.remove(
-        "show"
-      );
+        el.classList.remove(
+          "show"
+        );
 
-    },2300);
+      },
+      2300
+    );
 
 }
 
@@ -2874,11 +4439,88 @@ document.addEventListener(
 
     if(
       wrap &&
-      !wrap.contains(e.target)
+      !wrap.contains(
+        e.target
+      )
     ){
 
       $("walletMenu")
-        .classList.remove("show");
+        .classList.remove(
+          "show"
+        );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   SAVE BEFORE PAGE CLOSE
+========================================================= */
+
+window.addEventListener(
+  "beforeunload",
+  () => {
+
+    /*
+      Save mining amount up to
+      the exact moment the page closes.
+    */
+
+    if(connectedWallet){
+
+      accrueMining();
+
+    }
+
+    saveState();
+
+  }
+);
+
+
+/* =========================================================
+   VISIBILITY CHANGE
+========================================================= */
+
+document.addEventListener(
+  "visibilitychange",
+  () => {
+
+    if(
+      document.visibilityState ===
+      "hidden"
+    ){
+
+      if(connectedWallet){
+
+        accrueMining();
+
+      }
+
+      saveState();
+
+    }
+
+
+    if(
+      document.visibilityState ===
+      "visible"
+    ){
+
+      /*
+        When user returns,
+        calculate all elapsed time.
+      */
+
+      if(connectedWallet){
+
+        accrueMining();
+
+      }
+
+      render();
 
     }
 
@@ -2893,61 +4535,59 @@ document.addEventListener(
 initTelegram();
 
 
-/*
-  If Telegram username was already saved,
-  show it immediately.
-*/
+if(
+  state.telegramName
+){
 
-if(state.telegramName){
-
-  $("telegramName").textContent =
-    state.telegramName;
-
-}
-
-
-/*
-  Restore demo wallet appearance if it was
-  connected in this browser.
-*/
-
-if(connectedWallet){
-
-  setConnectedWallet(
-    connectedWallet
-  );
+  $("telegramName")
+    .textContent =
+      state.telegramName;
 
 }
 
 
 render();
 
+
 renderMiners();
 
 
 /*
-  Main live loop.
-
-  Every 250ms:
-  - mining accrues
-  - mined amount changes
-  - live speed display animates
-  - UI refreshes
+  Start TON Connect.
 */
 
-setInterval(() => {
+initTonConnect();
 
-  if(connectedWallet){
 
-    accrueMining();
+/*
+  Main loop.
 
-  }
+  Every 250ms:
+  - calculate elapsed mining
+  - update mined amount
+  - update live speed
+  - refresh UI
+*/
 
-  updateLiveSpeed();
+setInterval(
+  () => {
 
-  render();
+    if(
+      connectedWallet
+    ){
 
-},250);
+      accrueMining();
+
+    }
+
+
+    updateLiveSpeed();
+
+    render();
+
+  },
+  250
+);
 
 </script>
 
