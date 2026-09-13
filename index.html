@@ -999,6 +999,7 @@ button:disabled{
 /* =========================
    MOBILE HEIGHT OPTIMIZATION
 ========================= */
+      /* ========================= */
 @media(max-height:700px){
   .app{
     padding-top:7px;
@@ -1502,209 +1503,190 @@ body{
   .balance-value{ font-size:17px; }
   .mined-number{ font-size:25px; }
 }
+
+/* FINAL VISUAL TWEAKS — requested UI changes only */
+html,body{
+  background:
+    radial-gradient(circle at 50% -5%, rgba(47,232,161,.18), transparent 32%),
+    radial-gradient(circle at 100% 45%, rgba(32,150,109,.12), transparent 30%),
+    linear-gradient(180deg,#06221b 0%,#05251e 45%,#062019 100%);
+}
+.total-card{
+  border-radius:16px;
+  padding:14px 16px;
+  text-align:center;
+}
+.total-label{
+  text-align:center;
+}
+.total-row{
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  margin-top:7px;
+}
+.total-token{
+  padding-bottom:0;
+}
+.mined-card{
+  border-radius:16px;
+  padding:12px 14px;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  text-align:center;
+}
+.mined-left{
+  text-align:center;
+}
+.mined-right{
+  text-align:center;
+}
+.mined-sub{
+  text-align:center;
+}
 </style>
 </head>
 <body>
-
 <div class="app">
-
   <!-- ================= HEADER ================= -->
   <header class="header">
-
     <div class="brand">
-
       <div class="brand-logo">L</div>
-
       <div class="brand-text">
         <div class="brand-name" id="headerUserName">User</div>
         <div class="brand-sub">AUTOMATIC MINING</div>
       </div>
-
     </div>
-
     <div class="header-right">
-
       <button
         class="wallet-mini"
         id="walletHeaderBtn"
         onclick="toggleWalletPanel()">
-
         <span class="wallet-dot" id="walletDot"></span>
-
         <span
           class="wallet-mini-text"
           id="walletHeaderText">
           Connect Wallet
         </span>
-
       </button>
-
       <div class="level-pill">
-
         <div class="level-pill-label">LEVEL</div>
-
         <div
           class="level-pill-value"
           id="headerLevel">
           LVL 1
         </div>
-
       </div>
-
     </div>
-
   </header>
-
 
   <!-- ================= HOME ================= -->
   <main
     id="page-home"
     class="page active home">
-
     <section class="hero">
-
       <div class="orbit"></div>
       <div class="orbit two"></div>
-
       <div class="lnr-crystal">
         <div class="lnr-letter">LNR</div>
       </div>
-
       <div class="hero-caption">
         LUNARO
       </div>
-
     </section>
 
-
     <div class="mining-status">
-
       <span
         class="status-dot off"
         id="statusDot">
       </span>
-
       <span id="miningStatusText">
         WALLET REQUIRED TO START MINING
       </span>
-
     </div>
-
 
     <!-- TOTAL ASSETS -->
     <section class="total-card">
-
       <div class="total-label">
         TOTAL ASSETS
       </div>
-
       <div class="total-row">
-
         <div
           class="total-number"
           id="totalBalance">
           0.0000
         </div>
-
         <div class="total-token">
           LNR
         </div>
-
       </div>
-
     </section>
-
 
     <!-- WALLET BALANCES -->
     <section class="balance-grid">
-
       <div class="balance-card">
-
         <div class="balance-title">
-
           <div class="balance-icon">
             ◎
           </div>
-
           <span>
             HOLDING WALLET
           </span>
-
         </div>
-
         <div
           class="balance-value"
           id="holdingBalance">
           —
         </div>
-
         <div class="balance-unit">
           ON-CHAIN LNR
         </div>
-
       </div>
 
-
       <div class="balance-card">
-
         <div class="balance-title">
-
           <div class="balance-icon">
             ◉
           </div>
-
           <span>
             POOL WALLET
           </span>
-
         </div>
-
         <div
           class="balance-value"
           id="poolBalance">
           0.0000
         </div>
-
         <div class="balance-unit">
           CLAIMED LNR
         </div>
-
       </div>
-
     </section>
-
 
     <!-- MINED NOT CLAIMED -->
     <section class="mined-card">
-
       <div class="mined-left">
-
         <div class="mined-title">
           MINED TODAY
         </div>
-
         <div class="mined-sub">
           Automatic mining while your wallet is connected.
         </div>
-
       </div>
-
       <div class="mined-right">
-
         <div
           class="mined-number"
           id="minedBalance">
           0.0000
         </div>
-
         <div class="mined-unit">
           LNR
         </div>
-
       </div>
-
     </section>
-
 
     <!-- CLAIM -->
     <button
@@ -1712,638 +1694,58 @@ body{
       id="claimBtn"
       onclick="claimMining()"
       disabled>
-
       ⚡ &nbsp; CLAIM
-
     </button>
-
-
-    <!-- INFO -->
-    <section class="info-card">
-
-      <div class="info-logo">
-        LNR
-      </div>
-
-      <div class="info-content">
-
-        <div class="info-title">
-          LUNARO
-        </div>
-
-        <div class="info-text">
-          More mining. More rewards.
-        </div>
-
-      </div>
-
-    </section>
-
   </main>
 
-
-  <!-- ================= TOAST ================= -->
-  <div
-    class="toast"
-    id="toast">
-  </div>
-
-
-  <!-- ================= BOTTOM NAV ================= -->
-  <nav class="bottom-nav">
-
-    <button
-      class="nav-item active"
-      data-page="home"
-      onclick="showPage('home')">
-
-      <div class="nav-icon">
-
-        <svg
-          viewBox="0 0 24 24"
-          aria-hidden="true">
-
-          <path
-            d="M4 11.2 12 4l8 7.2v8.3a.9.9 0 0 1-.9.9H15v-5.1H9v5.1H4.9a.9.9 0 0 1-.9-.9z"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linejoin="round"/>
-
-        </svg>
-
-      </div>
-
-      <span>Mine</span>
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      data-page="tasks"
-      onclick="showPage('tasks')">
-
-      <div class="nav-icon">
-
-        <svg
-          viewBox="0 0 24 24"
-          aria-hidden="true">
-
-          <rect
-            x="6"
-            y="4"
-            width="12"
-            height="17"
-            rx="2"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"/>
-
-          <path
-            d="M9 4.8V3h6v1.8M9 11.2l2 2 4-4"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"/>
-
-        </svg>
-
-      </div>
-
-      <span>Tasks</span>
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      data-page="miners"
-      onclick="showPage('miners')">
-
-      <div class="nav-icon">
-
-        <svg
-          viewBox="0 0 24 24"
-          aria-hidden="true">
-
-          <path
-            d="m14.5 4.5 5 5M9 15l7.8-7.8a2.2 2.2 0 0 1 3.1 3.1L12.1 18M4 20l4.2-4.2M4.5 7.5h5M7 5v5"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"/>
-
-        </svg>
-
-      </div>
-
-      <span>Miners</span>
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      data-page="friends"
-      onclick="showPage('friends')">
-
-      <div class="nav-icon">
-
-        <svg
-          viewBox="0 0 24 24"
-          aria-hidden="true">
-
-          <circle
-            cx="9"
-            cy="8"
-            r="3"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"/>
-
-          <path
-            d="M3.5 19c.7-3 2.5-4.5 5.5-4.5s4.8 1.5 5.5 4.5M16 6.5a3 3 0 1 1 0 5.9M16 14.4c2.6.1 4.2 1.5 4.8 4.1"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"/>
-
-        </svg>
-
-      </div>
-
-      <span>Friends</span>
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      data-page="profile"
-      onclick="showPage('profile')">
-
-      <div class="nav-icon">
-
-        <svg
-          viewBox="0 0 24 24"
-          aria-hidden="true">
-
-          <circle
-            cx="12"
-            cy="8"
-            r="3.3"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"/>
-
-          <path
-            d="M5 20c.8-3.6 3.1-5.4 7-5.4s6.2 1.8 7 5.4"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"/>
-
-        </svg>
-
-      </div>
-
-      <span>Profile</span>
-
-    </button>
-
-  </nav>
-
-
-  <!-- ================= WALLET PANEL ================= -->
-
-  <div
-    class="overlay"
-    id="overlay"
-    onclick="closeWalletPanel()">
-  </div>
-
-
-  <div
-    class="wallet-panel"
-    id="walletPanel">
-
-    <div class="wallet-panel-title">
-      TON Wallet
-    </div>
-
-    <div class="wallet-panel-sub">
-      Connect your TON wallet to start automatic mining.
-    </div>
-
-    <div
-      class="wallet-address"
-      id="walletPanelAddress">
-      No wallet connected
-    </div>
-
-    <button
-      class="wallet-connect-big"
-      id="walletConnectButton"
-      onclick="connectWallet()">
-      CONNECT WALLET
-    </button>
-
-    <button
-      class="wallet-disconnect"
-      id="walletDisconnectButton"
-      onclick="disconnectWallet()"
-      style="display:none;">
-      DISCONNECT WALLET
-    </button>
-
-  </div>
-
-
-  <!-- ================= TASKS PAGE ================= -->
-
-  <main
-    id="page-tasks"
-    class="page">
-
-    <div class="section-title">
-
-      <h2>
-        Tasks
-      </h2>
-
-      <span>
-        Earn LNR
-      </span>
-
-    </div>
-
-
-    <div class="task-list">
-
-      <div class="task-card">
-
-        <div class="task-icon">
-          ✈
-        </div>
-
-        <div class="task-content">
-
-          <div class="task-name">
-            Join Telegram
-          </div>
-
-          <div class="task-reward">
-            +5 LNR
-          </div>
-
-        </div>
-
-        <button
-          class="task-btn"
-          onclick="showToast('Telegram task coming soon.')">
-          SOON
-        </button>
-
-      </div>
-
-
-      <div class="task-card">
-
-        <div class="task-icon">
-          ▶
-        </div>
-
-        <div class="task-content">
-
-          <div class="task-name">
-            Subscribe YouTube
-          </div>
-
-          <div class="task-reward">
-            +5 LNR
-          </div>
-
-        </div>
-
-        <button
-          class="task-btn"
-          onclick="showToast('YouTube task coming soon.')">
-          SOON
-        </button>
-
-      </div>
-
-
-      <div class="task-card">
-
-        <div class="task-icon">
-          ◷
-        </div>
-
-        <div class="task-content">
-
-          <div class="task-name">
-            Daily Login
-          </div>
-
-          <div class="task-reward">
-            +3 LNR
-          </div>
-
-        </div>
-
-        <button
-          class="task-btn"
-          id="dailyTaskBtn"
-          onclick="completeDailyTask()">
-          CLAIM
-        </button>
-
-      </div>
-
-    </div>
-
-  </main>
-
-
-  <!-- ================= MINERS PAGE ================= -->
-
-  <main
-    id="page-miners"
-    class="page">
-
-    <div class="section-title">
-
-      <h2>
-        Miners
-      </h2>
-
-      <span>
-        Upgrade your rate
-      </span>
-
-    </div>
-
-
-    <div class="miner-summary">
-
-      <div class="miner-summary-label">
-        CURRENT MINER
-      </div>
-
-      <div class="miner-summary-row">
-
-        <div
-          class="miner-summary-level"
-          id="minerCurrentLevel">
-          LVL 1
-        </div>
-
-        <div
-          class="miner-summary-rate"
-          id="minerCurrentRate">
-          0.7000 LNR / HOUR
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div
-      class="miner-grid"
-      id="minerGrid">
-    </div>
-
-  </main>
-
-
-  <!-- ================= FRIENDS PAGE ================= -->
-
-  <main
-    id="page-friends"
-    class="page">
-
-    <div class="section-title">
-
-      <h2>
-        Friends
-      </h2>
-
-      <span>
-        Referral
-      </span>
-
-    </div>
-
-
-    <section class="ref-card">
-
-      <div class="ref-label">
-        YOUR REFERRAL CODE
-      </div>
-
-      <div
-        class="ref-code"
-        id="referralCode">
-        LNR000000
-      </div>
-
-      <button
-        class="ref-copy"
-        onclick="copyReferral()">
-        COPY REFERRAL LINK
-      </button>
-
-    </section>
-
-
-    <section class="friend-stats">
-
-      <div class="friend-stat">
-
-        <div class="friend-stat-label">
-          FRIENDS
-        </div>
-
-        <div
-          class="friend-stat-value"
-          id="friendsCount">
-          0
-        </div>
-
-      </div>
-
-
-      <div class="friend-stat">
-
-        <div class="friend-stat-label">
-          REFERRAL REWARDS
-        </div>
-
-        <div
-          class="friend-stat-value"
-          id="refRewards">
-          0.0000
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- ================= PROFILE PAGE ================= -->
-
-  <main
-    id="page-profile"
-    class="page">
-
-    <div class="section-title">
-
-      <h2>
-        Profile
-      </h2>
-
-      <span>
-        Account
-      </span>
-
-    </div>
-
-
-    <section class="profile-user">
-
-      <div class="profile-avatar">
-        L
-      </div>
-
-      <div>
-
-        <div class="profile-label">
-          TELEGRAM USER
-        </div>
-
-        <div
-          class="profile-name"
-          id="telegramName">
-          Telegram User
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <section class="profile-box">
-
-      <div class="profile-row">
-
-        <span>
-          Telegram ID
-        </span>
-
-        <span id="profileTelegramId">
-          —
-        </span>
-
-      </div>
-
-
-      <div class="profile-row">
-
-        <span>
-          Pool Balance
-        </span>
-
-        <span id="profilePool">
-          0.0000 LNR
-        </span>
-
-      </div>
-
-
-      <div class="profile-row">
-
-        <span>
-          Total Balance
-        </span>
-
-        <span id="profileTotal">
-          0.0000 LNR
-        </span>
-
-      </div>
-
-    </section>
-
-
-    <section class="withdraw-box">
-
-      <div class="withdraw-title">
-        Withdraw
-      </div>
-
-      <div class="withdraw-sub">
-        Withdrawals will be enabled after the LNR token and secure transfer system are ready.
-      </div>
-
-
-      <div class="input-wrap">
-
-        <input
-          id="withdrawAmount"
-          class="withdraw-input"
-          type="number"
-          inputmode="decimal"
-          placeholder="Amount"
-          min="0"
-          step="0.0001">
-
-        <button
-          class="max-btn"
-          onclick="setMaxWithdraw()">
-          MAX
-        </button>
-
-      </div>
-
-
-      <button
-        class="withdraw-btn"
-        onclick="requestWithdraw()">
-        REQUEST WITHDRAWAL
-      </button>
-
-    </section>
-
-
-    <section class="history">
-
-      <div class="history-title">
-        History
-      </div>
-
-      <div class="history-empty">
-        No transactions yet.
-      </div>
-
-    </section>
-
-  </main>
-
+<!-- ================= TOAST ================= -->
+<div
+  class="toast"
+  id="toast">
 </div>
 
+<!-- ================= BOTTOM NAV ================= -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-page="home" onclick="showPage('home')">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.2 12 4l8 7.2v8.3a.9.9 0 0 1-.9.9H15v-5.1H9v5.1H4.9a.9.9 0 0 1-.9-.9z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </div>
+    <span>Mine</span>
+  </button>
+
+  <button class="nav-item" data-page="tasks" onclick="showPage('tasks')">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 4.8V3h6v1.8M9 11.2l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span>Tasks</span>
+  </button>
+
+  <button class="nav-item" data-page="miners" onclick="showPage('miners')">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 4.5 5 5M9 15l7.8-7.8a2.2 2.2 0 0 1 3.1 3.1L12.1 18M4 20l4.2-4.2M4.5 7.5h5M7 5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span>Miners</span>
+  </button>
+
+  <button class="nav-item" data-page="friends" onclick="showPage('friends')">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 19c.7-3 2.5-4.5 5.5-4.5s4.8 1.5 5.5 4.5M16 6.5a3 3 0 1 1 0 5.9M16 14.4c2.6.1 4.2 1.5 4.8 4.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </div>
+    <span>Friends</span>
+  </button>
+
+  <button class="nav-item" data-page="profile" onclick="showPage('profile')">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c.8-3.6 3.1-5.4 7-5.4s6.2 1.8 7 5.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </div>
+    <span>Profile</span>
+  </button>
+</nav>
 
 <script>
 /* =========================================================
    LUNARO CONFIG
 ========================================================= */
-
 const API_URL =
   "https://lunaro-api.alikoms15.workers.dev";
 
@@ -2363,66 +1765,43 @@ const BOT_USERNAME =
 const MANIFEST_URL =
   "https://alikoms15-lab.github.io/alikoms15.github.io/tonconnect-manifest.json";
 
-
 /* =========================================================
    TELEGRAM
 ========================================================= */
-
 const tg =
   window.Telegram?.WebApp || null;
-
 
 /* =========================================================
    TON CONNECT
 ========================================================= */
-
 let tonConnectUI = null;
 let tonReady = false;
 let restoringWallet = true;
 
-
 /* =========================================================
    LOCAL STATE
 ========================================================= */
-
 const STORAGE_KEY =
   "lunaro_v7_state";
 
 const defaultState = {
-
   pool: 0,
-
   holding: null,
-
   mined: 0,
-
   lastMiningTime: Date.now(),
-
   telegramName: "",
-
   telegramId: "",
-
   username: "",
-
   level: 1,
-
   rate: 0.7000,
-
   referralCode: "LNR000000",
-
   friends: 0,
-
   refRewards: 0,
-
   history: [],
-
   dailyClaimDate: ""
-
 };
 
-let state =
-  loadState();
-
+let state = loadState();
 
 /*
   This variable represents an ACTUAL TON Connect
@@ -2430,104 +1809,68 @@ let state =
 */
 let connectedWallet = null;
 
-
 /*
   Used to prevent excessive localStorage writes.
 */
 let lastSavedMining = 0;
 
-
 /* =========================================================
    HELPERS
 ========================================================= */
-
 function loadState(){
-
   try{
-
     const raw =
-      localStorage.getItem(
-        STORAGE_KEY
-      );
+      localStorage.getItem(STORAGE_KEY);
 
     if(!raw){
-
       return {
-
         ...defaultState,
-
-        lastMiningTime:
-          Date.now()
-
+        lastMiningTime:Date.now()
       };
-
     }
 
     const saved =
       JSON.parse(raw);
 
     return {
-
       ...defaultState,
-
       ...saved
-
     };
-
   }catch(error){
-
     console.error(
       "State load error:",
       error
     );
 
     return {
-
       ...defaultState,
-
-      lastMiningTime:
-        Date.now()
-
+      lastMiningTime:Date.now()
     };
-
   }
-
 }
 
-
 function saveState(){
-
   try{
-
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify(state)
     );
-
   }catch(error){
-
     console.error(
       "State save error:",
       error
     );
-
   }
-
 }
 
-
 function fmt(value){
-
   const n =
     Number(value || 0);
 
   return n.toFixed(4);
-
 }
 
-
 function shortAddress(address){
-
   if(!address){
     return "";
   }
@@ -2537,31 +1880,20 @@ function shortAddress(address){
   }
 
   return (
-
     address.slice(0,7) +
-
     "..." +
-
     address.slice(-6)
-
   );
-
 }
 
-
 function showToast(message){
-
   const el =
-    document.getElementById(
-      "toast"
-    );
+    document.getElementById("toast");
 
   el.textContent =
     message;
 
-  el.classList.add(
-    "show"
-  );
+  el.classList.add("show");
 
   clearTimeout(
     showToast.timer
@@ -2569,57 +1901,39 @@ function showToast(message){
 
   showToast.timer =
     setTimeout(()=>{
-
-      el.classList.remove(
-        "show"
-      );
-
+      el.classList.remove("show");
     },2300);
-
 }
-
 
 /* =========================================================
    TELEGRAM INIT
 ========================================================= */
-
 function initTelegram(){
-
   if(!tg){
-
     console.log(
       "LUNARO is running outside Telegram"
     );
 
     state.telegramId =
-      state.telegramId ||
-      "demo-user";
+      state.telegramId || "demo-user";
 
     state.telegramName =
-      state.telegramName ||
-      "Demo User";
+      state.telegramName || "Demo User";
 
     updateUI();
-
     return;
-
   }
 
   try{
-
     tg.ready();
-
     tg.expand();
 
     const user =
       tg.initDataUnsafe?.user;
 
     if(user){
-
       state.telegramId =
-        String(
-          user.id || ""
-        );
+        String(user.id || "");
 
       state.username =
         user.username || "";
@@ -2627,79 +1941,52 @@ function initTelegram(){
       state.telegramName =
         user.username
           ? `${user.first_name || "User"} @${user.username}`
-          : (
-              user.first_name ||
-              "User"
-            );
+          : (user.first_name || "User");
 
       saveState();
-
       updateUI();
-
     }
-
   }catch(error){
-
     console.error(
       "Telegram init error:",
       error
     );
-
   }
-
 }
-
 
 /* =========================================================
    TON CONNECT INIT
 ========================================================= */
-
 async function initTonConnect(){
-
   try{
-
     if(
       !window.TON_CONNECT_UI ||
       !window.TON_CONNECT_UI.TonConnectUI
     ){
-
       throw new Error(
         "TON Connect library failed to load."
       );
-
     }
 
     tonConnectUI =
       new TON_CONNECT_UI.TonConnectUI({
-
         manifestUrl:
           MANIFEST_URL,
-
         restoreConnection:
           true
-
       });
-
 
     /*
       Listen for wallet changes.
     */
-
     tonConnectUI.onStatusChange(
-
       wallet => {
-
-        if(
-          wallet &&
-          wallet.account
-        ){
-
+        if(wallet && wallet.account){
           const address =
             wallet.account.address;
 
           const changedWallet =
-            connectedWallet !==
-            address;
+            connectedWallet !== address;
 
           connectedWallet =
             address;
@@ -2707,22 +1994,14 @@ async function initTonConnect(){
           /*
             During restoration we don't reset
             the mining timer.
-
             If user manually changes wallet,
             timer starts from the new connection.
           */
-
           setConnectedWallet(
-
             address,
-
-            !restoringWallet &&
-            changedWallet
-
+            !restoringWallet && changedWallet
           );
-
         }else{
-
           connectedWallet =
             null;
 
@@ -2730,51 +2009,33 @@ async function initTonConnect(){
             null,
             false
           );
-
         }
-
       }
-
     );
-
 
     /*
       Wait until TON Connect attempts
       to restore previous connection.
     */
-
     try{
-
       await tonConnectUI.connectionRestored;
-
     }catch(error){
-
       console.warn(
         "Wallet restoration warning:",
         error
       );
-
     }
 
-    restoringWallet =
-      false;
-
-    tonReady =
-      true;
-
+    restoringWallet = false;
+    tonReady = true;
 
     /*
       Read wallet after restoration.
     */
-
     const wallet =
       tonConnectUI.wallet;
 
-    if(
-      wallet &&
-      wallet.account
-    ){
-
+    if(wallet && wallet.account){
       const address =
         wallet.account.address;
 
@@ -2785,9 +2046,7 @@ async function initTonConnect(){
         address,
         false
       );
-
     }else{
-
       connectedWallet =
         null;
 
@@ -2795,96 +2054,71 @@ async function initTonConnect(){
         null,
         false
       );
-
     }
 
     updateWalletUI();
 
   }catch(error){
-
-    restoringWallet =
-      false;
-
-    tonReady =
-      false;
+    restoringWallet = false;
+    tonReady = false;
 
     console.error(
       "TON Connect initialization error:",
       error
+    );    console.error(
+      "TON Connect initialization error:",
+      error
     );
 
-    updateWalletUI();
-
     showToast(
-      "TON wallet connection is not ready."
+      "Wallet connection is temporarily unavailable."
     );
 
   }
-
 }
 
-
 /* =========================================================
-   WALLET STATE
+   SET CONNECTED WALLET
 ========================================================= */
-
 function setConnectedWallet(
-
   address,
-
   resetMiningTime = true
-
 ){
-
   const previous =
     connectedWallet;
 
   connectedWallet =
     address || null;
 
-
   if(
     connectedWallet &&
     resetMiningTime
   ){
-
     /*
       Don't lose mined amount accumulated
       before the wallet switch.
     */
-
     state.lastMiningTime =
       Date.now();
-
   }
 
-
   if(!connectedWallet){
-
     /*
       Stop mining clock while disconnected.
     */
-
     state.lastMiningTime =
       Date.now();
-
   }
 
   saveState();
-
   updateWalletUI();
-
   updateUI();
-
 }
-
 
 /* =========================================================
    WALLET UI
 ========================================================= */
-
 function updateWalletUI(){
-
   const headerText =
     document.getElementById(
       "walletHeaderText"
@@ -2910,94 +2144,69 @@ function updateWalletUI(){
       "walletDisconnectButton"
     );
 
-
   if(connectedWallet){
 
     if(headerText){
-
       headerText.textContent =
         shortAddress(
           connectedWallet
         );
-
     }
 
     if(walletDot){
-
       walletDot.classList.remove(
         "off"
       );
-
     }
 
     if(panelAddress){
-
       panelAddress.textContent =
         connectedWallet;
-
     }
 
     if(connectButton){
-
       connectButton.textContent =
         "CHANGE WALLET";
-
     }
 
     if(disconnectButton){
-
       disconnectButton.style.display =
         "block";
-
     }
 
   }else{
 
     if(headerText){
-
       headerText.textContent =
         "Connect Wallet";
-
     }
 
     if(walletDot){
-
       walletDot.classList.add(
         "off"
       );
-
     }
 
     if(panelAddress){
-
       panelAddress.textContent =
         "No wallet connected";
-
     }
 
     if(connectButton){
-
       connectButton.textContent =
         "CONNECT WALLET";
-
     }
 
     if(disconnectButton){
-
       disconnectButton.style.display =
         "none";
-
     }
-
   }
-
 }
-
 
 /* =========================================================
    OPEN WALLET
 ========================================================= */
-
 function toggleWalletPanel(){
 
   const panel =
@@ -3010,13 +2219,9 @@ function toggleWalletPanel(){
       "overlay"
     );
 
-
   if(
-    panel.classList.contains(
-      "show"
-    )
+    panel.classList.contains("show")
   ){
-
     closeWalletPanel();
 
   }else{
@@ -3028,37 +2233,23 @@ function toggleWalletPanel(){
     overlay.classList.add(
       "show"
     );
-
   }
-
 }
-
 
 function closeWalletPanel(){
 
   document
-    .getElementById(
-      "walletPanel"
-    )
-    .classList.remove(
-      "show"
-    );
+    .getElementById("walletPanel")
+    .classList.remove("show");
 
   document
-    .getElementById(
-      "overlay"
-    )
-    .classList.remove(
-      "show"
-    );
-
+    .getElementById("overlay")
+    .classList.remove("show");
 }
-
 
 /* =========================================================
    CONNECT WALLET
 ========================================================= */
-
 async function connectWallet(){
 
   if(!tonConnectUI){
@@ -3068,7 +2259,6 @@ async function connectWallet(){
     );
 
     return;
-
   }
 
   try{
@@ -3087,16 +2277,12 @@ async function connectWallet(){
     showToast(
       "Could not open wallet connection."
     );
-
   }
-
 }
-
 
 /* =========================================================
    DISCONNECT WALLET
 ========================================================= */
-
 async function disconnectWallet(){
 
   if(!tonConnectUI){
@@ -3109,7 +2295,6 @@ async function disconnectWallet(){
       First account for already elapsed
       mining time.
     */
-
     accrueMining(
       true
     );
@@ -3123,11 +2308,8 @@ async function disconnectWallet(){
       Date.now();
 
     saveState();
-
     updateWalletUI();
-
     updateUI();
-
     closeWalletPanel();
 
     showToast(
@@ -3144,16 +2326,12 @@ async function disconnectWallet(){
     showToast(
       "Could not disconnect wallet."
     );
-
   }
-
 }
-
 
 /* =========================================================
    MINING
 ========================================================= */
-
 function accrueMining(
   shouldSave = false
 ){
@@ -3161,20 +2339,16 @@ function accrueMining(
   /*
     NO WALLET = NO MINING
   */
-
   if(!connectedWallet){
 
     state.lastMiningTime =
       Date.now();
 
     return;
-
   }
-
 
   const now =
     Date.now();
-
 
   if(!state.lastMiningTime){
 
@@ -3182,68 +2356,48 @@ function accrueMining(
       now;
 
     return;
-
   }
 
-
   let elapsed =
-    (now - state.lastMiningTime) /
-    1000;
-
+    (now - state.lastMiningTime) / 1000;
 
   /*
     Protect against abnormal time jumps.
     Normal page/background elapsed time can still
     be processed.
   */
-
   if(
     !Number.isFinite(elapsed) ||
     elapsed < 0
   ){
-
-    elapsed =
-      0;
-
+    elapsed = 0;
   }
-
 
   /*
     Mining rate = LNR per hour.
   */
-
   const earned =
     (elapsed / 3600) *
-    Number(
-      state.rate || 0.7
-    );
-
+    Number(state.rate || 0.7);
 
   if(earned > 0){
 
     state.mined =
-      Number(
-        state.mined || 0
-      ) +
+      Number(state.mined || 0) +
       earned;
-
   }
-
 
   state.lastMiningTime =
     now;
-
 
   /*
     Save only when needed,
     not every 100 milliseconds.
   */
-
   if(
     shouldSave ||
     Math.abs(
-      state.mined -
-      lastSavedMining
+      state.mined - lastSavedMining
     ) >= 0.0002
   ){
 
@@ -3251,22 +2405,17 @@ function accrueMining(
 
     lastSavedMining =
       state.mined;
-
   }
-
 }
-
 
 /* =========================================================
    CLAIM
 ========================================================= */
-
 async function claimMining(){
 
   /*
     Must be connected.
   */
-
   if(!connectedWallet){
 
     showToast(
@@ -3274,25 +2423,18 @@ async function claimMining(){
     );
 
     return;
-
   }
-
 
   /*
     Accumulate the latest fraction
     before claiming.
   */
-
   accrueMining(
     true
   );
 
-
   const amount =
-    Number(
-      state.mined || 0
-    );
-
+    Number(state.mined || 0);
 
   if(amount <= 0){
 
@@ -3301,29 +2443,21 @@ async function claimMining(){
     );
 
     return;
-
   }
-
 
   /*
     CURRENT PROTOTYPE:
     Claim locally.
-
     The Worker endpoint exists, but the
     authoritative mining ledger will be connected
     in the backend stage.
   */
-
   try{
 
     const response =
       await fetch(
-
-        API_URL +
-        "/claim",
-
+        API_URL + "/claim",
         {
-
           method:"POST",
 
           headers:{
@@ -3331,25 +2465,18 @@ async function claimMining(){
               "application/json"
           },
 
-          body:
-            JSON.stringify({
+          body:JSON.stringify({
+            telegram_id:
+              state.telegramId,
 
-              telegram_id:
-                state.telegramId,
-
-              amount:
-                amount
-
-            })
-
+            amount:
+              amount
+          })
         }
-
       );
-
 
     const data =
       await response.json();
-
 
     if(
       response.ok &&
@@ -3363,38 +2490,26 @@ async function claimMining(){
 
       state.pool =
         Number(
-
           data.user.balance ??
-          state.pool +
-          amount
-
+          state.pool + amount
         );
-
 
       state.mined =
         Number(
-
           data.user.mined ??
           0
-
         );
-
 
       state.level =
         Number(
-
           data.user.level ??
           state.level
-
         );
-
 
       state.rate =
         Number(
-
           data.user.mining_rate ??
           state.rate
-
         );
 
     }else{
@@ -3405,14 +2520,11 @@ async function claimMining(){
       */
 
       state.pool =
-        Number(
-          state.pool || 0
-        ) +
+        Number(state.pool || 0) +
         amount;
 
       state.mined =
         0;
-
     }
 
   }catch(error){
@@ -3422,47 +2534,36 @@ async function claimMining(){
       error
     );
 
-
     /*
       Prototype fallback.
     */
 
     state.pool =
-      Number(
-        state.pool || 0
-      ) +
+      Number(state.pool || 0) +
       amount;
 
     state.mined =
       0;
-
   }
-
 
   state.lastMiningTime =
     Date.now();
 
   saveState();
-
   updateUI();
 
   showToast(
     `Claimed ${fmt(amount)} LNR`
   );
-
 }
-
 
 /* =========================================================
    LEVEL SYSTEM
 ========================================================= */
-
 function levelThreshold(level){
 
   if(level <= 1){
-
     return 0;
-
   }
 
   return 100 *
@@ -3470,20 +2571,15 @@ function levelThreshold(level){
       level - 1,
       1.35
     );
-
 }
-
 
 function levelRate(level){
 
   return (
     0.70 +
-    (level - 1) *
-    0.05
+    (level - 1) * 0.05
   );
-
 }
-
 
 function updateLevel(){
 
@@ -3493,54 +2589,38 @@ function updateLevel(){
   */
 
   const balance =
-    Number(
-      state.pool || 0
-    );
+    Number(state.pool || 0);
 
-  let level =
-    1;
+  let level = 1;
 
-
-  for(
-    let i=2;
-    i<=100;
-    i++
-  ){
+  for(let i=2;i<=100;i++){
 
     if(
       balance >=
       levelThreshold(i)
     ){
 
-      level =
-        i;
+      level = i;
 
     }else{
 
       break;
-
     }
-
   }
-
 
   state.level =
     level;
 
   state.rate =
     levelRate(level);
-
 }
-
 
 /* =========================================================
    RENDER UI
 ========================================================= */
-
 function updateUI(){
 
   updateLevel();
-
 
   /*
     IMPORTANT:
@@ -3550,14 +2630,10 @@ function updateUI(){
   */
 
   const pool =
-    Number(
-      state.pool || 0
-    );
+    Number(state.pool || 0);
 
   const holding =
-    Number(
-      state.holding || 0
-    );
+    Number(state.holding || 0);
 
   const total =
     pool +
@@ -3566,7 +2642,6 @@ function updateUI(){
         ? holding
         : 0
     );
-
 
   const totalEl =
     document.getElementById(
@@ -3608,22 +2683,17 @@ function updateUI(){
       "miningStatusText"
     );
 
-
   if(totalEl){
 
     totalEl.textContent =
       fmt(total);
-
   }
-
 
   if(poolEl){
 
     poolEl.textContent =
       fmt(pool);
-
   }
-
 
   /*
     LNR token is not created/on-chain yet.
@@ -3633,38 +2703,26 @@ function updateUI(){
 
     holdingEl.textContent =
       "—";
-
   }
-
 
   if(minedEl){
 
     minedEl.textContent =
-      fmt(
-        state.mined
-      );
-
+      fmt(state.mined);
   }
-
 
   if(claimBtn){
 
     claimBtn.disabled =
       !connectedWallet ||
-      Number(
-        state.mined || 0
-      ) <= 0;
-
+      Number(state.mined || 0) <= 0;
   }
-
 
   if(headerLevel){
 
     headerLevel.textContent =
       `LVL ${state.level}`;
-
   }
-
 
   if(statusDot){
 
@@ -3679,11 +2737,8 @@ function updateUI(){
       statusDot.classList.add(
         "off"
       );
-
     }
-
   }
-
 
   if(statusText){
 
@@ -3691,9 +2746,7 @@ function updateUI(){
       connectedWallet
         ? "AUTOMATIC MINING ACTIVE"
         : "WALLET REQUIRED TO START MINING";
-
   }
-
 
   /*
     Profile
@@ -3719,55 +2772,43 @@ function updateUI(){
       "profileTotal"
     );
 
-
   if(telegramName){
 
     telegramName.textContent =
       state.telegramName ||
       "Telegram User";
-
   }
-
 
   const headerUserName =
     document.getElementById(
       "headerUserName"
     );
 
-
   if(headerUserName){
 
     headerUserName.textContent =
       state.telegramName ||
       "User";
-
   }
-
 
   if(profileId){
 
     profileId.textContent =
       state.telegramId ||
       "—";
-
   }
-
 
   if(profilePool){
 
     profilePool.textContent =
       `${fmt(pool)} LNR`;
-
   }
-
 
   if(profileTotal){
 
     profileTotal.textContent =
       `${fmt(total)} LNR`;
-
   }
-
 
   /*
     Friends
@@ -3788,34 +2829,23 @@ function updateUI(){
       "refRewards"
     );
 
-
   if(referralCode){
 
     referralCode.textContent =
       state.referralCode;
-
   }
-
 
   if(friendsCount){
 
     friendsCount.textContent =
-      Number(
-        state.friends || 0
-      );
-
+      Number(state.friends || 0);
   }
-
 
   if(refRewards){
 
     refRewards.textContent =
-      fmt(
-        state.refRewards
-      );
-
+      fmt(state.refRewards);
   }
-
 
   /*
     Miner summary
@@ -3831,32 +2861,24 @@ function updateUI(){
       "minerCurrentRate"
     );
 
-
   if(minerLevel){
 
     minerLevel.textContent =
       `LVL ${state.level}`;
-
   }
-
 
   if(minerRate){
 
     minerRate.textContent =
       `${Number(state.rate).toFixed(4)} LNR / HOUR`;
-
   }
 
-
   updateDailyTaskUI();
-
 }
-
 
 /* =========================================================
    MINER GRID
 ========================================================= */
-
 function renderMinerGrid(){
 
   const grid =
@@ -3864,77 +2886,45 @@ function renderMinerGrid(){
       "minerGrid"
     );
 
-
   if(!grid){
-
     return;
-
   }
 
+  let html = "";
 
-  let html =
-    "";
-
-
-  for(
-    let level=1;
-    level<=100;
-    level++
-  ){
+  for(let level=1;level<=100;level++){
 
     const threshold =
-      levelThreshold(
-        level
-      );
+      levelThreshold(level);
 
     const rate =
-      levelRate(
-        level
-      );
+      levelRate(level);
 
     const current =
-      level ===
-      state.level;
-
+      level === state.level;
 
     html += `
-
-      <div
-        class="miner-card ${
-          current
-            ? "current"
-            : ""
-        }">
-
+      <div class="miner-card ${current ? "current" : ""}">
         <div class="miner-level">
           LVL ${level}
         </div>
-
         <div class="miner-rate">
           ${rate.toFixed(2)} LNR/h
         </div>
-
         <div class="miner-hold">
           ${threshold.toFixed(0)} LNR claimed
         </div>
-
       </div>
-
     `;
-
   }
-
 
   grid.innerHTML =
     html;
-
 }
-
 
 /* =========================================================
    PAGE NAVIGATION
 ========================================================= */
-
 function showPage(page){
 
   const pages =
@@ -3942,120 +2932,75 @@ function showPage(page){
       ".page"
     );
 
-
   pages.forEach(
-
     item => {
 
       item.classList.remove(
         "active"
       );
-
     }
-
   );
-
 
   const target =
     document.getElementById(
-      "page-" +
-      page
+      "page-" + page
     );
-
 
   if(target){
 
     target.classList.add(
       "active"
     );
-
   }
-
 
   const navItems =
     document.querySelectorAll(
       ".nav-item"
     );
 
-
   navItems.forEach(
-
     item => {
 
       item.classList.toggle(
-
         "active",
-
-        item.dataset.page ===
-        page
-
+        item.dataset.page === page
       );
-
     }
-
   );
 
-
   window.scrollTo({
-
     top:0,
-
     behavior:"smooth"
-
   });
-
 
   if(page === "miners"){
 
     renderMinerGrid();
-
   }
-
 }
-
 
 /* =========================================================
    DAILY TASK
 ========================================================= */
-
 function todayKey(){
 
   const d =
     new Date();
 
-
   return [
-
     d.getFullYear(),
-
-    String(
-      d.getMonth()+1
-    ).padStart(
-      2,
-      "0"
-    ),
-
-    String(
-      d.getDate()
-    ).padStart(
-      2,
-      "0"
-    )
-
+    String(d.getMonth()+1).padStart(2,"0"),
+    String(d.getDate()).padStart(2,"0")
   ].join("-");
-
 }
-
 
 function completeDailyTask(){
 
   const today =
     todayKey();
 
-
   if(
-    state.dailyClaimDate ===
-    today
+    state.dailyClaimDate === today
   ){
 
     showToast(
@@ -4063,31 +3008,22 @@ function completeDailyTask(){
     );
 
     return;
-
   }
 
-
   state.pool =
-    Number(
-      state.pool || 0
-    ) +
+    Number(state.pool || 0) +
     3;
-
 
   state.dailyClaimDate =
     today;
 
-
   saveState();
-
   updateUI();
 
   showToast(
     "+3 LNR daily reward"
   );
-
 }
-
 
 function updateDailyTaskUI(){
 
@@ -4096,13 +3032,9 @@ function updateDailyTaskUI(){
       "dailyTaskBtn"
     );
 
-
   if(!btn){
-
     return;
-
   }
-
 
   if(
     state.dailyClaimDate ===
@@ -4130,29 +3062,21 @@ function updateDailyTaskUI(){
 
     btn.disabled =
       false;
-
   }
-
 }
-
 
 /* =========================================================
    REFERRAL
 ========================================================= */
-
 function copyReferral(){
 
   let link =
     "";
 
-
   if(
-
     BOT_USERNAME &&
-
     BOT_USERNAME !==
-    "YOUR_BOT_USERNAME"
-
+      "YOUR_BOT_USERNAME"
   ){
 
     link =
@@ -4162,16 +3086,11 @@ function copyReferral(){
 
     link =
       state.referralCode;
-
   }
 
-
   if(
-
     navigator.clipboard &&
-
     navigator.clipboard.writeText
-
   ){
 
     navigator.clipboard
@@ -4188,7 +3107,6 @@ function copyReferral(){
         showToast(
           link
         );
-
       });
 
   }else{
@@ -4196,16 +3114,12 @@ function copyReferral(){
     showToast(
       link
     );
-
   }
-
 }
-
 
 /* =========================================================
    WITHDRAW
 ========================================================= */
-
 function setMaxWithdraw(){
 
   const input =
@@ -4213,19 +3127,13 @@ function setMaxWithdraw(){
       "withdrawAmount"
     );
 
-
   if(input){
 
     input.value =
-      Number(
-        state.pool || 0
-      )
-      .toFixed(4);
-
+      Number(state.pool || 0)
+        .toFixed(4);
   }
-
 }
-
 
 function requestWithdraw(){
 
@@ -4234,12 +3142,10 @@ function requestWithdraw(){
       "withdrawAmount"
     );
 
-
   const amount =
     Number(
       input?.value || 0
     );
-
 
   if(amount <= 0){
 
@@ -4248,18 +3154,11 @@ function requestWithdraw(){
     );
 
     return;
-
   }
 
-
   if(
-
     amount >
-
-    Number(
-      state.pool || 0
-    )
-
+    Number(state.pool || 0)
   ){
 
     showToast(
@@ -4267,9 +3166,7 @@ function requestWithdraw(){
     );
 
     return;
-
   }
-
 
   /*
     Real withdrawal is intentionally disabled
@@ -4280,39 +3177,26 @@ function requestWithdraw(){
   showToast(
     "Withdrawals will be enabled later."
   );
-
 }
-
 
 /* =========================================================
    VISIBILITY / BACKGROUND
 ========================================================= */
-
 document.addEventListener(
-
   "visibilitychange",
-
   () => {
 
     if(
-
       document.visibilityState ===
       "hidden"
-
     ){
 
-      accrueMining(
-        true
-      );
-
+      accrueMining(true);
     }
 
-
     if(
-
       document.visibilityState ===
       "visible"
-
     ){
 
       if(connectedWallet){
@@ -4322,56 +3206,38 @@ document.addEventListener(
           and immediately calculate elapsed time.
         */
 
-        accrueMining(
-          true
-        );
-
+        accrueMining(true);
       }
 
       updateUI();
-
     }
-
   }
-
 );
-
 
 /* =========================================================
    BEFORE UNLOAD
 ========================================================= */
-
 window.addEventListener(
-
   "beforeunload",
-
   () => {
 
-    accrueMining(
-      true
-    );
-
+    accrueMining(true);
   }
-
 );
-
 
 /* =========================================================
    MAIN MINING LOOP
 ========================================================= */
-
 let lastFrame =
   Date.now();
 
 let lastRender =
   0;
 
-
 function miningLoop(){
 
   const now =
     Date.now();
-
 
   /*
     Mining calculation runs continuously.
@@ -4379,12 +3245,8 @@ function miningLoop(){
 
   if(connectedWallet){
 
-    accrueMining(
-      false
-    );
-
+    accrueMining(false);
   }
-
 
   /*
     Render frequently enough for
@@ -4392,32 +3254,23 @@ function miningLoop(){
   */
 
   if(
-
-    now -
-    lastRender >=
-    100
-
+    now - lastRender >= 100
   ){
 
     updateUI();
 
     lastRender =
       now;
-
   }
-
 
   requestAnimationFrame(
     miningLoop
   );
-
 }
-
 
 /* =========================================================
    START
 ========================================================= */
-
 async function startApp(){
 
   initTelegram();
@@ -4428,7 +3281,6 @@ async function startApp(){
 
   updateWalletUI();
 
-
   /*
     Start visual loop immediately.
   */
@@ -4437,7 +3289,6 @@ async function startApp(){
     miningLoop
   );
 
-
   /*
     Then initialize actual TON Connect.
   */
@@ -4445,17 +3296,12 @@ async function startApp(){
   await initTonConnect();
 
   updateUI();
-
 }
-
 
 /* =========================================================
    RUN
 ========================================================= */
-
 startApp();
-
 </script>
-
 </body>
 </html>
