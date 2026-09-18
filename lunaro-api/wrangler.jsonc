@@ -1,0 +1,38 @@
+{
+    "name": "lunaro-api",
+      "main": "src/worker.js",
+        "workers_dev": true,
+          "preview_urls": false,
+            "compatibility_date": "2026-09-13",
+
+              "triggers": {
+                  "crons": [
+                        "* * * * *"
+                            ]
+                              },
+
+                                "observability": {
+                                    "enabled": true,
+                                        "head_sampling_rate": 1,
+                                            "redact_query_string": false,
+                                                "logs": {
+                                                      "enabled": true,
+                                                            "head_sampling_rate": 1,
+                                                                  "persist": true,
+                                                                        "invocation_logs": true
+                                                                            },
+                                                                                "traces": {
+                                                                                      "enabled": false,
+                                                                                            "persist": true,
+                                                                                                  "head_sampling_rate": 1
+                                                                                                      }
+                                                                                                        },
+
+                                                                                                          "d1_databases": [
+                                                                                                              {
+                                                                                                                    "binding": "DB",
+                                                                                                                          "database_id": "d7367980-249a-41dc-918a-7208374ad963"
+                                                                                                                              }
+                                                                                                                                ]
+                                                                                                                                }
+}
