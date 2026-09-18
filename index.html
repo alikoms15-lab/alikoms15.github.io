@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>  <html lang="en">  
+<!DOCTYPE html>  <html lang="en">  
 <head>  
 <meta charset="UTF-8">  
 <meta name="viewport"  
@@ -4031,64 +4031,100 @@ function setMaxWithdraw(){
 }  
   
   
-function requestWithdraw(){  
-  
-  const input =  
-    document.getElementById(  
-      "withdrawAmount"  
-    );  
-  
-  
-  const amount =  
-    Number(  
-      input?.value || 0  
-    );  
-  
-  
-  if(amount <= 0){  
-  
-    showToast(  
-      "Enter a valid amount."  
-    );  
-  
-    return;  
-  
-  }  
-  
-  
-  if(  
-  
-    amount >  
-  
-    Number(  
-      state.pool || 0  
-    )  
-  
-  ){  
-  
-    showToast(  
-      "Insufficient claimed balance."  
-    );  
-  
-    return;  
-  
-  }  
-  
-  
-  /*  
-    Real withdrawal is intentionally disabled  
-    until LNR token + secure backend transfer  
-    are implemented.  
-  */  
-  
-  showToast(  
-    "Withdrawals will be enabled later."  
-  );  
-  
-}  
-  
-  
-/* =========================================================  
+function requestWithdraw(){
+
+  const input = document.getElementById("withdrawAmount");
+  const amount = Number(input?.value || 0);
+  const MIN_WITHDRAW = 500;
+  const FEE = 70;
+
+  if(!connectedWallet){
+    showToast("Connect your TON wallet first.");
+    return;
+  }
+
+  if(!state.telegramId){
+    showToast("Telegram account is not ready yet.");
+    return;
+  }
+
+  if(!Number.isFinite(amount) || amount < MIN_WITHDRAW){
+    showToast("Minimum withdrawal is 500 LNR.");
+    return;
+  }
+
+  if(amount > Number(state.pool || 0)){
+    showToast("Insufficient claimed balance.");
+    return;
+  }
+
+  const payout = amount - FEE;
+
+  if(payout <= 0){
+    showToast("Invalid withdrawal amount.");
+    return;
+  }
+
+  const btn = document.querySelector(".withdraw-btn");
+  if(btn) btn.disabled = true;
+
+  fetch(API_URL + "/withdraw", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      telegram_id: state.telegramId,
+      wallet: connectedWallet,
+      amount: amount
+    })
+  })
+  .then(async response => {
+
+    const data = await response.json();
+
+    if(!response.ok || !data.success){
+      throw new Error(
+        data.error || "Withdrawal request failed."
+      );
+    }
+
+    if(input){
+      input.value = "";
+    }
+
+    state.pool = Math.max(
+      0,
+      Number(state.pool || 0) -
+      Number(data.requested || amount)
+    );
+
+    saveState();
+    updateUI();
+
+    showToast(
+      `Withdrawal requested: ${fmt(Number(data.payout || payout))} LNR will be sent. Fee: ${fmt(FEE)} LNR.`
+    );
+  })
+  .catch(error => {
+
+    console.error("Withdraw error:", error);
+
+    showToast(
+      error.message ||
+      "Withdrawal request failed."
+    );
+
+  })
+  .finally(() => {
+
+    if(btn){
+      btn.disabled = false;
+    }
+
+  });
+
+}
+
+/* =========================================================
    VISIBILITY / BACKGROUND  
 ========================================================= */  
   
