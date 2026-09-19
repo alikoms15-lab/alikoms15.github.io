@@ -28,11 +28,10 @@
                                                                                                       }
                                                                                                         },
 
-                                                                                                          "d1_databases": [
-                                                                                                              {
-                                                                                                                    "binding": "DB",
-                                                                                                                          "database_id": "d7367980-249a-41dc-918a-7208374ad963"
-                                                                                                                              }
-                                                                                                                                ]
-                                                                                                                                
-}
+     "d1_databases": [
+      {
+        "binding": "DB",
+        "database_id": "d7367980-249a-41dc-918a-7208374ad963"
+      }
+    ]
+  }
