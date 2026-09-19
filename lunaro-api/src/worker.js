@@ -891,7 +891,7 @@ return J({
 return J({
   success: false,
   error: "Not Found"
-}, 404);
+} 404);
 },
 
 scheduled: async (event, env, ctx) => {
