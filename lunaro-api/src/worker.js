@@ -866,31 +866,308 @@ async function getHoldingBalance(wallet) {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         error:
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     "Unauthorized"
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             }, 401);
-try {
-  const results =
-    await processPendingWithdrawals(
-      env
-    );
+if (
+  u.pathname === "/withdraw" &&
+  req.method === "POST"
+) {
+  try {
+    const d = await req.json();
+
+    const tid =
+      String(d.telegram_id || "").trim();
+
+    const wallet =
+      String(d.wallet || "").trim();
+
+    const requested =
+      Number(d.amount);
+
+    if (!tid) {
+      return J({
+        success: false,
+        error: "telegram_id is required"
+      }, 400);
+    }
+
+    if (!wallet) {
+      return J({
+        success: false,
+        error: "Wallet is required"
+      }, 400);
+    }
+
+    if (!isValidTonAddress(wallet)) {
+      return J({
+        success: false,
+        error: "Invalid TON wallet"
+      }, 400);
+    }
+
+    if (
+      !Number.isFinite(requested) ||
+      requested < MIN_WITHDRAW
+    ) {
+      return J({
+        success: false,
+        error: "Minimum withdrawal is 500 LNR"
+      }, 400);
+    }
+
+    const amount =
+      round6(requested);
+
+    const payout =
+      round6(
+        amount - WITHDRAW_FEE
+      );
+
+    if (payout <= 0) {
+      return J({
+        success: false,
+        error: "Invalid withdrawal amount"
+      }, 400);
+    }
+
+    const user =
+      await env.DB
+        .prepare(`
+          SELECT
+            telegram_id,
+            wallet,
+            balance
+          FROM users
+          WHERE telegram_id=?
+        `)
+        .bind(tid)
+        .first();
+
+    if (!user) {
+      return J({
+        success: false,
+        error: "User not found"
+      }, 404);
+    }
+
+    if (
+      !user.wallet ||
+      user.wallet !== wallet
+    ) {
+      return J({
+        success: false,
+        error:
+          "Wallet does not match connected wallet"
+      }, 400);
+    }
+
+    const balance =
+      Number(user.balance || 0);
+
+    if (balance < amount) {
+      return J({
+        success: false,
+        error: "Insufficient LNR balance",
+        balance
+      }, 400);
+    }
+
+    const results =
+      await env.DB.batch([
+        env.DB
+          .prepare(`
+            UPDATE users
+            SET
+              balance=balance-?,
+              updated_at=CURRENT_TIMESTAMP
+            WHERE
+              telegram_id=?
+              AND balance>=?
+          `)
+          .bind(
+            amount,
+            tid,
+            amount
+          ),
+
+        env.DB
+          .prepare(`
+            INSERT INTO withdrawals
+            (
+              telegram_id,
+              wallet,
+              requested_amount,
+              fee,
+              payout_amount,
+              status,
+              tx_hash,
+              created_at,
+              completed_at
+            )
+            VALUES
+            (
+              ?,
+              ?,
+              ?,
+              ?,
+              ?,
+              'pending',
+              NULL,
+              CURRENT_TIMESTAMP,
+              NULL
+            )
+          `)
+          .bind(
+            tid,
+            wallet,
+            amount,
+            WITHDRAW_FEE,
+            payout
+          )
+      ]);
+
+    const changed =
+      Number(
+        results?.[0]?.meta?.changes || 0
+      );
+
+    const withdrawalId =
+      results?.[1]?.meta?.last_row_id;
+
+    if (changed !== 1) {
+      if (withdrawalId) {
+        await env.DB
+          .prepare(
+            "DELETE FROM withdrawals WHERE id=?"
+          )
+          .bind(withdrawalId)
+          .run();
+      }
+
+      return J({
+        success: false,
+        error:
+          "Balance changed, please try again"
+      }, 409);
+    }
+
+    return J({
+      success: true,
+      status: "pending",
+      withdrawal_id:
+        withdrawalId,
+      requested:
+        amount,
+      fee:
+        WITHDRAW_FEE,
+      payout:
+        payout,
+      message:
+        "Withdrawal request received"
+    });
+
+  } catch (e) {
+    return J({
+      success: false,
+      error:
+        e.message ||
+        "Withdrawal failed"
+    }, 500);
+  }
+}
+
+
+if (
+  u.pathname === "/withdrawals" &&
+  req.method === "GET"
+) {
+  const tid =
+    String(
+      u.searchParams.get(
+        "telegram_id"
+      ) || ""
+    ).trim();
+
+  if (!tid) {
+    return J({
+      success: false,
+      error:
+        "telegram_id is required"
+    }, 400);
+  }
+
+  const rows =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          wallet,
+          requested_amount,
+          fee,
+          payout_amount,
+          status,
+          tx_hash,
+          created_at,
+          completed_at
+        FROM withdrawals
+        WHERE telegram_id=?
+        ORDER BY id DESC
+        LIMIT 50
+      `)
+      .bind(tid)
+      .all();
 
   return J({
     success: true,
-    results
+    withdrawals:
+      rows?.results || []
   });
-
-} catch (e) {
-  return J({
-    success: false,
-    error: e.message
-  }, 500);
 }
 
+
+if (
+  u.pathname === "/process-withdrawals" &&
+  req.method === "POST"
+) {
+  const secret =
+    req.headers.get(
+      "X-LNR-CRON-SECRET"
+    );
+
+  if (
+    !env.LNR_CRON_SECRET ||
+    secret !== env.LNR_CRON_SECRET
+  ) {
+    return J({
+      success: false,
+      error: "Unauthorized"
+    }, 401);
+  }
+
+  try {
+    const results =
+      await processPendingWithdrawals(
+        env
+      );
+
+    return J({
+      success: true,
+      results
+    });
+
+  } catch (e) {
+    return J({
+      success: false,
+      error: e.message
+    }, 500);
+  }
 }
+
 
 return J({
   success: false,
   error: "Not Found"
 }, 404);
-}
+
+},
 
 scheduled: async (event, env, ctx) => {
   ctx.waitUntil(
