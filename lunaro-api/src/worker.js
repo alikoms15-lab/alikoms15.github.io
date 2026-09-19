@@ -891,7 +891,7 @@ return J({
   error: "Not Found"
 }, 404);
 
-},
+}
 
 scheduled: async (event, env, ctx) => {
   ctx.waitUntil(
