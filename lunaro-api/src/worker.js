@@ -925,4 +925,5 @@ scheduled: async (event, env, ctx) => {
       }
     })()
   );
-},
+
+};
