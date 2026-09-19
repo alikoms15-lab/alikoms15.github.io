@@ -125,7 +125,33 @@ import {
                                                                                                                                                                                                                                                       master,
                                                                                                                                                                                                                                                           decimals: 6
                                                                                                                                                                                                                                                             };
-                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                            } const TONCENTER_V3 = "https://toncenter.com/api/v3";
+const LNR_DECIMALS = 6;
+
+async function getHoldingBalance(wallet) {
+  if (!wallet) return 0;
+
+  const url =
+    `${TONCENTER_V3}/jetton/wallets` +
+    `?owner_address=${encodeURIComponent(wallet)}` +
+    `&jetton_address=${encodeURIComponent(LNR_MASTER)}` +
+    `&limit=1`;
+
+  const res = await fetch(url, {
+    headers: { Accept: "application/json" }
+  });
+
+  if (!res.ok) {
+    throw new Error(`TON API ${res.status}`);
+  }
+
+  const data = await res.json();
+  const row = data?.jetton_wallets?.[0];
+
+  return row
+    ? Number(row.balance || 0) / 10 ** LNR_DECIMALS
+    : 0;
+}
 
                                                                                                                                                                                                                                                             async function getTreasuryJettonWallet(env) {
                                                                                                                                                                                                                                                               const treasury =
