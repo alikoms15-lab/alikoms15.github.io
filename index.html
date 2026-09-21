@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>LUNARO — LNR Mining</title>
+  
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://unpkg.com/@tonconnect/ui@3.0.2/dist/tonconnect-ui.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #00f59b;
+      --primary-glow: rgba(0, 245, 155, 0.45);
+      --primary-dark: #00b371;
+      --gold-btn-top: #ffe259;
+      --gold-btn-bottom: #ffa700;
+      --gold-shadow: rgba(255, 195, 18, 0.45);
+      --bg-dark: #020907;
+      --bg-card: rgba(0, 24, 18, 0.72);
+      --border-card: rgba(0, 245, 155, 0.28);
+      --text-muted: #96aca7;
+      --text-dim: #5c7873;
+      --font-main: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000000;
+      font-family: var(--font-main);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app-container {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      height: 100%;
+      max-height: 960px;
+      background: #020907;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 60px rgba(0, 245, 155, 0.12);
+    }
+
+    @media (min-width: 500px) and (min-height: 700px) {
+      .app-container {
+        height: 92vh;
+        border-radius: 40px;
+        border: 2px solid rgba(0, 245, 155, 0.25);
+        box-shadow: 0 0 80px rgba(0, 245, 155, 0.2), 0 25px 50px rgba(0, 0, 0, 0.8);
+      }
+    }
+
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .bg-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center bottom;
+      opacity: 1;
+      filter: contrast(1.1) brightness(1.04) saturate(1.05);
+      transition: transform 0.4s ease;
+    }
+
+    .bg-gradient-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(2, 9, 7, 0.4) 0%,
+        transparent 15%,
+        transparent 70%,
+        rgba(2, 9, 7, 0.4) 85%,
+        rgba(2, 9, 7, 0.9) 100%
+      );
+      z-index: 2;
+    }
+
+    #particles-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .main-content {
+      position: relative;
+      z-index: 5;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 14px 16px 6px;
+      overflow: hidden;
+      overflow-x: hidden;
+      scrollbar-width: none;
+    }
+    .main-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .level-compact-card {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(0, 24, 18, 0.6);
+      backdrop-filter: blur(8px);
+      padding: 4px 10px 4px 5px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 245, 155, 0.25);
+    }
+
+    .level-gem-mini {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid var(--primary);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 8px rgba(0, 245, 155, 0.4);
+    }
+
+    .level-gem-mini img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .level-text-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .level-title-small {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .progress-track-slim {
+      width: 55px;
+      height: 4px;
+      background: #092c22;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 0.5px solid rgba(0, 245, 155, 0.35);
+    }
+
+    .progress-fill-slim {
+      width: 48%;
+      height: 100%;
+      background: linear-gradient(90deg, #00f59b 0%, #00d287 100%);
+      border-radius: 6px;
+      box-shadow: 0 0 6px rgba(0, 245, 155, 0.8);
+    }
+
+    .progress-text-small {
+      font-size: 11px;
+      font-weight: 700;
+      color: #9fe2d3;
+    }
+
+    .wallet-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      background: rgba(0, 22, 17, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1.2px solid rgba(0, 245, 155, 0.4);
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 14px rgba(0, 245, 155, 0.12);
+      transition: all 0.25s;
+    }
+
+    .wallet-chip:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(0, 245, 155, 0.3);
+    }
+
+    .wallet-chip:active {
+      transform: scale(0.96);
+    }
+
+    .wallet-icon-svg {
+      width: 16px;
+      height: 16px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+    }
+
+    .wallet-address {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.3px;
+    }
+
+    .wallet-chevron {
+      color: #88a7a0;
+      display: flex;
+      align-items: center;
+    }
+
+    .balance-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 2px;
+      margin-bottom: 4px;
+      position: relative;
+      z-index: 6;
+    }
+
+    .balance-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: #a4beba;
+      margin-bottom: 5px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .total-balance-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 5px 20px;
+      background: rgba(0, 20, 15, 0.82);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 245, 155, 0.4);
+      border-radius: 30px;
+      box-shadow: 0 0 20px rgba(0, 245, 155, 0.15), inset 0 0 10px rgba(0, 245, 155, 0.08);
+    }
+
+    .gold-coin-thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid #ffd700;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+      object-fit: cover;
+      display: block;
+    }
+
+    .total-number {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .currency-tag {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(0, 245, 155, 0.6);
+    }
+
+    .stats-card {
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      background: rgba(0, 22, 17, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 245, 155, 0.25);
+      border-radius: 18px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .stat-col {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 2px 6px;
+    }
+
+    .stat-col:first-child {
+      border-right: 1px solid rgba(0, 245, 155, 0.18);
+    }
+
+    .stat-icon-wrap {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      filter: drop-shadow(0 0 5px rgba(0, 245, 155, 0.5));
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-name {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #8faea8;
+      margin-bottom: 2px;
+    }
+
+    .stat-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-ticker {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .hero-stage {
+      position: relative;
+      flex: 1;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 6;
+    }
+
+    .coin-interactive-wrap {
+      position: relative;
+      width: min(72vw, 320px);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-coin {
+      width: min(62vw, 270px);
+      height: min(62vw, 270px);
+      object-fit: contain;
+      border-radius: 50%;
+      display: block;
+      filter: drop-shadow(0 18px 35px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 24px rgba(0, 245, 155, 0.18));
+      animation: coinFloat 6.5s ease-in-out infinite;
+      transform: translateZ(0);
+      will-change: transform;
+    }
+
+    @keyframes coinFloat {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50% { transform: translateY(-6px) rotate(1deg); }
+    }
+
+    .help-glass-orb {
+      position: absolute;
+      left: 8px;
+      top: 14%;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(255, 255, 255, 0.45);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 8px 16px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 25;
+      animation: orbFloat 3.2s ease-in-out infinite alternate;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    }
+
+    @keyframes orbFloat {
+      0% {
+        transform: translateY(0px) rotate(0deg);
+        box-shadow: 0 0 16px rgba(255, 255, 255, 0.15), 0 6px 14px rgba(0, 0, 0, 0.4);
+      }
+      50% {
+        transform: translateY(-6px) rotate(-3deg);
+        box-shadow: 0 0 24px rgba(255, 255, 255, 0.3), 0 10px 20px rgba(0, 0, 0, 0.5);
+      }
+      100% {
+        transform: translateY(3px) rotate(2deg);
+        box-shadow: 0 0 18px rgba(255, 255, 255, 0.18), 0 8px 16px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    .help-glass-orb-inner {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.2) 22%, rgba(15, 22, 20, 0.95) 60%, #030806 100%);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+
+    .help-glass-orb-inner span {
+      color: #ffffff;
+      font-size: 19px;
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 255, 255, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .help-glass-orb:hover {
+      animation-play-state: paused;
+      transform: scale(1.1);
+      border-color: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 28px rgba(255, 255, 255, 0.4);
+    }
+
+    .help-glass-orb:active {
+      transform: scale(0.94);
+    }
+
+    .live-mining-card {
+      width: 100%;
+      background: rgba(0, 22, 16, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(0, 245, 155, 0.38);
+      border-radius: 20px;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      margin-bottom: 10px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 245, 155, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .live-mining-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20%;
+      right: 20%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 245, 155, 0.6), transparent);
+    }
+
+    .live-mining-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .pulse-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+      animation: pulseDot 1.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseDot {
+      0% { opacity: 0.4; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 14px var(--primary); }
+    }
+
+    .live-mining-title {
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #9fe2d3;
+      text-transform: uppercase;
+    }
+
+    .live-mining-main-val {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 5px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .live-mining-symbol {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .live-mining-digits {
+      font-size: 28px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 16px rgba(0, 245, 155, 0.35);
+    }
+
+    .live-mining-unit {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(0, 245, 155, 0.5);
+    }
+
+    .claim-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      padding: 0 2px 8px;
+    }
+
+    .claim-btn-gold {
+      position: relative;
+      width: 100%;
+      height: 54px;
+      background: linear-gradient(180deg, var(--gold-btn-top) 0%, var(--gold-btn-bottom) 100%);
+      border: 1.5px solid #ffe97d;
+      border-radius: 18px;
+      color: #1a1200;
+      font-family: var(--font-main);
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      cursor: pointer;
+      box-shadow: 
+        0 0 28px var(--gold-shadow),
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.7),
+        inset 0 -2px 4px rgba(120, 75, 0, 0.5);
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .claim-btn-gold::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        60deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.35) 50%,
+        transparent 70%
+      );
+      transform: rotate(25deg);
+      animation: buttonShine 4s infinite linear;
+      pointer-events: none;
+    }
+
+    @keyframes buttonShine {
+      0% { transform: translateX(-100%) rotate(25deg); }
+      25% { transform: translateX(100%) rotate(25deg); }
+      100% { transform: translateX(100%) rotate(25deg); }
+    }
+
+    .claim-btn-gold:active {
+      transform: scale(0.97);
+      box-shadow: 0 0 15px var(--gold-shadow);
+    }
+
+    .bottom-nav {
+      position: relative;
+      z-index: 10;
+      height: 64px;
+      background: rgba(1, 10, 8, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(0, 245, 155, 0.22);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: 0 6px;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .nav-item {
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .nav-icon-container {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s;
+    }
+
+    .nav-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      transition: color 0.2s;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item.active .nav-icon-container {
+      filter: drop-shadow(0 0 8px var(--primary));
+      transform: translateY(-2px);
+    }
+
+    .nav-item.active .nav-label {
+      color: var(--primary);
+      text-shadow: 0 0 8px rgba(0, 245, 155, 0.4);
+    }
+
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 38px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 4px 4px 0 0;
+      box-shadow: 0 0 12px var(--primary);
+    }
+
+    .nav-item.special-btn .nav-icon-container {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(0, 245, 155, 0.15);
+      border: 1px solid rgba(0, 245, 155, 0.4);
+      color: var(--primary);
+      box-shadow: 0 0 10px rgba(0, 245, 155, 0.2);
+    }
+
+    .toast-msg {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: rgba(2, 25, 19, 0.95);
+      border: 1.5px solid var(--primary);
+      padding: 10px 18px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0, 245, 155, 0.4);
+      color: #ffffff;
+      font-size: 13.5px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .toast-msg.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 380px;
+      background: #021812;
+      border: 1.5px solid var(--primary);
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: 0 0 50px rgba(0, 245, 155, 0.25);
+      position: relative;
+      text-align: center;
+      animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalPop {
+      0% { opacity: 0; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: #96aca7;
+      font-size: 24px;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .modal-icon-header {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(0, 245, 155, 0.15);
+      border: 1.5px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      color: var(--primary);
+      box-shadow: 0 0 20px rgba(0, 245, 155, 0.3);
+    }
+
+    .modal-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .modal-body {
+      font-size: 13.5px;
+      color: #b1c7c2;
+      line-height: 1.55;
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .modal-btn {
+      width: 100%;
+      height: 46px;
+      background: linear-gradient(180deg, #00f59b 0%, #00a86b 100%);
+      border: none;
+      border-radius: 14px;
+      color: #02120d;
+      font-size: 15.5px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 245, 155, 0.35);
+      transition: all 0.2s;
+    }
+
+    .modal-btn:active {
+      transform: scale(0.97);
+    }
+
+    .wallet-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .wallet-option-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 15px;
+      background: rgba(0, 30, 22, 0.7);
+      border: 1px solid rgba(0, 245, 155, 0.25);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .wallet-option-item:hover {
+      border-color: var(--primary);
+      background: rgba(0, 45, 32, 0.85);
+    }
+
+    .wallet-option-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <div class="bg-layer">
+      <img src="assets/lunaro_hero_bg.jpg" alt="Lunaro Mining Stage" class="bg-image">
+      <div class="bg-gradient-overlay"></div>
+      <canvas id="particles-canvas"></canvas>
+    </div>
+
+    <main class="main-content">
+      
+      <div class="status-row">
+        <div class="level-compact-card">
+          <div class="level-gem-mini">
+            <img src="assets/level_gem.jpg" alt="Gem">
+          </div>
+          <div class="level-text-info">
+            <span class="level-title-small" id="levelTitle">Level 3</span>
+            <div class="progress-track-slim">
+              <div class="progress-fill-slim" id="levelProgressFill"></div>
+            </div>
+            <span class="progress-text-small" id="levelProgressText">48%</span>
+          </div>
+        </div>
+
+        <div class="wallet-chip" id="walletChip">
+          <div class="wallet-icon-svg">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="4" />
+              <path d="M16 12a2 2 0 1 0 4 0" />
+            </svg>
+          </div>
+          <span class="wallet-address" id="walletAddressDisplay">UQCN...iD7</span>
+          <div class="wallet-chevron">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <section class="balance-section">
+        <div class="balance-label">TOTAL BALANCE</div>
+        <div class="total-balance-pill">
+          <img src="assets/lnr_gold_coin.jpg" alt="LNR Gold Coin" class="gold-coin-thumb">
+          <span class="total-number" id="totalBalance">12,458.32</span>
+          <span class="currency-tag">LNR</span>
+        </div>
+
+        <div class="stats-card">
+          <div class="stat-col">
+            <div class="stat-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
+                <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
+                <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-name">HOLDING WALLET</span>
+              <div class="stat-value">
+                <span id="holdingWalletAmount">11,925.65</span>
+                <span class="stat-ticker">LNR</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-col">
+            <div class="stat-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-name">WALLET BALANCE</span>
+              <div class="stat-value">
+                <span id="walletBalance">532.67</span>
+                <span class="stat-ticker">LNR</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="hero-stage" id="heroStage">
+        <div class="help-glass-orb" id="btnHelpGuide" title="راهنمای برنامه">
+          <div class="help-glass-orb-inner">
+            <span>?</span>
+          </div>
+        </div>
+        <div class="coin-interactive-wrap" id="coinWrap">
+          <img src="assets/lnr_gold_coin.jpg" alt="LNR" class="hero-coin">
+        </div>
+      </div>
+
+      <div class="claim-container">
+        <div class="live-mining-card">
+          <div class="live-mining-header">
+            <div class="pulse-indicator"></div>
+            <span class="live-mining-title">UNCLAIMED MINED REWARD</span>
+          </div>
+          <div class="live-mining-main-val">
+            <span class="live-mining-symbol">+</span>
+            <span id="liveMinedCounter" class="live-mining-digits">0.34267</span>
+            <span class="live-mining-unit">LNR</span>
+          </div>
+        </div>
+
+        <button class="claim-btn-gold" id="btnClaim">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span>CLAIM</span>
+        </button>
+      </div>
+
+    </main>
+
+    <nav class="bottom-nav" id="bottomNav">
+      <button class="nav-item active" data-tab="mine" id="navMine">
+        <div class="nav-icon-container">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 9.5L19 5l-2.5-2.5L12 7"></path>
+            <path d="m21.5 2.5-19 19"></path>
+            <path d="M9.5 14.5L5 19l2.5 2.5L12 17"></path>
+          </svg>
+        </div>
+        <span class="nav-label">Mine</span>
+      </button>
+
+      <button class="nav-item" data-tab="tasks" id="navTasks">
+        <div class="nav-icon-container">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            <path d="m9 14 2 2 4-4"></path>
+          </svg>
+        </div>
+        <span class="nav-label">Tasks</span>
+      </button>
+
+      <button class="nav-item special-btn" data-tab="miners" id="navMiners">
+        <div class="nav-icon-container">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <span class="nav-label">Miners</span>
+      </button>
+
+      <button class="nav-item" data-tab="friends" id="navFriends">
+        <div class="nav-icon-container">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <span class="nav-label">Friends</span>
+      </button>
+
+      <button class="nav-item" data-tab="profile" id="navProfile">
+        <div class="nav-icon-container">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <span class="nav-label">Profile</span>
+      </button>
+    </nav>
+
+    <div class="toast-msg" id="toastMsg">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+      </svg>
+      <span id="toastText">Notification</span>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal-box">
+        <button class="modal-close" id="btnModalClose">&times;</button>
+        <div class="modal-icon-header" id="modalIcon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 14 14"></polyline>
+          </svg>
+        </div>
+        <h3 class="modal-title" id="modalTitle">Modal Header</h3>
+        <div class="modal-body" id="modalBody">Description text goes here.</div>
+        <div id="modalExtraContent"></div>
+        <button class="modal-btn" id="btnModalAction">Confirm</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ============================================================
+       LUNARO / LNR — FRONTEND LOGIC BRIDGE
+       ------------------------------------------------------------
+       ظاهر صفحه اول عمداً حفظ شده است.
+       موجودی و عملیات حساس باید از Backend معتبر شوند.
+       کلید خصوصی یا Seed Phrase هرگز در این فایل قرار نمی‌گیرد.
+       ============================================================ */
+
+    const LUNARO_CONFIG = window.LUNARO_CONFIG || {};
+    const LUNARO_API_BASE =
+      LUNARO_CONFIG.apiBase ||
+      localStorage.getItem('lunaro_api_base') ||
+      '/api';
+
+    const state = {
+      totalBalance: 12458.32,
+      holdingWallet: 11925.65,
+      walletBalance: 532.67,
+      liveMined: 0.34267,
+      miningRatePerSec: 0.0002222222,
+      miningRatePerHour: 0.80,
+      walletAddress: '',
+      isWalletConnected: false,
+      miningActive: false,
+      serverSynced: false,
+      lastServerSync: 0,
+      level: 3,
+      levelProgress: 48,
+      referralCode: '',
+      referralCount: 0,
+      referralEarnings: 0,
+      withdrawalHistory: []
+    };
+
+    const totalBalanceEl = document.getElementById('totalBalance');
+    const holdingWalletAmountEl = document.getElementById('holdingWalletAmount');
+    const walletBalanceEl = document.getElementById('walletBalance');
+    const liveMinedCounterEl = document.getElementById('liveMinedCounter');
+    const btnClaim = document.getElementById('btnClaim');
+    const btnHelpGuide = document.getElementById('btnHelpGuide');
+    const toastMsg = document.getElementById('toastMsg');
+    const toastText = document.getElementById('toastText');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalIcon = document.getElementById('modalIcon');
+    const modalExtra = document.getElementById('modalExtraContent');
+    const btnModalClose = document.getElementById('btnModalClose');
+    const btnModalAction = document.getElementById('btnModalAction');
+    const walletChip = document.getElementById('walletChip');
+    const walletAddressDisplay = document.getElementById('walletAddressDisplay');
+    const levelTitleEl = document.getElementById('levelTitle');
+    const levelProgressFillEl = document.getElementById('levelProgressFill');
+    const levelProgressTextEl = document.getElementById('levelProgressText');
+
+    let tonConnectUI = null;
+    let tonConnectReady = false;
+
+
+    function formatNumber(num, decimals = 2) {
+      return num.toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+    }
+
+    let toastTimeout;
+    function showToast(message) {
+      toastText.textContent = message;
+      toastMsg.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toastMsg.classList.remove('show');
+      }, 2200);
+    }
+
+    const AudioEngine = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+      },
+      playClaim() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const notes = [440, 554, 659, 880];
+          notes.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.15, this.ctx.currentTime + idx * 0.07);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.07 + 0.25);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(this.ctx.currentTime + idx * 0.07);
+            osc.stop(this.ctx.currentTime + idx * 0.07 + 0.25);
+          });
+        } catch (e) {}
+      }
+    };
+
+    function getTelegramInitData() {
+      return window.Telegram?.WebApp?.initData || '';
+    }
+
+    async function lunaroApi(path, options = {}) {
+      const headers = {
+        ...(options.headers || {}),
+        'Content-Type': 'application/json'
+      };
+
+      const initData = getTelegramInitData();
+      if (initData) headers['X-Telegram-Init-Data'] = initData;
+
+      const response = await fetch(`${LUNARO_API_BASE}${path}`, {
+        ...options,
+        headers,
+        credentials: 'include'
+      });
+
+      const contentType = response.headers.get('content-type') || '';
+      const payload = contentType.includes('application/json')
+        ? await response.json().catch(() => ({}))
+        : {};
+
+      if (!response.ok) {
+        const message = payload?.message || `API ${response.status}`;
+        throw new Error(message);
+      }
+
+      return payload;
+    }
+
+    function renderState() {
+      state.totalBalance = calculateTotalAssets();
+      totalBalanceEl.textContent = formatNumber(Number(state.totalBalance) || 0);
+      holdingWalletAmountEl.textContent = formatNumber(Number(state.holdingWallet) || 0);
+      walletBalanceEl.textContent = formatNumber(Number(state.walletBalance) || 0);
+      liveMinedCounterEl.textContent = (Number(state.liveMined) || 0).toFixed(5);
+
+      if (walletAddressDisplay) {
+        const address = state.walletAddress || '';
+        walletAddressDisplay.textContent = address
+          ? `${address.slice(0, 6)}...${address.slice(-4)}`
+          : 'CONNECT WALLET';
+      }
+
+      if (levelTitleEl) levelTitleEl.textContent = `Level ${Number(state.level) || 1}`;
+      if (levelProgressFillEl) {
+        const progress = Math.max(0, Math.min(100, Number(state.levelProgress) || 0));
+        levelProgressFillEl.style.width = `${progress}%`;
+      }
+      if (levelProgressTextEl) {
+        levelProgressTextEl.textContent = `${Math.round(Number(state.levelProgress) || 0)}%`;
+      }
+    }
+
+    function applyServerState(data) {
+      if (!data || typeof data !== 'object') return;
+
+      const numericFields = [
+        'totalBalance', 'holdingWallet', 'walletBalance',
+        'liveMined', 'miningRatePerSec', 'levelProgress',
+        'referralCount', 'referralEarnings'
+      ];
+
+      numericFields.forEach(key => {
+        if (data[key] !== undefined && Number.isFinite(Number(data[key]))) {
+          state[key] = Number(data[key]);
+        }
+      });
+
+      if (data.walletAddress !== undefined)
+        state.walletAddress = data.walletAddress || '';
+
+      if (typeof data.isWalletConnected === 'boolean')
+        state.isWalletConnected = data.isWalletConnected;
+
+      if (typeof data.miningActive === 'boolean')
+        state.miningActive = data.miningActive;
+
+      if (data.level !== undefined && Number.isFinite(Number(data.level)))
+        state.level = Number(data.level);
+
+      if (data.referralCode !== undefined)
+        state.referralCode = String(data.referralCode || '');
+
+      if (Array.isArray(data.withdrawalHistory))
+        state.withdrawalHistory = data.withdrawalHistory;
+
+      state.serverSynced = true;
+      state.lastServerSync = Date.now();
+      renderState();
+    }
+
+    async function syncLunaroState(showError = false) {
+      try {
+        const data = await lunaroApi('/me');
+        applyServerState(data);
+        return true;
+      } catch (error) {
+        if (showError) showToast('ارتباط با سرور LUNARO برقرار نشد');
+        return false;
+      }
+    }
+
+    /* ============================================================
+       LUNARO OUR MINING LOGIC
+       - Programmer's live mining logic removed.
+       - Mining is automatic only while wallet is connected.
+       - Unclaimed reward stays outside Total Assets until CLAIM.
+       - Rate increases with Level.
+       ============================================================ */
+
+    function levelThreshold(level) {
+      if (level <= 1) return 0;
+      return 100 * Math.pow(level - 1, 1.35);
+    }
+
+    function levelRate(level) {
+      return 0.70 + (level - 1) * 0.05; // LNR / hour
+    }
+
+    function calculateOurMiningRate() {
+      const level = Math.max(1, Number(state.level) || 1);
+      const ratePerHour = levelRate(level);
+      state.miningRatePerHour = ratePerHour;
+      state.miningRatePerSec = ratePerHour / 3600;
+      return state.miningRatePerSec;
+    }
+
+    function updateOurLevel() {
+      // For this stage the level follows the claimed LNR balance.
+      // Holding Wallet remains part of Total Assets, but is not claimable.
+      const claimed = Math.max(0, Number(state.walletBalance) || 0);
+      let level = 1;
+
+      for (let i = 2; i <= 100; i++) {
+        if (claimed >= levelThreshold(i)) level = i;
+        else break;
+      }
+
+      state.level = level;
+      calculateOurMiningRate();
+    }
+
+    function calculateTotalAssets() {
+      // Unclaimed mining is deliberately excluded.
+      return (Number(state.walletBalance) || 0) + (Number(state.holdingWallet) || 0);
+    }
+
+    function accrueOurMining(save = false) {
+      if (!state.isWalletConnected || !state.miningActive) {
+        state.lastMiningTime = Date.now();
+        return;
+      }
+
+      const now = Date.now();
+      if (!state.lastMiningTime) {
+        state.lastMiningTime = now;
+        return;
+      }
+
+      let elapsed = (now - state.lastMiningTime) / 1000;
+      if (!Number.isFinite(elapsed) || elapsed < 0) elapsed = 0;
+
+      calculateOurMiningRate();
+      state.liveMined = (Number(state.liveMined) || 0) + elapsed * state.miningRatePerSec;
+      state.lastMiningTime = now;
+
+      if (save) {
+        try {
+          localStorage.setItem('lunaro_our_mining_preview', JSON.stringify({
+            liveMined: state.liveMined,
+            lastMiningTime: state.lastMiningTime
+          }));
+        } catch (e) {}
+      }
+    }
+
+    async function startMiningSession() {
+      if (!state.isWalletConnected) {
+        state.miningActive = false;
+        state.lastMiningTime = Date.now();
+        renderState();
+        return false;
+      }
+
+      updateOurLevel();
+      state.miningActive = true;
+      state.lastMiningTime = Date.now();
+      renderState();
+      return true;
+    }
+
+    async function connectWalletToLunaro(address, provider = 'tonconnect') {
+      return lunaroApi('/wallet/connect', {
+        method: 'POST',
+        body: JSON.stringify({ address, provider })
+      });
+    }
+
+    async function disconnectWalletFromLunaro() {
+      return lunaroApi('/wallet/disconnect', {
+        method: 'POST',
+        body: JSON.stringify({})
+      });
+    }
+
+    async function requestWithdrawal() {
+      if (!state.isWalletConnected || !state.walletAddress) {
+        showToast('ابتدا کیف پول را متصل کنید');
+        return;
+      }
+
+      if (Number(state.walletBalance) < 500) {
+        showToast('حداقل برداشت 500 LNR است');
+        return;
+      }
+
+      const gross = 500;
+      const fee = 70;
+      const net = gross - fee;
+
+      try {
+        const data = await lunaroApi('/withdrawals/request', {
+          method: 'POST',
+          body: JSON.stringify({
+            amount: gross,
+            fee,
+            netAmount: net,
+            walletAddress: state.walletAddress
+          })
+        });
+        applyServerState(data);
+        showToast(`درخواست برداشت ثبت شد: ${net} LNR پس از کارمزد`);
+      } catch (error) {
+        showToast('درخواست برداشت ثبت نشد');
+      }
+    }
+
+    /* شمارنده فقط از منطق LUNARO خودمان تغذیه می‌شود. */
+    setInterval(() => {
+      if (!state.isWalletConnected || !state.miningActive) return;
+      accrueOurMining(false);
+      liveMinedCounterEl.textContent = (Number(state.liveMined) || 0).toFixed(5);
+    }, 100);
+
+    btnClaim.addEventListener('click', async (e) => {
+      e.stopPropagation();
+
+      if (!state.isWalletConnected) {
+        showToast('ابتدا کیف پول را متصل کنید');
+        return;
+      }
+
+      // Add the latest fraction before claiming.
+      accrueOurMining(true);
+      const amount = Number(state.liveMined) || 0;
+
+      if (amount <= 0.00001) {
+        showToast('مقدار قابل Claim وجود ندارد');
+        return;
+      }
+
+      btnClaim.disabled = true;
+      btnClaim.style.opacity = '0.7';
+
+      try {
+        AudioEngine.playClaim();
+
+        // OUR CLAIM LOGIC:
+        // Unclaimed -> Wallet/Claimed Balance.
+        // Only after this action does Total Assets increase.
+        state.walletBalance = (Number(state.walletBalance) || 0) + amount;
+        state.totalBalance = calculateTotalAssets();
+        state.liveMined = 0;
+
+        updateOurLevel();
+        state.lastMiningTime = Date.now();
+        renderState();
+
+        try {
+          localStorage.setItem('lunaro_our_claim_preview', JSON.stringify({
+            walletBalance: state.walletBalance,
+            totalBalance: state.totalBalance,
+            liveMined: 0,
+            level: state.level,
+            miningRatePerHour: state.miningRatePerHour
+          }));
+        } catch (e) {}
+
+        triggerConfetti();
+        showToast(`+${amount.toFixed(5)} LNR به کیف پول اضافه شد`);
+      } finally {
+        btnClaim.disabled = false;
+        btnClaim.style.opacity = '';
+      }
+    });
+
+    btnHelpGuide.addEventListener('click', (e) => {
+      e.stopPropagation();
+      modalIcon.innerHTML = `
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      `;
+      modalTitle.textContent = "راهنمای سیستم استخراج LUNARO";
+      modalBody.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13px; color:#d2e5e1; direction:rtl; text-align:right;">
+          <div><strong style="color:var(--primary);">⚡ استخراج خودکار:</strong> ماینینگ به صورت کاملاً اتوماتیک و ابری در پس‌زمینه انجام می‌شود و نیازی به ضربه زدن مداوم نیست.</div>
+          <div><strong style="color:#ffe259;">💰 دکمه CLAIM:</strong> با زدن دکمه زرد رنگ CLAIM، مقدار ماین‌شده از بخش Unclaimed خارج و پس از ثبت موفق سرور به موجودی حساب شما اضافه می‌شود.</div>
+          <div><strong style="color:var(--primary);">💎 ارتقای لول:</strong> Total Assets (دارایی کل) مبنای محاسبه نرخ Mining است و Level نیز از منطق سرور تعیین می‌شود.</div>
+        </div>
+      `;
+      modalExtra.innerHTML = "";
+      btnModalAction.textContent = "متوجه شدم";
+      btnModalAction.onclick = () => modalOverlay.classList.remove('active');
+      modalOverlay.classList.add('active');
+    });
+
+    async function initTonConnect() {
+      if (tonConnectReady) return tonConnectUI;
+      if (!window.TON_CONNECT_UI?.TonConnectUI) return null;
+
+      const manifestUrl =
+        LUNARO_CONFIG.tonConnectManifestUrl ||
+        new URL('tonconnect-manifest.json', window.location.href).href;
+
+      try {
+        tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+          manifestUrl,
+          analytics: { mode: 'off' }
+        });
+
+        /* TON Mainnet chain id = -239. */
+        if (typeof tonConnectUI.setConnectionNetwork === 'function') {
+          tonConnectUI.setConnectionNetwork('-239');
+        }
+
+        tonConnectUI.onStatusChange(async (wallet) => {
+          if (wallet?.account?.address) {
+            const address = wallet.account.address;
+            try {
+              const serverState = await connectWalletToLunaro(address, 'tonconnect');
+              applyServerState(serverState);
+            } catch (error) {
+              /* Keep wallet UI responsive even if Backend is temporarily unavailable. */
+              state.walletAddress = address;
+              state.isWalletConnected = true;
+              renderState();
+            }
+
+            state.miningActive = false;
+            await startMiningSession();
+            showToast('کیف پول با موفقیت متصل شد');
+          } else {
+            state.walletAddress = '';
+            state.isWalletConnected = false;
+            state.miningActive = false;
+            renderState();
+          }
+        });
+
+        if (typeof tonConnectUI.restoreConnection === 'function') {
+          await tonConnectUI.restoreConnection();
+        }
+
+        tonConnectReady = true;
+        return tonConnectUI;
+      } catch (error) {
+        tonConnectUI = null;
+        tonConnectReady = false;
+        return null;
+      }
+    }
+
+    walletChip.addEventListener('click', async () => {
+      modalIcon.innerHTML = `
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <rect x="2" y="4" width="20" height="16" rx="4" />
+          <path d="M16 12a2 2 0 1 0 4 0" />
+        </svg>
+      `;
+
+      modalTitle.textContent = 'TON Wallet';
+      modalBody.innerHTML = state.isWalletConnected && state.walletAddress
+        ? `<div style="text-align:center;direction:ltr;word-break:break-all;">${state.walletAddress}</div>`
+        : `<div style="text-align:center;direction:rtl;">هیچ کیف پولی متصل نیست.</div>`;
+
+      modalExtra.innerHTML = `
+        <div class="wallet-list">
+          <div class="wallet-option-item" id="tonkeeperConnectOption">
+            <div class="wallet-option-left"><span>💎 Tonkeeper</span></div>
+            <span style="color:var(--primary);font-size:12px;font-weight:800;">
+              ${state.isWalletConnected ? 'CONNECTED' : 'CONNECT'}
+            </span>
+          </div>
+
+          <div class="wallet-option-item" id="telegramWalletOption">
+            <div class="wallet-option-left"><span>✈️ Telegram Wallet</span></div>
+            <span style="color:#96aca7;font-size:12px;">${state.isWalletConnected ? 'Switch' : 'CONNECT'}</span>
+          </div>
+        </div>
+      `;
+
+      const tonkeeperOption = document.getElementById('tonkeeperConnectOption');
+      const telegramWalletOption = document.getElementById('telegramWalletOption');
+
+      tonkeeperOption.onclick = async () => {
+        const ui = await initTonConnect();
+        if (!ui) {
+          showToast('TonConnect هنوز آماده نشده است');
+          return;
+        }
+
+        try {
+          await ui.openModal();
+        } catch (error) {
+          showToast('صفحه اتصال کیف پول باز نشد');
+        }
+      };
+
+      telegramWalletOption.onclick = async () => {
+        /* Telegram Wallet نیز از مسیر TonConnect وارد می‌شود. */
+        const ui = await initTonConnect();
+        if (!ui) {
+          showToast('اتصال Telegram Wallet در دسترس نیست');
+          return;
+        }
+        try {
+          await ui.openModal();
+        } catch (error) {
+          showToast('لیست کیف پول‌ها باز نشد');
+        }
+      };
+
+      btnModalAction.textContent = state.isWalletConnected
+        ? 'Disconnect Wallet'
+        : 'Connect Wallet';
+
+      btnModalAction.onclick = async () => {
+        if (!state.isWalletConnected) {
+          const ui = await initTonConnect();
+          if (!ui) {
+            showToast('سیستم اتصال کیف پول آماده نیست');
+            return;
+          }
+          try {
+            await ui.openModal();
+          } catch (error) {
+            showToast('اتصال کیف پول انجام نشد');
+          }
+          return;
+        }
+
+        try {
+          if (tonConnectUI && typeof tonConnectUI.disconnect === 'function') {
+            await tonConnectUI.disconnect();
+          }
+          await disconnectWalletFromLunaro();
+          state.walletAddress = '';
+          state.isWalletConnected = false;
+          state.miningActive = false;
+          renderState();
+          modalOverlay.classList.remove('active');
+          showToast('Wallet disconnected');
+        } catch (error) {
+          showToast('قطع اتصال کیف پول انجام نشد');
+        }
+      };
+
+      modalOverlay.classList.add('active');
+    });
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function openSectionModal(tab, data = {}) {
+      const labels = {
+        tasks: 'Tasks',
+        miners: 'Miners',
+        friends: 'Friends',
+        profile: 'Profile'
+      };
+
+      const title = labels[tab] || tab;
+      modalTitle.textContent = title;
+      modalIcon.innerHTML = `<span style="font-size:20px;font-weight:900;">${title.slice(0,1)}</span>`;
+
+      if (tab === 'tasks') {
+        const tasks = Array.isArray(data.tasks) ? data.tasks : [];
+        modalBody.innerHTML = `
+          <div style="direction:rtl;text-align:right;color:#d2e5e1;">
+            <div style="margin-bottom:10px;">ماموریت‌ها پس از اتصال Backend از سرور بارگذاری می‌شوند.</div>
+            ${tasks.length ? tasks.map(t => `
+              <div style="padding:10px;border:1px solid rgba(0,245,155,.2);border-radius:12px;margin-bottom:8px;">
+                <b>${escapeHtml(t.title)}</b><br><span style="color:var(--primary);">+${escapeHtml(t.reward)} LNR</span>
+              </div>`).join('') : '<div style="color:#96aca7;">فعلاً ماموریتی از سرور دریافت نشده است.</div>'}
+          </div>`;
+        modalExtra.innerHTML = '';
+        btnModalAction.textContent = 'Close';
+        btnModalAction.onclick = () => modalOverlay.classList.remove('active');
+      }
+
+      if (tab === 'miners') {
+        modalBody.innerHTML = `
+          <div style="direction:rtl;text-align:right;color:#d2e5e1;display:flex;flex-direction:column;gap:10px;">
+            <div><b>Level:</b> ${Number(state.level) || 1}</div>
+            <div><b>Total Assets:</b> ${formatNumber(Number(state.totalBalance) || 0)} LNR</div>
+            <div><b>Mining Rate:</b> ${(Number(state.miningRatePerSec) || 0).toFixed(8)} LNR/sec</div>
+            <div style="color:#96aca7;">نرخ واقعی باید توسط Backend بر اساس Total Assets تعیین و به کاربر اعلام شود.</div>
+          </div>`;
+        modalExtra.innerHTML = '';
+        btnModalAction.textContent = 'Close';
+        btnModalAction.onclick = () => modalOverlay.classList.remove('active');
+      }
+
+      if (tab === 'friends') {
+        const code = data.referralCode || state.referralCode || '---';
+        const shareUrl = data.shareUrl || '';
+        modalBody.innerHTML = `
+          <div style="direction:rtl;text-align:right;color:#d2e5e1;display:flex;flex-direction:column;gap:10px;">
+            <div><b>کد دعوت شما:</b> <span style="color:var(--primary);direction:ltr;display:inline-block;">${escapeHtml(code)}</span></div>
+            <div><b>تعداد دعوت‌شده‌ها:</b> ${Number(state.referralCount) || 0}</div>
+            <div><b>درآمد Referral:</b> ${formatNumber(Number(state.referralEarnings) || 0)} LNR</div>
+            <div style="color:#96aca7;">سهم معرف: 10% از مقدار Claim شده کاربر دعوت‌شده.</div>
+          </div>`;
+        modalExtra.innerHTML = `
+          <button class="modal-btn" id="btnShareReferral" style="margin-bottom:10px;">Share Referral</button>
+        `;
+        document.getElementById('btnShareReferral').onclick = async () => {
+          const text = `Join LUNARO with my referral code: ${code}`;
+          try {
+            if (navigator.share) {
+              await navigator.share({ title: 'LUNARO', text, url: shareUrl || undefined });
+            } else if (shareUrl && navigator.clipboard) {
+              await navigator.clipboard.writeText(shareUrl);
+              showToast('لینک دعوت کپی شد');
+            } else if (navigator.clipboard) {
+              await navigator.clipboard.writeText(code);
+              showToast('کد دعوت کپی شد');
+            }
+          } catch (error) {}
+        };
+        btnModalAction.textContent = 'Close';
+        btnModalAction.onclick = () => modalOverlay.classList.remove('active');
+      }
+
+      if (tab === 'profile') {
+        const history = Array.isArray(data.withdrawalHistory)
+          ? data.withdrawalHistory
+          : state.withdrawalHistory;
+        modalBody.innerHTML = `
+          <div style="direction:rtl;text-align:right;color:#d2e5e1;display:flex;flex-direction:column;gap:9px;">
+            <div><b>Wallet:</b> <span style="direction:ltr;display:inline-block;word-break:break-all;">${escapeHtml(state.walletAddress || 'Not connected')}</span></div>
+            <div><b>Holding Wallet:</b> ${formatNumber(Number(state.holdingWallet) || 0)} LNR</div>
+            <div><b>Wallet Balance:</b> ${formatNumber(Number(state.walletBalance) || 0)} LNR</div>
+            <div><b>Total Assets:</b> ${formatNumber(Number(state.totalBalance) || 0)} LNR</div>
+            <div style="color:#96aca7;">حداقل برداشت 500 LNR و کارمزد 70 LNR است؛ دریافتی خالصِ برداشت 500 برابر 430 LNR خواهد بود.</div>
+          </div>`;
+        modalExtra.innerHTML = `
+          <button class="modal-btn" id="btnWithdrawProfile" style="margin-bottom:10px;">Withdraw 500 LNR</button>
+          <div style="max-height:150px;overflow:hidden;direction:rtl;text-align:right;color:#9fb4af;font-size:12px;">
+            <b style="color:#fff;">Withdrawal History</b>
+            ${history.length ? history.slice(0,5).map(x => `<div style="padding:7px 0;border-bottom:1px solid rgba(0,245,155,.12);">${escapeHtml(x.status || 'pending')} — ${escapeHtml(x.amount ?? '500')} LNR</div>`).join('') : '<div style="padding-top:8px;">هنوز برداشت ثبت نشده است.</div>'}
+          </div>`;
+        document.getElementById('btnWithdrawProfile').onclick = requestWithdrawal;
+        btnModalAction.textContent = 'Close';
+        btnModalAction.onclick = () => modalOverlay.classList.remove('active');
+      }
+
+      modalOverlay.classList.add('active');
+    }
+
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const tab = btn.dataset.tab;
+        if (tab === 'mine') {
+          accrueOurMining(true);
+          renderState();
+          return;
+        }
+
+        try {
+          const data = await lunaroApi(`/section/${tab}`);
+          openSectionModal(tab, data || {});
+        } catch (error) {
+          openSectionModal(tab, {});
+        }
+      });
+    });
+
+    btnModalClose.onclick = () => modalOverlay.classList.remove('active');
+    modalOverlay.onclick = (e) => {
+      if (e.target === modalOverlay) modalOverlay.classList.remove('active');
+    };
+
+    /* Telegram Mini App bootstrap */
+    try {
+      const tg = window.Telegram?.WebApp;
+      if (tg) {
+        tg.ready();
+        if (typeof tg.expand === 'function') tg.expand();
+      }
+    } catch (error) {}
+
+    renderState();
+    // Mining/Claim are controlled by the LUNARO logic above.
+    if (state.isWalletConnected) startMiningSession();
+    initTonConnect();
+
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    let confettiList = [];
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    for (let i = 0; i < 35; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 1.5 + 0.5,
+        speedX: (Math.random() - 0.5) * 0.15,
+        speedY: -Math.random() * 0.25 - 0.08,
+        opacity: Math.random() * 0.7 + 0.3
+      });
+    }
+
+    function triggerConfetti() {
+      for (let i = 0; i < 70; i++) {
+        confettiList.push({
+          x: canvas.width / 2,
+          y: canvas.height * 0.65,
+          vx: (Math.random() - 0.5) * 10,
+          vy: (Math.random() - 1) * 12 - 3,
+          size: Math.random() * 5 + 3,
+          color: Math.random() > 0.4 ? '#ffe259' : '#ffffff',
+          alpha: 1,
+          gravity: 0.32,
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 15
+        });
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#ffffff';
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+
+        if (p.y < 0) {
+          p.y = canvas.height;
+          p.x = Math.random() * canvas.width;
+        }
+
+        ctx.globalAlpha = p.opacity;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      for (let i = confettiList.length - 1; i >= 0; i--) {
+        const c = confettiList[i];
+        c.x += c.vx;
+        c.y += c.vy;
+        c.vy += c.gravity;
+        c.alpha -= 0.016;
+        c.rotation += c.rotSpeed;
+
+        if (c.alpha <= 0) {
+          confettiList.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = c.alpha;
+        ctx.translate(c.x, c.y);
+        ctx.rotate((c.rotation * Math.PI) / 180);
+        ctx.fillStyle = c.color;
+        ctx.fillRect(-c.size / 2, -c.size / 2, c.size, c.size * 0.6);
+        ctx.restore();
+      }
+
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(animateParticles);
+    }
+
+    animateParticles();
+  </script>
+</body>
+</html>
