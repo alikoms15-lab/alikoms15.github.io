@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>LUNARO — LNR Mining</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #00f59b;
+      --primary-glow: rgba(0, 245, 155, 0.45);
+      --primary-dark: #00b371;
+      --gold-btn-top: #ffe259;
+      --gold-btn-bottom: #ffa700;
+      --gold-shadow: rgba(255, 195, 18, 0.45);
+      --bg-dark: #020907;
+      --bg-card: rgba(0, 24, 18, 0.72);
+      --border-card: rgba(0, 245, 155, 0.28);
+      --text-muted: #96aca7;
+      --text-dim: #5c7873;
+      --font-main: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000000;
+      font-family: var(--font-main);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app-container {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      height: 100%;
+      max-height: 960px;
+      background: #020907;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 60px rgba(0, 245, 155, 0.12);
+    }
+
+    @media (min-width: 500px) and (min-height: 700px) {
+      .app-container {
+        height: 92vh;
+        border-radius: 40px;
+        border: 2px solid rgba(0, 245, 155, 0.25);
+        box-shadow: 0 0 80px rgba(0, 245, 155, 0.2), 0 25px 50px rgba(0, 0, 0, 0.8);
+      }
+    }
+
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .bg-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center bottom;
+      opacity: 1;
+      filter: contrast(1.1) brightness(1.04) saturate(1.05);
+      transition: transform 0.4s ease;
+    }
+
+    .bg-gradient-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(2, 9, 7, 0.4) 0%,
+        transparent 15%,
+        transparent 70%,
+        rgba(2, 9, 7, 0.4) 85%,
+        rgba(2, 9, 7, 0.9) 100%
+      );
+      z-index: 2;
+    }
+
+    #particles-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .main-content {
+      position: relative;
+      z-index: 5;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 14px 16px 6px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+    }
+    .main-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .level-compact-card {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(0, 24, 18, 0.6);
+      backdrop-filter: blur(8px);
+      padding: 4px 10px 4px 5px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 245, 155, 0.25);
+    }
+
+    .level-gem-mini {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid var(--primary);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 8px rgba(0, 245, 155, 0.4);
+    }
+
+    .level-gem-mini img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .level-text-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .level-title-small {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .progress-track-slim {
+      width: 55px;
+      height: 4px;
+      background: #092c22;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 0.5px solid rgba(0, 245, 155, 0.35);
+    }
+
+    .progress-fill-slim {
+      width: 48%;
+      height: 100%;
+      background: linear-gradient(90deg, #00f59b 0%, #00d287 100%);
+      border-radius: 6px;
+      box-shadow: 0 0 6px rgba(0, 245, 155, 0.8);
+    }
+
+    .progress-text-small {
+      font-size: 11px;
+      font-weight: 700;
+      color: #9fe2d3;
+    }
+
+    .wallet-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      background: rgba(0, 22, 17, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1.2px solid rgba(0, 245, 155, 0.4);
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 14px rgba(0, 245, 155, 0.12);
+      transition: all 0.25s;
+    }
+
+    .wallet-chip:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(0, 245, 155, 0.3);
+    }
+
+    .wallet-chip:active {
+      transform: scale(0.96);
+    }
+
+    .wallet-icon-svg {
+      width: 16px;
+      height: 16px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+    }
+
+    .wallet-address {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.3px;
+    }
+
+    .wallet-chevron {
+      color: #88a7a0;
+      display: flex;
+      align-items: center;
+    }
+
+    .balance-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 2px;
+      margin-bottom: 4px;
+      position: relative;
+      z-index: 6;
+    }
+
+    .balance-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: #a4beba;
+      margin-bottom: 5px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .total-balance-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 5px 20px;
+      background: rgba(0, 20, 15, 0.82);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 245, 155, 0.4);
+      border-radius: 30px;
+      box-shadow: 0 0 20px rgba(0, 245, 155, 0.15), inset 0 0 10px rgba(0, 245, 155, 0.08);
+    }
+
+    .gold-coin-thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid #ffd700;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+      object-fit: cover;
+      display: block;
+    }
+
+    .total-number {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .currency-tag {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(0, 245, 155, 0.6);
+    }
+
+    .stats-card {
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      background: rgba(0, 22, 17, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 245, 155, 0.25);
+      border-radius: 18px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .stat-col {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 2px 6px;
+    }
+
+    .stat-col:first-child {
+      border-right: 1px solid rgba(0, 245, 155, 0.18);
+    }
+
+    .stat-icon-wrap {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      filter: drop-shadow(0 0 5px rgba(0, 245, 155, 0.5));
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-name {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #8faea8;
+      margin-bottom: 2px;
+    }
+
+    .stat-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-ticker {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .hero-stage {
+      position: relative;
+      flex: 1;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 6;
+    }
+
+    .coin-interactive-wrap {
+      position: relative;
+      width: min(72vw, 320px);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .help-glass-orb {
+      position: absolute;
+      left: 8px;
+      top: 14%;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(255, 255, 255, 0.45);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 8px 16px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 25;
+      animation: orbFloat 3.2s ease-in-out infinite alternate;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    }
+
+    @keyframes orbFloat {
+      0% {
+        transform: translateY(0px) rotate(0deg);
+        box-shadow: 0 0 16px rgba(255, 255, 255, 0.15), 0 6px 14px rgba(0, 0, 0, 0.4);
+      }
+      50% {
+        transform: translateY(-6px) rotate(-3deg);
+        box-shadow: 0 0 24px rgba(255, 255, 255, 0.3), 0 10px 20px rgba(0, 0, 0, 0.5);
+      }
+      100% {
+        transform: translateY(3px) rotate(2deg);
+        box-shadow: 0 0 18px rgba(255, 255, 255, 0.18), 0 8px 16px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    .help-glass-orb-inner {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.2) 22%, rgba(15, 22, 20, 0.95) 60%, #030806 100%);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+
+    .help-glass-orb-inner span {
+      color: #ffffff;
+      font-size: 19px;
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 255, 255, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .help-glass-orb:hover {
+      animation-play-state: paused;
+      transform: scale(1.1);
+      border-color: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 28px rgba(255, 255, 255, 0.4);
+    }
+
+    .help-glass-orb:active {
+      transform: scale(0.94);
+    }
+
+    .live-mining-card {
+      width: 100%;
+      background: rgba(0, 22, 16, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(0, 245, 155, 0.38);
+      border-radius: 20px;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      margin-bottom: 10px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 245, 155, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .live-mining-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20%;
+      right: 20%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 245, 155, 0.6), transparent);
+    }
+
+    .live-mining-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .pulse-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+      animation: pulseDot 1.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseDot {
+      0% { opacity: 0.4; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 14px var(--primary); }
+    }
+
+    .live-mining-title {
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #9fe2d3;
+      text-transform: uppercase;
+    }
+
+    .live-mining-main-val {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 5px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .live-mining-symbol {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .live-mining-digits {
+      font-size: 28px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 16px rgba(0, 245, 155, 0.35);
+    }
+
+    .live-mining-unit {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(0, 245, 155, 0.5);
+    }
+
+    .claim-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      padding: 0 2px 8px;
+    }
+
+    .claim-btn-gold {
+      position: relative;
+      width: 100%;
+      height: 54px;
+      background: linear-gradient(180deg, var(--gold-btn-top) 0%, var(--gold-btn-bottom) 100%);
+      border: 1.5px solid #ffe97d;
+      border-radius: 18px;
+      color: #1a1200;
+      font-family: var(--font-main);
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      cursor: pointer;
+      box-shadow: 
+        0 0 28px var(--gold-shadow),
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.7),
+        inset 0 -2px 4px rgba(120, 75, 0, 0.5);
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .claim-btn-gold::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        60deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.35) 50%,
+        transparent 70%
+      );
+      transform: rotate(25deg);
+      animation: buttonShine 4s infinite linear;
+      pointer-events: none;
+    }
+
+    @keyframes buttonShine {
+      0% { transform: translateX(-100%) rotate(25deg); }
+      25% { transform: translateX(100%) rotate(25deg); }
+      100% { transform: translateX(100%) rotate(25deg); }
+    }
+
+    .claim-btn-gold:active {
+      transform: scale(0.97);
+      box-shadow: 0 0 15px var(--gold-shadow);
+    }
+
+    .bottom-nav {
+      position: relative;
+      z-index: 10;
+      height: 64px;
+      background: rgba(1, 10, 8, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(0, 245, 155, 0.22);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: 0 6px;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .nav-item {
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .nav-icon-container {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s;
+    }
+
+    .nav-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      transition: color 0.2s;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item.active .nav-icon-container {
+      filter: drop-shadow(0 0 8px var(--primary));
+      transform: translateY(-2px);
+    }
+
+    .nav-item.active .nav-label {
+      color: var(--primary);
+      text-shadow: 0 0 8px rgba(0, 245, 155, 0.4);
+    }
+
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 38px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 4px 4px 0 0;
+      box-shadow: 0 0 12px var(--primary);
+    }
+
+    .nav-item.special-btn .nav-icon-container {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(0, 245, 155, 0.15);
+      border: 1px solid rgba(0, 245, 155, 0.4);
+      color: var(--primary);
+      box-shadow: 0 0 10px rgba(0, 245, 155, 0.2);
+    }
+
+    .toast-msg {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: rgba(2, 25, 19, 0.95);
+      border: 1.5px solid var(--primary);
+      padding: 10px 18px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0, 245, 155, 0.4);
+      color: #ffffff;
+      font-size: 13.5px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .toast-msg.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 380px;
+      background: #021812;
+      border: 1.5px solid var(--primary);
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: 0 0 50px rgba(0, 245, 155, 0.25);
+      position: relative;
+      text-align: center;
+      animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalPop {
+      0% { opacity: 0; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: #96aca7;
+      font-size: 24px;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .modal-icon-header {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(0, 245, 155, 0.15);
+      border: 1.5px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      color: var(--primary);
+      box-shadow: 0 0 20px rgba(0, 245, 155, 0.3);
+    }
+
+    .modal-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .modal-body {
+      font-size: 13.5px;
+      color: #b1c7c2;
+      line-height: 1.55;
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .modal-btn {
+      width: 100%;
+      height: 46px;
+      background: linear-gradient(180deg, #00f59b 0%, #00a86b 100%);
+      border: none;
+      border-radius: 14px;
+      color: #02120d;
+      font-size: 15.5px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 245, 155, 0.35);
+      transition: all 0.2s;
+    }
+
+    .modal-btn:active {
+      transform: scale(0.97);
+    }
+
+    .wallet-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .wallet-option-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 15px;
+      background: rgba(0, 30, 22, 0.7);
+      border: 1px solid rgba(0, 245, 155, 0.25);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .wallet-option-item:hover {
+      border-color: var(--primary);
+      background: rgba(0, 45, 32, 0.85);
+    }
+
+    .wallet-option-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <div class="bg-layer">
+      <img src="assets/lunaro_hero_bg.jpg" alt="Lunaro Mining Stage" class="bg-image">
+      <div class="bg-gradient-overlay"></div>
+      <canvas id="particles-canvas"></canvas>
+    </div>
+
+    <main class="main-content">
+      
+      <div class="status-row">
+        <div class="level-compact-card">
+          <div class="level-gem-mini">
+            <img src="assets/level_gem.jpg" alt="Gem">
+          </div>
+          <div class="level-text-info">
+            <span class="level-title-small">Level 3</span>
+            <div class="progress-track-slim">
+              <div class="progress-fill-slim"></div>
+            </div>
+            <span class="progress-text-small">48%</span>
+          </div>
+        </div>
+
+        <div class="wallet-chip" id="walletChip">
+          <div class="wallet-icon-svg">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="4" />
+              <path d="M16 12a2 2 0 1 0 4 0" />
+            </svg>
+          </div>
+          <span class="wallet-address" id="walletAddressDisplay">UQCN...iD7</span>
+          <div class="wallet-chevron">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <section class="balance-section">
+        <div class="balance-label">TOTAL BALANCE</div>
+        <div class="total-balance-pill">
+          <img src="assets/lnr_gold_coin.jpg" alt="LNR Gold Coin" class="gold-coin-thumb">
+          <span class="total-number" id="totalBalance">12,458.32</span>
+          <span class="currency-tag">LNR</span>
+        </div>
+
+        <div class="stats-card">
+          <div class="stat-col">
+            <div class="stat-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
+                <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
+                <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-name">HOLDING WALLET</span>
+              <div class="stat-value">
+                <span id="holdingWalletAmount">11,925.65</span>
+                <span class="stat-ticker">LNR</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-col">
+            <div class="stat-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-name">WALLET BALANCE</span>
+              <div class="stat-value">
+                <span id="walletBalance">532.67</span>
+                <span class="stat-ticker">LNR</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="hero-stage" id="heroStage">
+        <div class="help-glass-orb" id="btnHelpGuide" title="راهنمای برنامه">
+          <div class="help-glass-orb-inner">
+            <span>?</span>
+          </div>
+        </div>
+        <div class="coin-interactive-wrap" id="coinWrap"></div>
+      </div>
+
+      <div class="claim-container">
+        <div class="live-mining-card">
+          <div class="live-mining-header">
+            <div class="pulse-indicator"></div>
+            <span class="live-mining-title">UNCLAIMED MINED REWARD</span>
+          </div>
+          <div class="live-mining-main-val">
+            <span class="live-mining-symbol">+</span>
+            <span id="liveMinedCounter" class="live-mining-digits">0.34267</span>
+            <span class="live-mining-unit">LNR</span>
+          </div>
+        </div>
+
+        <button class="claim-btn-gold" id="btnClaim">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span>CLAIM</span>
+        </button>
+      </div>
+
+    </main>
+
+    <nav class="bottom-nav" id="bottomNav">
+      <button class="nav-item active" data-tab="mine" id="navMine">
+        <div class="nav-icon-container">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 9.5L19 5l-2.5-2.5L12 7"></path>
+            <path d="m21.5 2.5-19 19"></path>
+            <path d="M9.5 14.5L5 19l2.5 2.5L12 17"></path>
+          </svg>
+        </div>
+        <span class="nav-label">Mine</span>
+      </button>
+
+      <button class="nav-item" data-tab="tasks" id="navTasks">
+        <div class="nav-icon-container">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            <path d="m9 14 2 2 4-4"></path>
+          </svg>
+        </div>
+        <span class="nav-label">Tasks</span>
+      </button>
+
+      <button class="nav-item special-btn" data-tab="miners" id="navMiners">
+        <div class="nav-icon-container">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <span class="nav-label">Miners</span>
+      </button>
+
+      <button class="nav-item" data-tab="friends" id="navFriends">
+        <div class="nav-icon-container">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <span class="nav-label">Friends</span>
+      </button>
+
+      <button class="nav-item" data-tab="profile" id="navProfile">
+        <div class="nav-icon-container">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <span class="nav-label">Profile</span>
+      </button>
+    </nav>
+
+    <div class="toast-msg" id="toastMsg">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+      </svg>
+      <span id="toastText">Notification</span>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal-box">
+        <button class="modal-close" id="btnModalClose">&times;</button>
+        <div class="modal-icon-header" id="modalIcon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 14 14"></polyline>
+          </svg>
+        </div>
+        <h3 class="modal-title" id="modalTitle">Modal Header</h3>
+        <div class="modal-body" id="modalBody">Description text goes here.</div>
+        <div id="modalExtraContent"></div>
+        <button class="modal-btn" id="btnModalAction">Confirm</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const state = {
+      totalBalance: 12458.32,
+      holdingWallet: 11925.65,
+      walletBalance: 532.67,
+      liveMined: 0.34267,
+      miningRatePerSec: 0.00185,
+      walletAddress: "UQCN...iD7",
+      isWalletConnected: true
+    };
+
+    const totalBalanceEl = document.getElementById('totalBalance');
+    const holdingWalletAmountEl = document.getElementById('holdingWalletAmount');
+    const walletBalanceEl = document.getElementById('walletBalance');
+    const liveMinedCounterEl = document.getElementById('liveMinedCounter');
+    const btnClaim = document.getElementById('btnClaim');
+    const btnHelpGuide = document.getElementById('btnHelpGuide');
+    const toastMsg = document.getElementById('toastMsg');
+    const toastText = document.getElementById('toastText');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalIcon = document.getElementById('modalIcon');
+    const modalExtra = document.getElementById('modalExtraContent');
+    const btnModalClose = document.getElementById('btnModalClose');
+    const btnModalAction = document.getElementById('btnModalAction');
+    const walletChip = document.getElementById('walletChip');
+
+    function formatNumber(num, decimals = 2) {
+      return num.toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+    }
+
+    let toastTimeout;
+    function showToast(message) {
+      toastText.textContent = message;
+      toastMsg.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toastMsg.classList.remove('show');
+      }, 2200);
+    }
+
+    const AudioEngine = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+      },
+      playClaim() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const notes = [440, 554, 659, 880];
+          notes.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.15, this.ctx.currentTime + idx * 0.07);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.07 + 0.25);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(this.ctx.currentTime + idx * 0.07);
+            osc.stop(this.ctx.currentTime + idx * 0.07 + 0.25);
+          });
+        } catch (e) {}
+      }
+    };
+
+    setInterval(() => {
+      const step = state.miningRatePerSec / 10;
+      state.liveMined += step;
+      liveMinedCounterEl.textContent = state.liveMined.toFixed(5);
+    }, 100);
+
+    btnClaim.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (state.liveMined <= 0.00001) {
+        showToast("No mined LNR to claim right now!");
+        return;
+      }
+
+      AudioEngine.playClaim();
+      const claimedAmount = state.liveMined;
+      
+      state.holdingWallet += claimedAmount;
+      state.totalBalance += claimedAmount;
+      state.liveMined = 0.00000;
+
+      liveMinedCounterEl.textContent = "0.00000";
+      holdingWalletAmountEl.textContent = formatNumber(state.holdingWallet);
+      totalBalanceEl.textContent = formatNumber(state.totalBalance);
+
+      triggerConfetti();
+      showToast(`Successfully claimed +${claimedAmount.toFixed(4)} LNR!`);
+    });
+
+    btnHelpGuide.addEventListener('click', (e) => {
+      e.stopPropagation();
+      modalIcon.innerHTML = `
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      `;
+      modalTitle.textContent = "راهنمای سیستم استخراج LUNARO";
+      modalBody.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:13px; color:#d2e5e1; direction:rtl; text-align:right;">
+          <div><strong style="color:var(--primary);">⚡ استخراج خودکار:</strong> ماینینگ به صورت کاملاً اتوماتیک و ابری در پس‌زمینه انجام می‌شود و نیازی به ضربه زدن مداوم نیست.</div>
+          <div><strong style="color:#ffe259;">💰 دکمه CLAIM:</strong> با زدن دکمه زرد رنگ CLAIM، موجودی لحظه‌ای ماین‌شده به هولدینگ ولت و بالانس کل شما واریز می‌گردد.</div>
+          <div><strong style="color:var(--primary);">💎 ارتقای لول:</strong> با افزایش موجودی هولدینگ، لول ماینینگ شما ارتقا یافته و نرخ استخراج خودکار افزایش می‌یابد.</div>
+        </div>
+      `;
+      modalExtra.innerHTML = "";
+      btnModalAction.textContent = "متوجه شدم";
+      btnModalAction.onclick = () => modalOverlay.classList.remove('active');
+      modalOverlay.classList.add('active');
+    });
+
+    walletChip.addEventListener('click', () => {
+      modalIcon.innerHTML = `
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="4" width="20" height="16" rx="4" />
+          <path d="M16 12a2 2 0 1 0 4 0" />
+        </svg>
+      `;
+      modalTitle.textContent = "TON Wallet";
+      modalBody.innerHTML = `<div style="text-align:center;">Connected Address: <b>${state.walletAddress}</b></div>`;
+      modalExtra.innerHTML = `
+        <div class="wallet-list">
+          <div class="wallet-option-item">
+            <div class="wallet-option-left">
+              <span>💎 Tonkeeper</span>
+            </div>
+            <span style="color: var(--primary); font-size:12px; font-weight:800;">CONNECTED</span>
+          </div>
+          <div class="wallet-option-item">
+            <div class="wallet-option-left">
+              <span>✈️ Telegram Wallet</span>
+            </div>
+            <span style="color: #96aca7; font-size:12px;">Switch</span>
+          </div>
+        </div>
+      `;
+      btnModalAction.textContent = "Disconnect Wallet";
+      btnModalAction.onclick = () => {
+        showToast("Wallet disconnected");
+        modalOverlay.classList.remove('active');
+      };
+      modalOverlay.classList.add('active');
+    });
+
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        if (tab !== 'mine') {
+          showToast(`${btn.querySelector('.nav-label').textContent} section opened`);
+        }
+      });
+    });
+
+    btnModalClose.onclick = () => modalOverlay.classList.remove('active');
+    modalOverlay.onclick = (e) => {
+      if (e.target === modalOverlay) modalOverlay.classList.remove('active');
+    };
+
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    let confettiList = [];
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    for (let i = 0; i < 35; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 1.5 + 0.5,
+        speedX: (Math.random() - 0.5) * 0.15,
+        speedY: -Math.random() * 0.25 - 0.08,
+        opacity: Math.random() * 0.7 + 0.3
+      });
+    }
+
+    function triggerConfetti() {
+      for (let i = 0; i < 70; i++) {
+        confettiList.push({
+          x: canvas.width / 2,
+          y: canvas.height * 0.65,
+          vx: (Math.random() - 0.5) * 10,
+          vy: (Math.random() - 1) * 12 - 3,
+          size: Math.random() * 5 + 3,
+          color: Math.random() > 0.4 ? '#ffe259' : '#ffffff',
+          alpha: 1,
+          gravity: 0.32,
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 15
+        });
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#ffffff';
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+
+        if (p.y < 0) {
+          p.y = canvas.height;
+          p.x = Math.random() * canvas.width;
+        }
+
+        ctx.globalAlpha = p.opacity;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      for (let i = confettiList.length - 1; i >= 0; i--) {
+        const c = confettiList[i];
+        c.x += c.vx;
+        c.y += c.vy;
+        c.vy += c.gravity;
+        c.alpha -= 0.016;
+        c.rotation += c.rotSpeed;
+
+        if (c.alpha <= 0) {
+          confettiList.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = c.alpha;
+        ctx.translate(c.x, c.y);
+        ctx.rotate((c.rotation * Math.PI) / 180);
+        ctx.fillStyle = c.color;
+        ctx.fillRect(-c.size / 2, -c.size / 2, c.size, c.size * 0.6);
+        ctx.restore();
+      }
+
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(animateParticles);
+    }
+
+    animateParticles();
+  </script>
+</body>
+</html>
