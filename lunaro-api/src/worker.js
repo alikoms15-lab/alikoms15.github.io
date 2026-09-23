@@ -309,7 +309,7 @@ async function holdingWalletBalance(env, wallet) {
   const base = String(
     env.TONCENTER_API_URL ||
     "https://toncenter.com"
-  ).replace(/\\/+$/, "");
+  ).replace(/\\/+$/ "");
 
   const apiKey = String(
     env.TONCENTER_API_KEY ||
