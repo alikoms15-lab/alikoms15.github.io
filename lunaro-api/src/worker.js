@@ -30,7 +30,7 @@ const LNR_MASTER =
   "EQArZiLoiwGQVFXf-xypL_3qBg6DYuOQTHNJhOmEju-LNPuk";
 
 const TREASURY_OWNER =
-  "EQCNobW-3Kzoku_up0oV0yD3pUegqj0q3S2ptCfp2yhKig0-";
+  "UQCNobW-3Kzoku_up0oV0yD3pUegqj0q3S2ptCfp2yhKilD7";
 
 const TONCENTER_URL =
   "https://toncenter.com/api/v2/jsonRPC";
