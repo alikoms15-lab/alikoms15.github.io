@@ -1,1615 +1,3979 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>LUNARO — LNR Mining</title>
-  
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://unpkg.com/@tonconnect/ui@3.0.2/dist/tonconnect-ui.min.js"></script>
+import {
+  Address,
+  beginCell,
+  internal,
+  SendMode,
+  WalletContractV4
+} from "@ton/core";
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+import {
+  mnemonicToPrivateKey
+} from "@ton/crypto";
 
-  <style>
-    :root {
-      --primary: #00f59b;
-      --primary-glow: rgba(0, 245, 155, 0.45);
-      --primary-dark: #00b371;
-      --gold-btn-top: #ffe259;
-      --gold-btn-bottom: #ffa700;
-      --gold-shadow: rgba(255, 195, 18, 0.45);
-      --bg-dark: #020907;
-      --bg-card: rgba(0, 24, 18, 0.72);
-      --border-card: rgba(0, 245, 155, 0.28);
-      --text-muted: #96aca7;
-      --text-dim: #5c7873;
-      --font-main: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+import {
+  TonClient,
+  JettonMaster
+} from "@ton/ton";
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: #000000;
-      font-family: var(--font-main);
-      color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+/* =========================================================
+   LUNARO WORKER
+   ========================================================= */
 
-    .app-container {
-      position: relative;
-      width: 100%;
-      max-width: 440px;
-      height: 100%;
-      max-height: 960px;
-      background: #020907;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 0 60px rgba(0, 245, 155, 0.12);
-    }
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+  "Access-Control-Allow-Headers":
+    "Content-Type, X-Telegram-Init-Data, X-LNR-CRON-SECRET"
+};
 
-    @media (min-width: 500px) and (min-height: 700px) {
-      .app-container {
-        height: 92vh;
-        border-radius: 40px;
-        border: 2px solid rgba(0, 245, 155, 0.25);
-        box-shadow: 0 0 80px rgba(0, 245, 155, 0.2), 0 25px 50px rgba(0, 0, 0, 0.8);
+
+/* =========================================================
+   CONFIG
+   ========================================================= */
+
+const CONFIG = {
+  BOT_USERNAME: "LunaroGameBot",
+
+  MAX_LEVEL: 1000,
+
+  LEVEL_STEP_LNR: 500,
+
+  BASE_MINING_RATE: 0.70,
+
+  MINING_RATE_STEP: 0.05,
+
+  WITHDRAWAL_MIN: 500,
+
+  WITHDRAWAL_FEE: 70,
+
+  WITHDRAWAL_NET: 430,
+
+  REFERRAL_SUCCESS_BONUS: 500,
+
+  REFERRAL_CLAIM_PERCENT: 0.10,
+
+  DEFAULT_LNR_PRICE: 0.0008,
+
+  DAILY_TASK_REWARD: 3
+};
+
+
+/* =========================================================
+   LNR BLOCKCHAIN CONFIG
+   ========================================================= */
+
+const LNR_MASTER =
+  "EQArZiLoiwGQVFXf-xypL_3qBg6DYuOQTHNJhOmEju-LNPuk";
+
+/*
+ * Treasury wallet specified for LUNARO.
+ */
+const TREASURY_OWNER =
+  "UQCNobW-3Kzoku_up0oV0yD3pUegqj0q3S2ptCfp2yhKilD7";
+
+/*
+ * As requested.
+ */
+const LNR_DECIMALS = 9;
+
+const TONCENTER_URL =
+  "https://toncenter.com/api/v2/jsonRPC";
+
+/*
+ * TON needed for Jetton transfer gas.
+ */
+const MIN_TREASURY_TON =
+  0.15;
+
+/*
+ * Amount of TON attached to Jetton transfer.
+ */
+const FORWARD_TON =
+  0.001;
+
+
+/* =========================================================
+   BASIC HELPERS
+   ========================================================= */
+
+function json(data, status = 200) {
+  return new Response(
+    JSON.stringify(data),
+    {
+      status,
+      headers: {
+        ...corsHeaders,
+        "Content-Type":
+          "application/json; charset=UTF-8",
+        "Cache-Control":
+          "no-store"
       }
     }
+  );
+}
 
-    .bg-layer {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      overflow: hidden;
-      pointer-events: none;
-    }
 
-    .bg-image {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center bottom;
-      opacity: 1;
-      filter: contrast(1.1) brightness(1.04) saturate(1.05);
-      transition: transform 0.4s ease;
-    }
+function nowIso() {
+  return new Date().toISOString();
+}
 
-    .bg-gradient-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        180deg,
-        rgba(2, 9, 7, 0.4) 0%,
-        transparent 15%,
-        transparent 70%,
-        rgba(2, 9, 7, 0.4) 85%,
-        rgba(2, 9, 7, 0.9) 100%
+
+function num(v, d = 0) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : d;
+}
+
+
+function safeWallet(wallet) {
+  const w =
+    String(wallet || "").trim();
+
+  return (
+    w.length >= 20 &&
+    w.length <= 128
+  );
+}
+
+
+function levelRequiredLNR(level) {
+  const lv =
+    Math.max(
+      1,
+      Math.min(
+        CONFIG.MAX_LEVEL,
+        Math.floor(
+          num(level, 1)
+        )
+      )
+    );
+
+  return (
+    (lv - 1) *
+    CONFIG.LEVEL_STEP_LNR
+  );
+}
+
+
+function miningRateForLevel(level) {
+  const lv =
+    Math.max(
+      1,
+      Math.floor(
+        num(level, 1)
+      )
+    );
+
+  return (
+    CONFIG.BASE_MINING_RATE +
+    Math.max(0, lv - 1) *
+    CONFIG.MINING_RATE_STEP
+  );
+}
+
+
+function referralCodeForTelegramId(id) {
+  const s =
+    String(id || "");
+
+  return (
+    "LNR" +
+    s.slice(-8) +
+    Math.random()
+      .toString(36)
+      .slice(2, 7)
+      .toUpperCase()
+  );
+}
+
+
+function readableError(error) {
+  if (!error)
+    return "Unknown error";
+
+  if (typeof error === "string")
+    return error.slice(0, 4000);
+
+  return String(
+    error.message ||
+    error.reason ||
+    error.stack ||
+    error
+  ).slice(0, 4000);
+}
+
+
+function rawLnrAmount(amount) {
+  const value =
+    Number(amount);
+
+  if (
+    !Number.isFinite(value) ||
+    value <= 0
+  ) {
+    throw new Error(
+      "INVALID_LNR_AMOUNT"
+    );
+  }
+
+  const raw =
+    Math.round(
+      value *
+      Math.pow(
+        10,
+        LNR_DECIMALS
+      )
+    );
+
+  if (
+    !Number.isSafeInteger(raw) ||
+    raw <= 0
+  ) {
+    throw new Error(
+      "INVALID_RAW_LNR_AMOUNT"
+    );
+  }
+
+  return BigInt(raw);
+}
+
+
+/* =========================================================
+   D1 SCHEMA
+   ========================================================= */
+
+async function bestEffortSchema(env) {
+  if (!env.DB)
+    return;
+
+  const statements = [
+
+    `CREATE TABLE IF NOT EXISTS claims (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      telegram_id TEXT NOT NULL,
+      amount REAL NOT NULL,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )`,
+
+    `CREATE TABLE IF NOT EXISTS withdrawals (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      telegram_id TEXT NOT NULL,
+      wallet TEXT NOT NULL,
+      requested_amount REAL,
+      fee REAL NOT NULL DEFAULT 70,
+      payout_amount REAL,
+      amount REAL,
+      net_amount REAL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      tx_hash TEXT,
+      error_stage TEXT,
+      error_code TEXT,
+      error_message TEXT,
+      error_details TEXT,
+      raw_amount TEXT,
+      jetton_decimals INTEGER,
+      processing_started_at TEXT,
+      broadcast_at TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      completed_at TEXT,
+      processed_at TEXT
+    )`,
+
+    `CREATE TABLE IF NOT EXISTS daily_tasks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      telegram_id TEXT NOT NULL,
+      task_key TEXT NOT NULL,
+      task_date TEXT NOT NULL,
+      reward REAL NOT NULL DEFAULT 3,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(
+        telegram_id,
+        task_key,
+        task_date
+      )
+    )`,
+
+    `CREATE TABLE IF NOT EXISTS referral_bonus_ledger (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      referrer_telegram_id TEXT NOT NULL,
+      referred_telegram_id TEXT NOT NULL UNIQUE,
+      amount REAL NOT NULL DEFAULT 500,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )`,
+
+    `CREATE TABLE IF NOT EXISTS referral_claim_ledger (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      referrer_telegram_id TEXT NOT NULL,
+      referred_telegram_id TEXT NOT NULL,
+      claim_id INTEGER,
+      claim_key TEXT NOT NULL UNIQUE,
+      amount REAL NOT NULL,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )`
+  ];
+
+  for (const sql of statements) {
+    try {
+      await env.DB
+        .prepare(sql)
+        .run();
+    } catch (_) {}
+  }
+
+  const columns = [
+
+    [
+      "users",
+      "referred_by",
+      "TEXT"
+    ],
+
+    [
+      "users",
+      "referral_success",
+      "INTEGER DEFAULT 0"
+    ],
+
+    [
+      "users",
+      "referral_success_at",
+      "TEXT"
+    ],
+
+    [
+      "users",
+      "referral_bonus_credited",
+      "REAL DEFAULT 0"
+    ],
+
+    [
+      "users",
+      "referral_earnings",
+      "REAL DEFAULT 0"
+    ],
+
+    [
+      "users",
+      "holding_wallet",
+      "REAL DEFAULT 0"
+    ],
+
+    [
+      "users",
+      "last_task_date",
+      "TEXT"
+    ],
+
+    [
+      "withdrawals",
+      "requested_amount",
+      "REAL"
+    ],
+
+    [
+      "withdrawals",
+      "payout_amount",
+      "REAL"
+    ],
+
+    [
+      "withdrawals",
+      "error_stage",
+      "TEXT"
+    ],
+
+    [
+      "withdrawals",
+      "error_code",
+      "TEXT"
+    ],
+
+    [
+      "withdrawals",
+      "error_message",
+      "TEXT"
+    ],
+
+    [
+      "withdrawals",
+      "error_details",
+      "TEXT"
+    ],
+
+    [
+      "withdrawals",
+      "raw_amount",
+      "TEXT"
+    ],
+
+    [
+      "withdrawals",
+      "jetton_decimals",
+      "INTEGER"
+    ],
+
+    [
+      "withdrawals",
+      "processing_started_at",
+      "TEXT"
+    ],
+
+    [
+      "withdrawals",
+      "broadcast_at",
+      "TEXT"
+    ],
+
+    [
+      "withdrawals",
+      "completed_at",
+      "TEXT"
+    ]
+  ];
+
+  for (
+    const [
+      table,
+      column,
+      type
+    ] of columns
+  ) {
+    try {
+      await env.DB
+        .prepare(
+          `ALTER TABLE ${table}
+           ADD COLUMN ${column} ${type}`
+        )
+        .run();
+    } catch (_) {}
+  }
+}
+
+
+/* =========================================================
+   USER
+   ========================================================= */
+
+async function getUser(
+  env,
+  telegramId
+) {
+  return env.DB
+    .prepare(
+      "SELECT * FROM users WHERE telegram_id = ?"
+    )
+    .bind(
+      String(telegramId)
+    )
+    .first();
+}
+
+
+async function ensureUser(
+  env,
+  data
+) {
+  const telegramId =
+    String(
+      data.telegram_id || ""
+    );
+
+  if (!telegramId)
+    throw new Error(
+      "telegram_id is required"
+    );
+
+  let user =
+    await getUser(
+      env,
+      telegramId
+    );
+
+  if (!user) {
+
+    const referralCode =
+      referralCodeForTelegramId(
+        telegramId
       );
-      z-index: 2;
-    }
 
-    #particles-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      pointer-events: none;
-    }
+    await env.DB
+      .prepare(`
+        INSERT INTO users
+        (
+          telegram_id,
+          username,
+          first_name,
+          wallet,
+          balance,
+          mined,
+          mining_rate,
+          level,
+          referral_code,
+          last_mining_at
+        )
+        VALUES
+        (?, ?, ?, NULL, 0, 0, ?, 1, ?, ?)
+      `)
+      .bind(
+        telegramId,
+        data.username || null,
+        data.first_name || "User",
+        CONFIG.BASE_MINING_RATE,
+        referralCode,
+        nowIso()
+      )
+      .run();
 
-    .main-content {
-      position: relative;
-      z-index: 5;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 14px 16px 6px;
-      overflow: hidden;
-      overflow-x: hidden;
-      scrollbar-width: none;
-    }
-    .main-content::-webkit-scrollbar {
-      display: none;
-    }
-
-    .status-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .level-compact-card {
-      cursor: pointer;
-      transition: transform .15s ease, filter .15s ease;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      background: rgba(0, 24, 18, 0.6);
-      backdrop-filter: blur(8px);
-      padding: 4px 10px 4px 5px;
-      border-radius: 20px;
-      border: 1px solid rgba(0, 245, 155, 0.25);
-    }
-
-    .level-gem-mini {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 1px solid var(--primary);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 8px rgba(0, 245, 155, 0.4);
-    }
-
-    .level-gem-mini img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .level-text-info {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .level-title-small {
-      font-size: 12.5px;
-      font-weight: 800;
-      color: #ffffff;
-    }
-
-    .progress-track-slim {
-      width: 55px;
-      height: 4px;
-      background: #092c22;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 0.5px solid rgba(0, 245, 155, 0.35);
-    }
-
-    .progress-fill-slim {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #00f59b 0%, #00d287 100%);
-      border-radius: 6px;
-      box-shadow: 0 0 6px rgba(0, 245, 155, 0.8);
-    }
-
-    .progress-text-small {
-      font-size: 11px;
-      font-weight: 700;
-      color: #9fe2d3;
-    }
-
-    .wallet-chip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 11px;
-      background: rgba(0, 22, 17, 0.75);
-      backdrop-filter: blur(8px);
-      border: 1.2px solid rgba(0, 245, 155, 0.4);
-      border-radius: 20px;
-      cursor: pointer;
-      box-shadow: 0 0 14px rgba(0, 245, 155, 0.12);
-      transition: all 0.25s;
-    }
-
-    .wallet-chip:hover {
-      border-color: var(--primary);
-      box-shadow: 0 0 20px rgba(0, 245, 155, 0.3);
-    }
-
-    .wallet-chip:active {
-      transform: scale(0.96);
-    }
-
-    .wallet-icon-svg {
-      width: 16px;
-      height: 16px;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-    }
-
-    .wallet-address {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: 0.3px;
-    }
-
-    .wallet-chevron {
-      color: #88a7a0;
-      display: flex;
-      align-items: center;
-    }
-
-    .balance-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 2px;
-      margin-bottom: 4px;
-      position: relative;
-      z-index: 6;
-    }
-
-    .balance-label {
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      color: #a4beba;
-      margin-bottom: 5px;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-    }
-
-    .total-balance-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      padding: 5px 20px;
-      background: rgba(0, 20, 15, 0.82);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(0, 245, 155, 0.4);
-      border-radius: 30px;
-      box-shadow: 0 0 20px rgba(0, 245, 155, 0.15), inset 0 0 10px rgba(0, 245, 155, 0.08);
-    }
-
-    .gold-coin-thumb {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 1px solid #ffd700;
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-      object-fit: cover;
-      display: block;
-    }
-
-    .total-number {
-      font-size: 24px;
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: 0.5px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .currency-tag {
-      font-size: 17px;
-      font-weight: 800;
-      color: var(--primary);
-      text-shadow: 0 0 10px rgba(0, 245, 155, 0.6);
-    }
-
-    .stats-card {
-      width: 100%;
-      margin-top: 8px;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      background: rgba(0, 22, 17, 0.75);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(0, 245, 155, 0.25);
-      border-radius: 18px;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
-    }
-
-    .stat-col {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      padding: 2px 6px;
-    }
-
-    .stat-col:first-child {
-      border-right: 1px solid rgba(0, 245, 155, 0.18);
-    }
-
-    .stat-icon-wrap {
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--primary);
-      filter: drop-shadow(0 0 5px rgba(0, 245, 155, 0.5));
-    }
-
-    .stat-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .stat-name {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      color: #8faea8;
-      margin-bottom: 2px;
-    }
-
-    .stat-value {
-      font-size: 15px;
-      font-weight: 800;
-      color: #ffffff;
-      display: flex;
-      align-items: baseline;
-      gap: 4px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .stat-ticker {
-      font-size: 11.5px;
-      font-weight: 800;
-      color: var(--primary);
-    }
-
-    .hero-stage {
-      position: relative;
-      flex: 1;
-      min-height: 250px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 6;
-    }
-
-    .coin-interactive-wrap {
-      position: relative;
-      width: min(72vw, 320px);
-      aspect-ratio: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .hero-coin {
-      width: min(62vw, 270px);
-      height: min(62vw, 270px);
-      object-fit: contain;
-      border-radius: 50%;
-      display: block;
-      filter: drop-shadow(0 18px 35px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 24px rgba(0, 245, 155, 0.18));
-      animation: coinFloat 6.5s ease-in-out infinite;
-      transform: translateZ(0);
-      will-change: transform;
-    }
-
-    @keyframes coinFloat {
-      0%, 100% { transform: translateY(0) rotate(-1deg); }
-      50% { transform: translateY(-6px) rotate(1deg); }
-    }
-
-    .help-glass-orb {
-      position: absolute;
-      left: 8px;
-      top: 14%;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1.5px solid rgba(255, 255, 255, 0.45);
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 8px 16px rgba(0, 0, 0, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 25;
-      animation: orbFloat 3.2s ease-in-out infinite alternate;
-      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-    }
-
-    @keyframes orbFloat {
-      0% {
-        transform: translateY(0px) rotate(0deg);
-        box-shadow: 0 0 16px rgba(255, 255, 255, 0.15), 0 6px 14px rgba(0, 0, 0, 0.4);
-      }
-      50% {
-        transform: translateY(-6px) rotate(-3deg);
-        box-shadow: 0 0 24px rgba(255, 255, 255, 0.3), 0 10px 20px rgba(0, 0, 0, 0.5);
-      }
-      100% {
-        transform: translateY(3px) rotate(2deg);
-        box-shadow: 0 0 18px rgba(255, 255, 255, 0.18), 0 8px 16px rgba(0, 0, 0, 0.4);
-      }
-    }
-
-    .help-glass-orb-inner {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.2) 22%, rgba(15, 22, 20, 0.95) 60%, #030806 100%);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.8);
-      position: relative;
-    }
-
-    .help-glass-orb-inner span {
-      color: #ffffff;
-      font-size: 19px;
-      font-weight: 900;
-      line-height: 1;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 255, 255, 0.6);
-      transform: translateY(-1px);
-    }
-
-    .help-glass-orb:hover {
-      animation-play-state: paused;
-      transform: scale(1.1);
-      border-color: rgba(255, 255, 255, 0.85);
-      box-shadow: 0 0 28px rgba(255, 255, 255, 0.4);
-    }
-
-    .help-glass-orb:active {
-      transform: scale(0.94);
-    }
-
-    .live-mining-card {
-      width: 100%;
-      background: rgba(0, 22, 16, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1.5px solid rgba(0, 245, 155, 0.38);
-      border-radius: 20px;
-      padding: 10px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      margin-bottom: 10px;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 245, 155, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .live-mining-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 20%;
-      right: 20%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0, 245, 155, 0.6), transparent);
-    }
-
-    .live-mining-header {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .pulse-indicator {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--primary);
-      box-shadow: 0 0 10px var(--primary);
-      animation: pulseDot 1.4s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulseDot {
-      0% { opacity: 0.4; transform: scale(0.85); }
-      100% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 14px var(--primary); }
-    }
-
-    .live-mining-title {
-      font-size: 10.5px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: #9fe2d3;
-      text-transform: uppercase;
-    }
-
-    .live-mining-main-val {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 5px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .live-mining-symbol {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--primary);
-    }
-
-    .live-mining-digits {
-      font-size: 28px;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: 0.5px;
-      text-shadow: 0 0 16px rgba(0, 245, 155, 0.35);
-    }
-
-    .live-mining-unit {
-      font-size: 17px;
-      font-weight: 800;
-      color: var(--primary);
-      text-shadow: 0 0 10px rgba(0, 245, 155, 0.5);
-    }
-
-    .claim-container {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      padding: 0 2px 8px;
-    }
-
-    .claim-btn-gold {
-      position: relative;
-      width: 100%;
-      height: 54px;
-      background: linear-gradient(180deg, var(--gold-btn-top) 0%, var(--gold-btn-bottom) 100%);
-      border: 1.5px solid #ffe97d;
-      border-radius: 18px;
-      color: #1a1200;
-      font-family: var(--font-main);
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      cursor: pointer;
-      box-shadow: 
-        0 0 28px var(--gold-shadow),
-        inset 0 1.5px 1px rgba(255, 255, 255, 0.7),
-        inset 0 -2px 4px rgba(120, 75, 0, 0.5);
-      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-      overflow: hidden;
-    }
-
-    .claim-btn-gold::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        60deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.35) 50%,
-        transparent 70%
+    user =
+      await getUser(
+        env,
+        telegramId
       );
-      transform: rotate(25deg);
-      animation: buttonShine 4s infinite linear;
-      pointer-events: none;
+
+  } else {
+
+    await env.DB
+      .prepare(`
+        UPDATE users
+        SET
+          username = ?,
+          first_name = ?,
+          updated_at =
+            CURRENT_TIMESTAMP
+        WHERE telegram_id = ?
+      `)
+      .bind(
+        data.username || null,
+        data.first_name || "User",
+        telegramId
+      )
+      .run();
+
+    user =
+      await getUser(
+        env,
+        telegramId
+      );
+  }
+
+  return user;
+}
+
+
+/* =========================================================
+   MINING
+   ========================================================= */
+
+async function settleMining(
+  env,
+  user,
+  wallet = null
+) {
+  const now =
+    Date.now();
+
+  const last =
+    user.last_mining_at
+      ? new Date(
+          user.last_mining_at
+        ).getTime()
+      : now;
+
+  let elapsed =
+    (now - last) / 1000;
+
+  if (
+    !Number.isFinite(elapsed) ||
+    elapsed < 0
+  ) {
+    elapsed = 0;
+  }
+
+  elapsed =
+    Math.min(
+      elapsed,
+      86400
+    );
+
+  const rate =
+    Math.max(
+      0,
+      num(
+        user.mining_rate,
+        CONFIG.BASE_MINING_RATE
+      )
+    );
+
+  const earned =
+    (elapsed / 3600) *
+    rate;
+
+  const currentMined =
+    Math.max(
+      0,
+      num(user.mined)
+    );
+
+  const mined =
+    currentMined +
+    earned;
+
+  await env.DB
+    .prepare(`
+      UPDATE users
+      SET
+        wallet =
+          COALESCE(?, wallet),
+        mined = ?,
+        last_mining_at = ?,
+        updated_at =
+          CURRENT_TIMESTAMP
+      WHERE telegram_id = ?
+    `)
+    .bind(
+      wallet || null,
+      mined,
+      nowIso(),
+      String(
+        user.telegram_id
+      )
+    )
+    .run();
+
+  return getUser(
+    env,
+    user.telegram_id
+  );
+}
+
+
+/* =========================================================
+   REFERRAL
+   ========================================================= */
+
+async function attachReferral(
+  env,
+  user,
+  referralCode
+) {
+  const code =
+    String(
+      referralCode || ""
+    ).trim();
+
+  if (
+    !code ||
+    user.referred_by
+  ) {
+    return user;
+  }
+
+  const referrer =
+    await env.DB
+      .prepare(
+        "SELECT telegram_id FROM users WHERE referral_code = ?"
+      )
+      .bind(code)
+      .first();
+
+  if (
+    !referrer ||
+    String(
+      referrer.telegram_id
+    ) ===
+    String(
+      user.telegram_id
+    )
+  ) {
+    return user;
+  }
+
+  try {
+
+    await env.DB
+      .prepare(`
+        UPDATE users
+        SET
+          referred_by = ?,
+          updated_at =
+            CURRENT_TIMESTAMP
+        WHERE telegram_id = ?
+          AND (
+            referred_by IS NULL
+            OR referred_by = ''
+          )
+      `)
+      .bind(
+        String(
+          referrer.telegram_id
+        ),
+        String(
+          user.telegram_id
+        )
+      )
+      .run();
+
+  } catch (_) {}
+
+  return getUser(
+    env,
+    user.telegram_id
+  );
+}
+
+
+async function markSuccessfulReferral(
+  env,
+  user
+) {
+  if (
+    !user ||
+    !user.referred_by ||
+    Number(
+      user.referral_success || 0
+    ) === 1
+  ) {
+    return;
+  }
+
+  try {
+
+    const refId =
+      String(
+        user.referred_by
+      );
+
+    const existing =
+      await env.DB
+        .prepare(`
+          SELECT id
+          FROM referral_bonus_ledger
+          WHERE referred_telegram_id = ?
+        `)
+        .bind(
+          String(
+            user.telegram_id
+          )
+        )
+        .first();
+
+    if (existing) {
+
+      await env.DB
+        .prepare(`
+          UPDATE users
+          SET referral_success = 1
+          WHERE telegram_id = ?
+        `)
+        .bind(
+          String(
+            user.telegram_id
+          )
+        )
+        .run();
+
+      return;
     }
 
-    @keyframes buttonShine {
-      0% { transform: translateX(-100%) rotate(25deg); }
-      25% { transform: translateX(100%) rotate(25deg); }
-      100% { transform: translateX(100%) rotate(25deg); }
+    const referrer =
+      await getUser(
+        env,
+        refId
+      );
+
+    if (!referrer)
+      return;
+
+    await env.DB
+      .prepare(`
+        UPDATE users
+        SET
+          balance =
+            COALESCE(balance,0) + ?,
+          referral_earnings =
+            COALESCE(referral_earnings,0) + ?,
+          updated_at =
+            CURRENT_TIMESTAMP
+        WHERE telegram_id = ?
+      `)
+      .bind(
+        CONFIG.REFERRAL_SUCCESS_BONUS,
+        CONFIG.REFERRAL_SUCCESS_BONUS,
+        refId
+      )
+      .run();
+
+    await env.DB
+      .prepare(`
+        INSERT INTO
+        referral_bonus_ledger
+        (
+          referrer_telegram_id,
+          referred_telegram_id,
+          amount
+        )
+        VALUES (?, ?, ?)
+      `)
+      .bind(
+        refId,
+        String(
+          user.telegram_id
+        ),
+        CONFIG.REFERRAL_SUCCESS_BONUS
+      )
+      .run();
+
+    await env.DB
+      .prepare(`
+        UPDATE users
+        SET
+          referral_success = 1,
+          referral_success_at = ?,
+          referral_bonus_credited = ?,
+          updated_at =
+            CURRENT_TIMESTAMP
+        WHERE telegram_id = ?
+      `)
+      .bind(
+        nowIso(),
+        CONFIG.REFERRAL_SUCCESS_BONUS,
+        String(
+          user.telegram_id
+        )
+      )
+      .run();
+
+  } catch (_) {}
+}
+
+
+async function creditReferralClaimReward(
+  env,
+  referredUser,
+  claimAmount,
+  claimId
+) {
+  if (
+    !referredUser ||
+    !referredUser.referred_by ||
+    claimAmount <= 0
+  ) {
+    return;
+  }
+
+  try {
+
+    const reward =
+      claimAmount *
+      CONFIG.REFERRAL_CLAIM_PERCENT;
+
+    if (reward <= 0)
+      return;
+
+    const claimKey =
+      String(
+        claimId ||
+        `${referredUser.telegram_id}:${Date.now()}:${claimAmount}`
+      );
+
+    const exists =
+      await env.DB
+        .prepare(`
+          SELECT id
+          FROM referral_claim_ledger
+          WHERE claim_key = ?
+        `)
+        .bind(claimKey)
+        .first();
+
+    if (exists)
+      return;
+
+    await env.DB
+      .prepare(`
+        UPDATE users
+        SET
+          balance =
+            COALESCE(balance,0) + ?,
+          referral_earnings =
+            COALESCE(referral_earnings,0) + ?,
+          updated_at =
+            CURRENT_TIMESTAMP
+        WHERE telegram_id = ?
+      `)
+      .bind(
+        reward,
+        reward,
+        String(
+          referredUser.referred_by
+        )
+      )
+      .run();
+
+    await env.DB
+      .prepare(`
+        INSERT INTO referral_claim_ledger
+        (
+          referrer_telegram_id,
+          referred_telegram_id,
+          claim_id,
+          claim_key,
+          amount
+        )
+        VALUES (?, ?, ?, ?, ?)
+      `)
+      .bind(
+        String(
+          referredUser.referred_by
+        ),
+        String(
+          referredUser.telegram_id
+        ),
+        claimId || null,
+        claimKey,
+        reward
+      )
+      .run();
+
+  } catch (_) {}
+}
+
+
+/* =========================================================
+   HOLDING WALLET
+   ========================================================= */
+
+async function holdingWalletBalance(
+  env,
+  wallet
+) {
+  if (
+    !safeWallet(wallet) ||
+    !env.TONCENTER_API_KEY
+  ) {
+    return 0;
+  }
+
+  try {
+
+    const response =
+      await fetch(
+        "https://toncenter.com/api/v3/jetton/wallets" +
+        `?owner_address=${encodeURIComponent(wallet)}` +
+        `&jetton_address=${encodeURIComponent(LNR_MASTER)}` +
+        `&exclude_zero_balance=true` +
+        `&limit=1`,
+        {
+          headers: {
+            "X-API-Key":
+              env.TONCENTER_API_KEY
+          }
+        }
+      );
+
+    if (!response.ok)
+      return 0;
+
+    const data =
+      await response.json();
+
+    const rows =
+      data.jetton_wallets || [];
+
+    if (!rows.length)
+      return 0;
+
+    const raw =
+      Number(
+        rows[0].balance
+      );
+
+    if (
+      !Number.isFinite(raw)
+    ) {
+      return 0;
     }
 
-    .claim-btn-gold:active {
-      transform: scale(0.97);
-      box-shadow: 0 0 15px var(--gold-shadow);
+    return (
+      raw /
+      Math.pow(
+        10,
+        LNR_DECIMALS
+      )
+    );
+
+  } catch (_) {
+    return 0;
+  }
+}
+
+
+async function buildUserPayload(
+  env,
+  user
+) {
+  const wallet =
+    String(
+      user?.wallet || ""
+    );
+
+  let holding =
+    num(
+      user?.holding_wallet,
+      0
+    );
+
+  const chainHolding =
+    await holdingWalletBalance(
+      env,
+      wallet
+    );
+
+  if (chainHolding > 0) {
+    holding =
+      chainHolding;
+
+    try {
+      await env.DB
+        .prepare(`
+          UPDATE users
+          SET holding_wallet = ?
+          WHERE telegram_id = ?
+        `)
+        .bind(
+          holding,
+          String(
+            user.telegram_id
+          )
+        )
+        .run();
+    } catch (_) {}
+  }
+
+  const pool =
+    num(
+      user?.balance,
+      0
+    );
+
+  const mined =
+    num(
+      user?.mined,
+      0
+    );
+
+  const totalAssets =
+    pool + holding;
+
+  const level =
+    Math.min(
+      CONFIG.MAX_LEVEL,
+      Math.max(
+        1,
+        Math.floor(
+          totalAssets /
+          CONFIG.LEVEL_STEP_LNR
+        ) + 1
+      )
+    );
+
+  const rate =
+    miningRateForLevel(
+      level
+    );
+
+  return {
+    ...user,
+
+    balance: pool,
+
+    pool: pool,
+
+    mined: mined,
+
+    holding: holding,
+
+    holding_wallet:
+      holding,
+
+    total_assets:
+      totalAssets,
+
+    level:
+      level,
+
+    mining_rate:
+      rate,
+
+    next_level_required:
+      level <
+      CONFIG.MAX_LEVEL
+        ? levelRequiredLNR(
+            level + 1
+          )
+        : null,
+
+    referral_success:
+      Number(
+        user?.referral_success ||
+        0
+      ),
+
+    referral_earnings:
+      num(
+        user?.referral_earnings,
+        0
+      ),
+
+    successful_referrals:
+      Number(
+        user?.referral_success ||
+        0
+      )
+  };
+}
+
+
+/* =========================================================
+   USER API
+   ========================================================= */
+
+async function handleUserPost(
+  request,
+  env
+) {
+  const data =
+    await request.json();
+
+  let user =
+    await ensureUser(
+      env,
+      data
+    );
+
+  if (
+    data.referral_code
+  ) {
+    user =
+      await attachReferral(
+        env,
+        user,
+        data.referral_code
+      );
+  }
+
+  if (
+    String(
+      data.referral_action ||
+      ""
+    ).toLowerCase()
+    ===
+    "wallet_verified"
+  ) {
+
+    await markSuccessfulReferral(
+      env,
+      user
+    );
+
+    user =
+      await getUser(
+        env,
+        user.telegram_id
+      );
+  }
+
+  return json({
+    success: true,
+    user:
+      await buildUserPayload(
+        env,
+        user
+      )
+  });
+}
+
+
+/* =========================================================
+   MINE API
+   ========================================================= */
+
+async function handleMine(
+  request,
+  env
+) {
+  const data =
+    await request.json();
+
+  const telegramId =
+    String(
+      data.telegram_id || ""
+    );
+
+  const wallet =
+    String(
+      data.wallet || ""
+    );
+
+  if (!telegramId)
+    return json({
+      success: false,
+      error:
+        "telegram_id is required"
+    }, 400);
+
+  if (!wallet)
+    return json({
+      success: false,
+      error:
+        "wallet is required"
+    }, 400);
+
+  const user =
+    await getUser(
+      env,
+      telegramId
+    );
+
+  if (!user)
+    return json({
+      success: false,
+      error:
+        "User not found"
+    }, 404);
+
+  const updated =
+    await settleMining(
+      env,
+      user,
+      wallet
+    );
+
+  if (
+    updated.referred_by &&
+    Number(
+      updated.referral_success ||
+      0
+    ) !== 1
+  ) {
+    await markSuccessfulReferral(
+      env,
+      updated
+    );
+  }
+
+  const finalUser =
+    await getUser(
+      env,
+      telegramId
+    );
+
+  return json({
+    success: true,
+
+    earned:
+      Math.max(
+        0,
+        num(finalUser.mined) -
+        num(user.mined)
+      ),
+
+    user:
+      await buildUserPayload(
+        env,
+        finalUser
+      )
+  });
+}
+
+
+/* =========================================================
+   CLAIM
+   ========================================================= */
+
+async function handleClaim(
+  request,
+  env
+) {
+  const data =
+    await request.json();
+
+  const telegramId =
+    String(
+      data.telegram_id || ""
+    );
+
+  const wallet =
+    String(
+      data.wallet || ""
+    );
+
+  if (!telegramId)
+    return json({
+      success: false,
+      error:
+        "telegram_id is required"
+    }, 400);
+
+  if (!wallet)
+    return json({
+      success: false,
+      error:
+        "wallet is required"
+    }, 400);
+
+  const user =
+    await getUser(
+      env,
+      telegramId
+    );
+
+  if (!user)
+    return json({
+      success: false,
+      error:
+        "User not found"
+    }, 404);
+
+  const now =
+    Date.now();
+
+  const last =
+    user.last_mining_at
+      ? new Date(
+          user.last_mining_at
+        ).getTime()
+      : now;
+
+  let elapsed =
+    (now - last) /
+    1000;
+
+  if (
+    !Number.isFinite(elapsed) ||
+    elapsed < 0
+  ) {
+    elapsed = 0;
+  }
+
+  elapsed =
+    Math.min(
+      elapsed,
+      86400
+    );
+
+  const rate =
+    miningRateForLevel(
+      Number(
+        user.level || 1
+      )
+    );
+
+  const accrued =
+    (elapsed / 3600) *
+    rate;
+
+  const claimAmount =
+    Number(
+      user.mined || 0
+    ) + accrued;
+
+  if (
+    claimAmount <= 0
+  ) {
+    return json({
+      success: false,
+      error:
+        "Nothing to claim"
+    }, 400);
+  }
+
+  const newBalance =
+    Number(
+      user.balance || 0
+    ) + claimAmount;
+
+  await env.DB
+    .prepare(`
+      UPDATE users
+      SET
+        wallet = ?,
+        balance = ?,
+        mined = 0,
+        last_mining_at = ?,
+        updated_at =
+          CURRENT_TIMESTAMP
+      WHERE telegram_id = ?
+    `)
+    .bind(
+      wallet,
+      newBalance,
+      nowIso(),
+      telegramId
+    )
+    .run();
+
+  let claimId =
+    null;
+
+  try {
+
+    const inserted =
+      await env.DB
+        .prepare(`
+          INSERT INTO claims
+          (
+            telegram_id,
+            amount
+          )
+          VALUES (?, ?)
+        `)
+        .bind(
+          telegramId,
+          claimAmount
+        )
+        .run();
+
+    claimId =
+      inserted?.meta
+        ?.last_row_id ??
+      null;
+
+  } catch (_) {}
+
+  try {
+    await creditReferralClaimReward(
+      env,
+      user,
+      claimAmount,
+      claimId
+    );
+  } catch (_) {}
+
+  const finalUser =
+    await getUser(
+      env,
+      telegramId
+    );
+
+  return json({
+    success: true,
+
+    claimed:
+      claimAmount,
+
+    user:
+      await buildUserPayload(
+        env,
+        finalUser
+      )
+  });
+}
+
+
+/* =========================================================
+   DAILY TASK
+   ========================================================= */
+
+async function handleTask(
+  request,
+  env
+) {
+  const data =
+    await request.json();
+
+  const telegramId =
+    String(
+      data.telegram_id || ""
+    );
+
+  const taskKey =
+    String(
+      data.task_key ||
+      "daily"
+    );
+
+  if (!telegramId)
+    return json({
+      success: false,
+      error:
+        "telegram_id is required"
+    }, 400);
+
+  const user =
+    await getUser(
+      env,
+      telegramId
+    );
+
+  if (!user)
+    return json({
+      success: false,
+      error:
+        "User not found"
+    }, 404);
+
+  const today =
+    new Date()
+      .toISOString()
+      .slice(0, 10);
+
+  try {
+
+    const existing =
+      await env.DB
+        .prepare(`
+          SELECT id
+          FROM daily_tasks
+          WHERE telegram_id = ?
+            AND task_key = ?
+            AND task_date = ?
+        `)
+        .bind(
+          telegramId,
+          taskKey,
+          today
+        )
+        .first();
+
+    if (existing) {
+      return json({
+        success: false,
+        error:
+          "Task already claimed",
+        user:
+          await buildUserPayload(
+            env,
+            user
+          )
+      }, 400);
     }
 
-    .bottom-nav {
-      position: relative;
-      z-index: 10;
-      height: 64px;
-      background: rgba(1, 10, 8, 0.94);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-top: 1px solid rgba(0, 245, 155, 0.22);
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      padding: 0 6px;
-      padding-bottom: env(safe-area-inset-bottom);
-    }
+    await env.DB
+      .prepare(`
+        UPDATE users
+        SET
+          balance =
+            COALESCE(balance,0) + ?,
+          last_task_date = ?,
+          updated_at =
+            CURRENT_TIMESTAMP
+        WHERE telegram_id = ?
+      `)
+      .bind(
+        CONFIG.DAILY_TASK_REWARD,
+        today,
+        telegramId
+      )
+      .run();
 
-    .nav-item {
-      background: none;
-      border: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      color: var(--text-muted);
-      cursor: pointer;
-      position: relative;
-      transition: all 0.2s;
-    }
+    await env.DB
+      .prepare(`
+        INSERT INTO daily_tasks
+        (
+          telegram_id,
+          task_key,
+          task_date,
+          reward
+        )
+        VALUES (?, ?, ?, ?)
+      `)
+      .bind(
+        telegramId,
+        taskKey,
+        today,
+        CONFIG.DAILY_TASK_REWARD
+      )
+      .run();
 
-    .nav-icon-container {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.25s;
-    }
+  } catch (e) {
 
-    .nav-label {
-      font-size: 11.5px;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      transition: color 0.2s;
-    }
+    return json({
+      success: false,
+      error:
+        e.message ||
+        "Task failed"
+    }, 500);
+  }
 
-    .nav-item.active {
-      color: var(--primary);
-    }
+  const updated =
+    await getUser(
+      env,
+      telegramId
+    );
 
-    .nav-item.active .nav-icon-container {
-      filter: drop-shadow(0 0 8px var(--primary));
-      transform: translateY(-2px);
-    }
+  return json({
+    success: true,
 
-    .nav-item.active .nav-label {
-      color: var(--primary);
-      text-shadow: 0 0 8px rgba(0, 245, 155, 0.4);
-    }
+    reward:
+      CONFIG.DAILY_TASK_REWARD,
 
-    .nav-item.active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      width: 38px;
-      height: 3px;
-      background: var(--primary);
-      border-radius: 4px 4px 0 0;
-      box-shadow: 0 0 12px var(--primary);
-    }
+    user:
+      await buildUserPayload(
+        env,
+        updated
+      )
+  });
+}
 
-    .nav-item.special-btn .nav-icon-container {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: rgba(0, 245, 155, 0.15);
-      border: 1px solid rgba(0, 245, 155, 0.4);
-      color: var(--primary);
-      box-shadow: 0 0 10px rgba(0, 245, 155, 0.2);
-    }
 
-    .toast-msg {
-      position: absolute;
-      top: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-20px);
-      background: rgba(2, 25, 19, 0.95);
-      border: 1.5px solid var(--primary);
-      padding: 10px 18px;
-      border-radius: 20px;
-      box-shadow: 0 0 25px rgba(0, 245, 155, 0.4);
-      color: #ffffff;
-      font-size: 13.5px;
-      font-weight: 700;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
-    }
+/* =========================================================
+   WITHDRAWAL HELPERS
+   ========================================================= */
 
-    .toast-msg.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+function classifyWithdrawalError(
+  stage,
+  error
+) {
+  const message =
+    readableError(error);
 
-    .modal-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.78);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 90;
-      padding: 20px;
-    }
+  let code =
+    "WITHDRAWAL_ERROR";
 
-    .modal-overlay.active {
-      display: flex;
-    }
+  if (
+    message.includes(
+      "mnemonic"
+    )
+  ) {
+    code =
+      "TREASURY_MNEMONIC_ERROR";
 
-    .modal-box {
-      width: 100%;
-      max-width: 380px;
-      background: #021812;
-      border: 1.5px solid var(--primary);
-      border-radius: 26px;
-      padding: 22px;
-      box-shadow: 0 0 50px rgba(0, 245, 155, 0.25);
-      position: relative;
-      text-align: center;
-      animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+  } else if (
+    message.includes(
+      "Treasury"
+    )
+  ) {
+    code =
+      "TREASURY_ERROR";
 
-    @keyframes modalPop {
-      0% { opacity: 0; transform: scale(0.85); }
-      100% { opacity: 1; transform: scale(1); }
-    }
+  } else if (
+    message.includes(
+      "Jetton"
+    )
+  ) {
+    code =
+      "JETTON_ERROR";
 
-    .modal-close {
-      position: absolute;
-      top: 14px;
-      right: 16px;
-      background: none;
-      border: none;
-      color: #96aca7;
-      font-size: 24px;
-      cursor: pointer;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-    }
+  } else if (
+    message.includes(
+      "balance"
+    )
+  ) {
+    code =
+      "BALANCE_ERROR";
 
-    .modal-icon-header {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: rgba(0, 245, 155, 0.15);
-      border: 1.5px solid var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 12px;
-      color: var(--primary);
-      box-shadow: 0 0 20px rgba(0, 245, 155, 0.3);
-    }
+  } else if (
+    message.includes(
+      "seqno"
+    )
+  ) {
+    code =
+      "SEQNO_ERROR";
 
-    .modal-title {
-      font-size: 19px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 8px;
-    }
+  } else if (
+    message.includes(
+      "timeout"
+    )
+  ) {
+    code =
+      "CONFIRMATION_TIMEOUT";
 
-    .modal-body {
-      max-height: 68vh;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: contain;
-      scrollbar-width: thin;
-      font-size: 13.5px;
-      color: #b1c7c2;
-      line-height: 1.55;
-      margin-bottom: 18px;
-      text-align: left;
-    }
+  } else if (
+    message.includes(
+      "TON"
+    )
+  ) {
+    code =
+      "TON_GAS_ERROR";
+  }
 
-    .modal-btn {
-      width: 100%;
-      height: 46px;
-      background: linear-gradient(180deg, #00f59b 0%, #00a86b 100%);
-      border: none;
-      border-radius: 14px;
-      color: #02120d;
-      font-size: 15.5px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(0, 245, 155, 0.35);
-      transition: all 0.2s;
-    }
+  return {
+    stage,
+    code,
+    message
+  };
+}
 
-    .modal-btn:active {
-      transform: scale(0.97);
-    }
 
-    .wallet-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin: 14px 0;
-    }
+async function saveWithdrawalError(
+  env,
+  id,
+  stage,
+  error,
+  details = {}
+) {
+  const info =
+    classifyWithdrawalError(
+      stage,
+      error
+    );
 
-    .wallet-option-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 11px 15px;
-      background: rgba(0, 30, 22, 0.7);
-      border: 1px solid rgba(0, 245, 155, 0.25);
-      border-radius: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+  try {
 
-    .wallet-option-item:hover {
-      border-color: var(--primary);
-      background: rgba(0, 45, 32, 0.85);
-    }
+    await env.DB
+      .prepare(`
+        UPDATE withdrawals
+        SET
+          error_stage = ?,
+          error_code = ?,
+          error_message = ?,
+          error_details = ?
+        WHERE id = ?
+      `)
+      .bind(
+        info.stage,
+        info.code,
+        info.message,
+        JSON.stringify(
+          details
+        ).slice(0, 10000),
+        id
+      )
+      .run();
 
-    .wallet-option-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      color: #ffffff;
-    }
-  
-/* ATF-style LUNARO miners */
-.miners-screen{color:#eaf6f2;padding:2px 0 8px;min-height:100%;}
-.miners-topbar{display:flex;justify-content:space-between;align-items:center;padding:4px 2px 12px;font-size:16px;position:sticky;top:0;background:rgba(7,18,17,.96);z-index:3;}
-.miners-topbar b{font-size:20px;letter-spacing:.2px}.miners-topbar span{font-size:9px;color:#8ca39d;margin-left:5px;letter-spacing:1px}.miners-assets{font-size:11px;color:#b6c9c4;}
-.miners-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}
-.miner-level-card{border:1px solid rgba(255,255,255,.10);border-radius:13px;padding:10px 9px 9px;background:linear-gradient(145deg,rgba(24,33,32,.98),rgba(12,20,19,.98));box-shadow:0 5px 18px rgba(0,0,0,.20);cursor:pointer;min-height:118px;transition:.15s;}
-.miner-level-card:active{transform:scale(.985)}
-.miner-level-card.active{border:1px solid #d4aa39;box-shadow:0 0 0 1px rgba(212,170,57,.15),0 6px 20px rgba(0,0,0,.28)}
-.miner-level-card.unlock{border-color:rgba(24,166,106,.75)}
-.miner-level-card.need{border-color:rgba(224,190,71,.62)}
-.miner-level-card.locked{opacity:.72;border-color:rgba(255,255,255,.09)}
-.miner-card-head{display:flex;justify-content:space-between;gap:5px;align-items:center;font-weight:700;font-size:13px}.miner-card-price{color:#f0d36c;font-size:14px}.miner-card-speed{font-size:12px;color:#a8bbb6;margin:10px 0 9px}
-.miner-card-action{width:100%;border:0;border-radius:7px;padding:7px 5px;font-size:10px;font-weight:800;letter-spacing:.15px;background:#303938;color:#b9c7c3}.miner-card-action.active{background:#19a66b;color:#fff}.miner-card-action.need{background:#d0ae38;color:#151713}.miner-card-action.unlock{background:#198c5d;color:#fff}.miner-card-action.locked{background:#313837;color:#a9b4b1}
-.miner-card-missing{text-align:center;color:#59c893;font-size:9px;margin-top:7px}
-.miners-price-note{text-align:center;color:#91aaa3;font-size:10px;line-height:1.7;padding-top:7px}.miners-price-note b{color:#f0d36c}.miners-price-note span{opacity:.85}
-.miner-detail{text-align:left;color:#dcebe7;padding:3px 1px 5px}.miner-detail-price{text-align:center;font-size:39px;font-weight:800;color:#f3d66d;margin:3px 0 17px}.miner-detail-speed{display:flex;justify-content:space-between;padding:0 2px 14px;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px}.miner-detail-speed b{color:#fff}.miner-detail-row{display:flex;justify-content:space-between;gap:10px;padding:13px 2px;border-bottom:1px solid rgba(255,255,255,.07);font-size:12px}.miner-detail-row span{color:#92a9a4}.miner-detail-row b{text-align:right;color:#fff}.miner-detail-row.missing b{color:#f1c94f}.miner-detail-note{font-size:10px;color:#8fa59f;text-align:center;line-height:1.7;padding-top:8px}.miner-buy-btn{background:#18a66a!important;color:#fff!important;border-color:rgba(24,166,106,.7)!important}
-</style>
-</head>
-<body>
+  } catch (_) {}
 
-  <div class="app-container">
-    
-    <div class="bg-layer">
-      <img src="assets/lunaro_hero_bg.jpg" alt="Lunaro Mining Stage" class="bg-image">
-      <div class="bg-gradient-overlay"></div>
-      <canvas id="particles-canvas"></canvas>
-    </div>
+  console.error(
+    "LNR_WITHDRAWAL_ERROR",
+    JSON.stringify({
+      withdrawal_id: id,
+      ...info,
+      details
+    })
+  );
+}
 
-    <main class="main-content">
-      
-      <div class="status-row">
-        <div class="level-compact-card">
-          <div class="level-gem-mini">
-            <img src="assets/level_gem.jpg" alt="Gem">
-          </div>
-          <div class="level-text-info">
-            <span class="level-title-small" id="levelTitle">Level 3</span>
-            <div class="progress-track-slim">
-              <div class="progress-fill-slim" id="levelProgressFill"></div>
-            </div>
-            <span class="progress-text-small" id="levelProgressText">48%</span>
-          </div>
-        </div>
 
-        <div class="wallet-chip" id="walletChip">
-          <div class="wallet-icon-svg">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="4" width="20" height="16" rx="4" />
-              <path d="M16 12a2 2 0 1 0 4 0" />
-            </svg>
-          </div>
-          <span class="wallet-address" id="walletAddressDisplay">UQCN...iD7</span>
-          <div class="wallet-chevron">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </div>
-        </div>
-      </div>
+/* =========================================================
+   TON CLIENT
+   ========================================================= */
 
-      <section class="balance-section">
-        <div class="balance-label">TOTAL BALANCE</div>
-        <div class="total-balance-pill">
-          <img src="assets/lnr_gold_coin.jpg" alt="LNR Gold Coin" class="gold-coin-thumb">
-          <span class="total-number" id="totalBalance">12,458.32</span>
-          <span class="currency-tag">LNR</span>
-        </div>
+function createTonClient(
+  env
+) {
+  return new TonClient({
+    endpoint:
+      env.TONCENTER_URL ||
+      TONCENTER_URL,
 
-        <div class="stats-card">
-          <div class="stat-col">
-            <div class="stat-icon-wrap">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
-                <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
-                <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
-              </svg>
-            </div>
-            <div class="stat-info">
-              <span class="stat-name">HOLDING WALLET</span>
-              <div class="stat-value">
-                <span id="holdingWalletAmount">11,925.65</span>
-                <span class="stat-ticker">LNR</span>
-              </div>
-            </div>
-          </div>
+    apiKey:
+      env.TONCENTER_API_KEY ||
+      ""
+  });
+}
 
-          <div class="stat-col">
-            <div class="stat-icon-wrap">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M12 6v6l4 2"></path>
-              </svg>
-            </div>
-            <div class="stat-info">
-              <span class="stat-name">WALLET BALANCE</span>
-              <div class="stat-value">
-                <span id="walletBalance">532.67</span>
-                <span class="stat-ticker">LNR</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <div class="hero-stage" id="heroStage">
-        <div class="help-glass-orb" id="btnHelpGuide" title="راهنمای برنامه">
-          <div class="help-glass-orb-inner">
-            <span>?</span>
-          </div>
-        </div>
-        <div class="coin-interactive-wrap" id="coinWrap">
-          <img src="assets/lnr_gold_coin.jpg" alt="LNR" class="hero-coin">
-        </div>
-      </div>
+/* =========================================================
+   TREASURY
+   ========================================================= */
 
-      <div class="claim-container">
-        <div class="live-mining-card">
-          <div class="live-mining-header">
-            <div class="pulse-indicator"></div>
-            <span class="live-mining-title">UNCLAIMED MINED REWARD</span>
-          </div>
-          <div class="live-mining-main-val">
-            <span class="live-mining-symbol">+</span>
-            <span id="liveMinedCounter" class="live-mining-digits">0.34267</span>
-            <span class="live-mining-unit">LNR</span>
-          </div>
-        </div>
+async function getTreasury(
+  env
+) {
+  const mnemonic =
+    String(
+      env.LNR_TREASURY_MNEMONIC ||
+      ""
+    ).trim();
 
-        <button class="claim-btn-gold" id="btnClaim">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-          <span>CLAIM</span>
-        </button>
-      </div>
+  if (!mnemonic) {
+    throw new Error(
+      "TREASURY_MNEMONIC_MISSING"
+    );
+  }
 
-    </main>
+  const words =
+    mnemonic
+      .split(/\s+/)
+      .filter(Boolean);
 
-    <nav class="bottom-nav" id="bottomNav">
-      <button class="nav-item active" data-tab="mine" id="navMine">
-        <div class="nav-icon-container">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14.5 9.5L19 5l-2.5-2.5L12 7"></path>
-            <path d="m21.5 2.5-19 19"></path>
-            <path d="M9.5 14.5L5 19l2.5 2.5L12 17"></path>
-          </svg>
-        </div>
-        <span class="nav-label">Mine</span>
-      </button>
+  if (
+    words.length < 12
+  ) {
+    throw new Error(
+      "TREASURY_MNEMONIC_INVALID"
+    );
+  }
 
-      <button class="nav-item" data-tab="tasks" id="navTasks">
-        <div class="nav-icon-container">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-            <path d="m9 14 2 2 4-4"></path>
-          </svg>
-        </div>
-        <span class="nav-label">Tasks</span>
-      </button>
+  const keyPair =
+    await mnemonicToPrivateKey(
+      words
+    );
 
-      <button class="nav-item special-btn" data-tab="miners" id="navMiners">
-        <div class="nav-icon-container">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-        </div>
-        <span class="nav-label">Miners</span>
-      </button>
+  const wallet =
+    WalletContractV4.create({
+      workchain: 0,
+      publicKey:
+        keyPair.publicKey
+    });
 
-      <button class="nav-item" data-tab="friends" id="navFriends">
-        <div class="nav-icon-container">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-        </div>
-        <span class="nav-label">Friends</span>
-      </button>
+  const configured =
+    Address.parse(
+      TREASURY_OWNER
+    );
 
-      <button class="nav-item" data-tab="profile" id="navProfile">
-        <div class="nav-icon-container">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-        </div>
-        <span class="nav-label">Profile</span>
-      </button>
-    </nav>
+  if (
+    !wallet.address.equals(
+      configured
+    )
+  ) {
+    throw new Error(
+      "TREASURY_MNEMONIC_DOES_NOT_MATCH_TREASURY"
+    );
+  }
 
-    <div class="toast-msg" id="toastMsg">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)">
-        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-      </svg>
-      <span id="toastText">Notification</span>
-    </div>
+  return {
+    wallet,
+    keyPair
+  };
+}
 
-    <div class="modal-overlay" id="modalOverlay">
-      <div class="modal-box">
-        <button class="modal-close" id="btnModalClose">&times;</button>
-        <div class="modal-icon-header" id="modalIcon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 14 14"></polyline>
-          </svg>
-        </div>
-        <h3 class="modal-title" id="modalTitle">Modal Header</h3>
-        <div class="modal-body" id="modalBody">Description text goes here.</div>
-        <div id="modalExtraContent"></div>
-        <button class="modal-btn" id="btnModalAction">Confirm</button>
-      </div>
-    </div>
 
-  </div>
+/* =========================================================
+   JETTON MASTER / TREASURY JETTON WALLET
+   ========================================================= */
 
-  <script>
-    const API_URL = "https://lunaro-api.alikoms15.workers.dev";
-    const BOT_USERNAME = "LunaroGameBot";
-    const MANIFEST_URL = "https://alikoms15-lab.github.io/alikoms15.github.io/tonconnect-manifest.json";
-    const tg = window.Telegram?.WebApp || null;
+async function getTreasuryJettonWallet(
+  env
+) {
+  const client =
+    createTonClient(
+      env
+    );
 
-    const stateKey = "lunaro_v7_state";
-    const defaultState = {
-      pool: 0,
-      holding: null,
-      mined: 0,
-      lastMiningTime: Date.now(),
-      telegramName: "",
-      telegramId: "",
-      username: "",
-      level: 1,
-      rate: 7.5000,
-      referralCode: "LNR000000",
-      friends: 0,
-      successfulFriends: 0,
-      refRewards: 0,
-      referralBonuses: 0,
-      pendingReferralCode: "",
-      history: [],
-      dailyClaimDate: ""
+  const masterAddress =
+    Address.parse(
+      env.LNR_JETTON_MASTER ||
+      LNR_MASTER
+    );
+
+  const master =
+    client.open(
+      new JettonMaster(
+        masterAddress
+      )
+    );
+
+  const treasury =
+    Address.parse(
+      TREASURY_OWNER
+    );
+
+  const jettonWallet =
+    await master.getWalletAddress(
+      treasury
+    );
+
+  return {
+    client,
+    master,
+    masterAddress,
+    jettonWallet
+  };
+}
+
+
+/* =========================================================
+   TREASURY BALANCES
+   ========================================================= */
+
+async function getTreasuryTonBalance(
+  env
+) {
+  const client =
+    createTonClient(
+      env
+    );
+
+  const balance =
+    await client.getBalance(
+      Address.parse(
+        TREASURY_OWNER
+      )
+    );
+
+  return Number(balance) /
+    1e9;
+}
+
+
+async function getTreasuryLnrBalance(
+  env
+) {
+  const {
+    client,
+    jettonWallet
+  } =
+    await getTreasuryJettonWallet(
+      env
+    );
+
+  try {
+
+    const result =
+      await client.runMethod(
+        jettonWallet,
+        "get_wallet_data"
+      );
+
+    const raw =
+      result.stack.readBigNumber();
+
+    return {
+      raw,
+      amount:
+        Number(raw) /
+        Math.pow(
+          10,
+          LNR_DECIMALS
+        ),
+
+      wallet:
+        jettonWallet
+          .toString()
     };
 
-    let state = loadState();
-    let connectedWallet = "";
-    let tonConnectUI = null;
-    let tonReady = false;
-    let miningSyncTimer = null;
-    let fullSyncTimer = null;
-    let miningSyncBusy = false;
-    let displayMinedBase = 0;
-    let displayMinedAt = Date.now();
-    let toastTimeout;
+  } catch (error) {
 
-    const totalBalanceEl = document.getElementById('totalBalance');
-    const holdingWalletAmountEl = document.getElementById('holdingWalletAmount');
-    const walletBalanceEl = document.getElementById('walletBalance');
-    const liveMinedCounterEl = document.getElementById('liveMinedCounter');
-    const btnClaim = document.getElementById('btnClaim');
-    const btnHelpGuide = document.getElementById('btnHelpGuide');
-    const toastMsg = document.getElementById('toastMsg');
-    const toastText = document.getElementById('toastText');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    const modalIcon = document.getElementById('modalIcon');
-    const modalExtra = document.getElementById('modalExtraContent');
-    const btnModalClose = document.getElementById('btnModalClose');
-    const btnModalAction = document.getElementById('btnModalAction');
-    const walletChip = document.getElementById('walletChip');
-    const walletAddressDisplay = document.getElementById('walletAddressDisplay');
-    const levelTitleEl = document.getElementById('levelTitle');
-    const levelProgressFillEl = document.getElementById('levelProgressFill');
-    const levelProgressTextEl = document.getElementById('levelProgressText');
+    throw new Error(
+      "JETTON_BALANCE_READ_FAILED: " +
+      readableError(error)
+    );
+  }
+}
 
-    function loadState(){
-      try{
-        const raw = localStorage.getItem(stateKey);
-        return {...defaultState, ...(raw ? JSON.parse(raw) : {})};
-      }catch(e){ return {...defaultState}; }
-    }
-    function saveState(){
-      try{ localStorage.setItem(stateKey, JSON.stringify(state)); }catch(e){}
-    }
-    function fmt(n, decimals=2){
-      return Number(n || 0).toLocaleString('en-US',{minimumFractionDigits:decimals,maximumFractionDigits:decimals});
-    }
-    function shortAddress(a){ return a ? `${a.slice(0,6)}...${a.slice(-4)}` : 'CONNECT WALLET'; }
-    function showToast(message){
-      if(!toastMsg || !toastText) return;
-      toastText.textContent = message;
-      toastMsg.classList.add('show');
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(()=>toastMsg.classList.remove('show'),2200);
-    }
 
-    function getStartParam(){
-      try{
-        return String(tg?.initDataUnsafe?.start_param || new URLSearchParams(location.search).get('startapp') || new URLSearchParams(location.search).get('start') || '').trim();
-      }catch(e){ return ''; }
-    }
+/* =========================================================
+   JETTON TRANSFER BODY
+   ========================================================= */
 
-    function initTelegram(){
-      try{
-        if(tg){ tg.ready(); if(typeof tg.expand==='function') tg.expand(); }
-        const startParam=getStartParam();
-        if(startParam && !state.pendingReferralCode) state.pendingReferralCode=startParam;
-        const u = tg?.initDataUnsafe?.user;
-        if(u){
-          state.telegramId = String(u.id || '');
-          state.username = u.username || '';
-          state.telegramName = [u.first_name,u.last_name].filter(Boolean).join(' ') || state.username || 'User';
-        }
-      }catch(e){}
-      if(!state.telegramId) state.telegramId = 'demo-user';
-      if(!state.telegramName) state.telegramName = 'User';
-      saveState();
-    }
+function buildJettonTransferBody(
+  destination,
+  responseDestination,
+  amountRaw,
+  queryId
+) {
+  return beginCell()
 
-    async function initTonConnect(){
-      if(tonReady) return tonConnectUI;
-      if(!window.TON_CONNECT_UI?.TonConnectUI) return null;
-      try{
-        tonConnectUI = new TON_CONNECT_UI.TonConnectUI({manifestUrl: MANIFEST_URL, analytics:{mode:'off'}});
-        tonConnectUI.onStatusChange(async wallet=>{
-          const address = wallet?.account?.address || '';
-          if(address) await setConnectedWallet(address,false);
-          else await setConnectedWallet('',false);
-        });
-        if(typeof tonConnectUI.connectionRestored !== 'undefined'){
-          try{ await tonConnectUI.connectionRestored; }catch(e){}
-        }else if(typeof tonConnectUI.restoreConnection==='function'){
-          try{ await tonConnectUI.restoreConnection(); }catch(e){}
-        }
-        tonReady = true;
-        return tonConnectUI;
-      }catch(e){
-        console.warn('TonConnect init failed',e);
-        tonConnectUI=null; tonReady=false; return null;
+    /*
+     * op::transfer
+     */
+    .storeUint(
+      0x0f8a7ea5,
+      32
+    )
+
+    .storeUint(
+      queryId,
+      64
+    )
+
+    .storeCoins(
+      amountRaw
+    )
+
+    .storeAddress(
+      destination
+    )
+
+    .storeAddress(
+      responseDestination
+    )
+
+    /*
+     * custom_payload = null
+     */
+    .storeBit(0)
+
+    /*
+     * forward_ton_amount
+     */
+    .storeCoins(
+      BigInt(
+        Math.round(
+          FORWARD_TON *
+          1e9
+        )
+      )
+    )
+
+    /*
+     * forward_payload = empty
+     */
+    .storeBit(0)
+
+    .endCell();
+}
+
+
+/* =========================================================
+   SEND LNR
+   ========================================================= */
+
+async function sendLnrFromTreasury(
+  env,
+  destination,
+  amount,
+  withdrawalId
+) {
+  if (
+    !safeWallet(destination)
+  ) {
+    throw new Error(
+      "INVALID_DESTINATION_WALLET"
+    );
+  }
+
+  const destinationAddress =
+    Address.parse(
+      destination
+    );
+
+  const {
+    wallet,
+    keyPair
+  } =
+    await getTreasury(
+      env
+    );
+
+  const client =
+    createTonClient(
+      env
+    );
+
+  const tonBalance =
+    await getTreasuryTonBalance(
+      env
+    );
+
+  if (
+    tonBalance <
+    MIN_TREASURY_TON
+  ) {
+    throw new Error(
+      `INSUFFICIENT_TREASURY_TON:${tonBalance}`
+    );
+  }
+
+  const treasuryLnr =
+    await getTreasuryLnrBalance(
+      env
+    );
+
+  const rawAmount =
+    rawLnrAmount(
+      amount
+    );
+
+  if (
+    treasuryLnr.raw <
+    rawAmount
+  ) {
+    throw new Error(
+      `INSUFFICIENT_TREASURY_LNR:required=${rawAmount.toString()}:available=${treasuryLnr.raw.toString()}`
+    );
+  }
+
+  const {
+    jettonWallet
+  } =
+    await getTreasuryJettonWallet(
+      env
+    );
+
+  const openedWallet =
+    client.open(
+      wallet
+    );
+
+  const seqno =
+    await openedWallet.getSeqno();
+
+  const body =
+    buildJettonTransferBody(
+      destinationAddress,
+      wallet.address,
+      rawAmount,
+      BigInt(
+        withdrawalId
+      )
+    );
+
+  await openedWallet.sendTransfer({
+    seqno,
+
+    secretKey:
+      keyPair.secretKey,
+
+    sendMode:
+      SendMode.PAY_GAS_SEPARATELY,
+
+    messages: [
+      internal({
+        to:
+          jettonWallet,
+
+        value:
+          BigInt(
+            Math.round(
+              MIN_TREASURY_TON *
+              1e9
+            )
+          ),
+
+        bounce:
+          true,
+
+        body
+      })
+    ]
+  });
+
+  return {
+    seqno,
+
+    rawAmount,
+
+    decimals:
+      LNR_DECIMALS,
+
+    treasury:
+      wallet.address.toString(),
+
+    treasuryJettonWallet:
+      jettonWallet.toString(),
+
+    destination,
+
+    broadcastAt:
+      nowIso()
+  };
+}
+
+
+/* =========================================================
+   WAIT FOR TREASURY SEQNO
+   ========================================================= */
+
+async function waitForSeqnoAdvance(
+  env,
+  previousSeqno,
+  timeoutMs = 120000
+) {
+  const started =
+    Date.now();
+
+  while (
+    Date.now() -
+    started <
+    timeoutMs
+  ) {
+
+    try {
+
+      const {
+        wallet
+      } =
+        await getTreasury(
+          env
+        );
+
+      const client =
+        createTonClient(
+          env
+        );
+
+      const current =
+        await client.open(
+          wallet
+        ).getSeqno();
+
+      if (
+        current >
+        previousSeqno
+      ) {
+        return current;
       }
-    }
 
-    async function setConnectedWallet(address, resetMiningTime=true){
-      connectedWallet = address || '';
-      if(connectedWallet){
-        if(resetMiningTime){ state.lastMiningTime = Date.now(); }
-        updateWalletUI();
-        startMiningDisplay();
-        startMiningSync();
-        startFullSync();
-        await syncMiningFromServer();
-        await loadUser();
-      }else{
-        stopMiningDisplay();
-        stopMiningSync();
-        stopFullSync();
-        updateWalletUI();
-      }
-      saveState(); updateUI();
-    }
+    } catch (_) {}
 
-    function updateWalletUI(){
-      if(walletAddressDisplay) walletAddressDisplay.textContent = shortAddress(connectedWallet);
-      if(walletChip) walletChip.classList.toggle('connected',!!connectedWallet);
-    }
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          5000
+        )
+    );
+  }
 
-    async function connectWallet(){
-      const ui = await initTonConnect();
-      if(!ui){ showToast('سیستم اتصال کیف پول آماده نیست'); return; }
-      try{ await ui.openModal(); }catch(e){ showToast('صفحه اتصال کیف پول باز نشد'); }
-    }
-    async function disconnectWallet(){
-      try{ if(tonConnectUI?.disconnect) await tonConnectUI.disconnect(); }catch(e){}
-      connectedWallet=''; stopMiningDisplay(); stopMiningSync(); stopFullSync(); updateWalletUI(); updateUI();
-    }
+  throw new Error(
+    "CONFIRMATION_TIMEOUT"
+  );
+}
 
-    async function syncMiningFromServer(){
-      if(miningSyncBusy || !connectedWallet || !state.telegramId) return;
-      miningSyncBusy=true;
-      try{
-        const response=await fetch(API_URL+'/mine',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_id:state.telegramId,wallet:connectedWallet})});
-        const data=await response.json();
-        if(response.ok && data.success && data.user){
-          applyServerUser(data.user);
-          const serverMined=Number(data.user.mined||0);
-          const currentLive=displayMinedBase+((Date.now()-displayMinedAt)/3600000)*Number(state.rate||0.7);
-          displayMinedBase=Math.max(serverMined,currentLive);
-          displayMinedAt=Date.now();
-          state.mined=serverMined;
-          saveState();
-        }
-      }catch(error){ console.warn('Mining sync failed:',error); }
-      finally{ miningSyncBusy=false; }
-    }
 
-    function applyServerUser(user){
-      state.pool=Number(user.balance ?? state.pool ?? 0);
-      state.mined=Number(user.mined ?? state.mined ?? 0);
-      state.level=Number(user.level ?? state.level ?? 1);
-      state.rate=Number(user.mining_rate ?? state.rate ?? 7.5);
-      if(user.referral_code) state.referralCode=user.referral_code;
-      if(user.referral_count!=null) state.friends=Number(user.referral_count||0);
-      if(user.successful_referrals!=null) state.successfulFriends=Number(user.successful_referrals||0);
-      if(user.referral_earnings!=null) state.refRewards=Number(user.referral_earnings||0);
-      if(user.referral_bonuses!=null) state.referralBonuses=Number(user.referral_bonuses||0);
-      if(Array.isArray(user.withdrawal_history)) state.history=user.withdrawal_history;
-      if(user.holding!=null && Number.isFinite(Number(user.holding))) state.holding=Number(user.holding);
-    }
+/* =========================================================
+   FIND TX HASH
+   ========================================================= */
 
-    async function loadUser(){
-      if(!state.telegramId) return;
-      try{
-        const response=await fetch(API_URL+'/user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_id:state.telegramId,username:state.username,first_name:state.telegramName,wallet:connectedWallet||'',referral_code:state.pendingReferralCode||'',referral_action:connectedWallet?'wallet_verified':'enter'})});
-        const data=await response.json();
-        if(response.ok && data.success && data.user){
-          applyServerUser(data.user);
-          const serverMined=Number(data.user.mined||0);
-          displayMinedBase=serverMined;
-          displayMinedAt=Date.now();
-          state.mined=serverMined;
-          saveState(); updateUI();
-        }
-      }catch(e){ console.warn('User load failed:',e); }
-    }
+async function findRecentTreasuryTx(
+  env,
+  previousSeqno
+) {
+  const apiKey =
+    env.TONCENTER_API_KEY ||
+    "";
 
-    function startMiningSync(){
-      stopMiningSync();
-      miningSyncTimer=setInterval(syncMiningFromServer,1000);
-    }
-    function stopMiningSync(){ if(miningSyncTimer){clearInterval(miningSyncTimer);miningSyncTimer=null;} }
-    function startFullSync(){
-      stopFullSync();
-      fullSyncTimer=setInterval(loadUser,20000);
-    }
-    function stopFullSync(){ if(fullSyncTimer){clearInterval(fullSyncTimer);fullSyncTimer=null;} }
-    function startMiningDisplay(){
-      if(!window.__lunaroMiningDisplay){
-        window.__lunaroMiningDisplay=setInterval(updateMiningDisplay,250);
-      }
-      displayMinedBase=Number(state.mined||0);
-      displayMinedAt=Date.now();
-    }
-    function stopMiningDisplay(){
-      if(window.__lunaroMiningDisplay){clearInterval(window.__lunaroMiningDisplay);window.__lunaroMiningDisplay=null;}
-    }
-    function updateMiningDisplay(){
-      if(!connectedWallet) return;
-      // Worker is the single source of truth for mined amount and mining rate.
-      // Do not extrapolate a second client-side mining balance here.
-      if(liveMinedCounterEl) liveMinedCounterEl.textContent=Number(state.mined||0).toFixed(5);
-    }
+  const response =
+    await fetch(
+      env.TONCENTER_URL ||
+      TONCENTER_URL,
+      {
+        method: "POST",
 
-    function levelThreshold(level){
-      // Level progression is based on the same fixed LNR requirements used by Miners.
-      // Level 1 starts at 0 LNR; Level 2+ use levelRequiredLNR().
-      if(level<=1) return 0;
-      return typeof levelRequiredLNR==='function' ? Number(levelRequiredLNR(level))||0 : 0;
-    }
-    function levelRate(level){ const lv=Math.max(1,Math.min(1000,Math.floor(Number(level)||1))); return 7.5+(lv-1)*(499/999); }
-    function updateLevel(){
-      // Total Assets = Pool Wallet + Holding Wallet.
-      // Level 1 is the starting level. Level 2 requires exactly 5,000 LNR.
-      // Every next level adds another 5,000 LNR to the total requirement.
-      const totalAssets=minersTotalAssets();
-      let level=1;
-      for(let i=2;i<=1000;i++){
-        const required=levelRequiredLNR(i);
-        if(totalAssets>=required) level=i;
-        else break;
-      }
-      state.level=level;
-      // state.rate comes from the Worker (user.mining_rate).
-      // Do not calculate a second mining rate in the Index.
-    }
+        headers: {
+          "Content-Type":
+            "application/json",
 
-    function updateUI(){
-      updateLevel();
-      const pool=Number(state.pool||0);
-      const holding=Number(state.holding);
-      const total=pool+(Number.isFinite(holding)?holding:0);
-      if(totalBalanceEl) totalBalanceEl.textContent=fmt(total);
-      if(walletBalanceEl) walletBalanceEl.textContent=fmt(pool);
-      if(holdingWalletAmountEl) holdingWalletAmountEl.textContent=Number.isFinite(holding)?fmt(holding):'—';
-      if(liveMinedCounterEl){
-        liveMinedCounterEl.textContent=Number(state.mined||0).toFixed(5);
-      }
-      if(levelTitleEl) levelTitleEl.textContent=`Level ${state.level}`;
-      const currentLevel=Math.max(1,Math.min(1000,Number(state.level)||1));
-      const nextLevel=currentLevel<1000 ? currentLevel+1 : 1000;
-      const nextRequired=typeof levelRequiredLNR==='function' ? Number(levelRequiredLNR(nextLevel))||0 : 0;
-      // Progress is measured only toward the NEXT level.
-      // Example: Level 1 + 250 LNR toward the 5,000 LNR Level 2 requirement = 50%.
-      const progress=currentLevel>=1000 ? 100 : (nextRequired>0 ? Math.min(100,Math.max(0,(total/nextRequired)*100)) : 0);
-      if(levelProgressFillEl) levelProgressFillEl.style.width=`${progress.toFixed(1)}%`;
-      if(levelProgressTextEl) levelProgressTextEl.textContent=`${Math.round(progress)}%`;
-      if(btnClaim) btnClaim.disabled=!connectedWallet || Number(state.mined||0)<=0;
-      updateWalletUI();
-    }
+          ...(apiKey
+            ? {
+                "X-API-Key":
+                  apiKey
+              }
+            : {})
+        },
 
-    async function claimMining(){
-      if(!connectedWallet){showToast('ابتدا کیف پول را متصل کنید');return;}
-      if(!state.telegramId){showToast('حساب تلگرام هنوز آماده نیست');return;}
-      if(btnClaim) btnClaim.disabled=true;
-      try{
-        await syncMiningFromServer();
-        const response=await fetch(API_URL+'/claim',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_id:state.telegramId,wallet:connectedWallet})});
-        const data=await response.json();
-        if(!response.ok || !data.success || !data.user) throw new Error(data.error||'Claim failed');
-        const claimed=Number(data.claimed||0);
-        applyServerUser(data.user);
-        state.lastMiningTime=Date.now();
-        displayMinedBase=Number(data.user.mined||0);
-        displayMinedAt=Date.now();
-        state.mined=Number(data.user.mined||0);
-        saveState(); updateUI();
-        showToast(`Claimed ${fmt(claimed,5)} LNR`);
-      }catch(error){ console.error('Claim error:',error); showToast(error.message||'Claim failed'); updateUI(); }
-    }
-    btnClaim?.addEventListener('click',claimMining);
+        body:
+          JSON.stringify({
+            jsonrpc: "2.0",
+            id: Date.now(),
 
-    async function completeDailyTask(){
-      const today=new Date().toISOString().slice(0,10);
-      if(state.dailyClaimDate===today){showToast('امروز این پاداش را گرفته‌اید');return;}
-      state.pool=Number(state.pool||0)+3;
-      state.dailyClaimDate=today; saveState(); updateUI(); showToast('+3 LNR');
-    }
+            method:
+              "getTransactions",
 
-    async function requestWithdrawal(){
-      if(!connectedWallet){showToast('ابتدا کیف پول را متصل کنید');return;}
-      if(!state.telegramId){showToast('حساب تلگرام آماده نیست');return;}
-      if(Number(state.pool)<500){showToast('حداقل برداشت 500 LNR است');return;}
-      try{
-        const response=await fetch(API_URL+'/withdraw',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_id:state.telegramId,wallet:connectedWallet,amount:500})});
-        const data=await response.json();
-        if(!response.ok || !data.success) throw new Error(data.error||'Withdrawal failed');
-        applyServerUser(data.user||{}); state.pool=Math.max(0,Number(state.pool)-500); saveState(); updateUI();
-        showToast('برداشت ثبت شد: 430 LNR پس از کارمزد 70');
-      }catch(e){showToast(e.message||'درخواست برداشت ثبت نشد');}
-    }
+            params: {
+              address:
+                Address.parse(
+                  TREASURY_OWNER
+                ).toRawString(),
 
-    function referralLink(){
-      if(!BOT_USERNAME || !state.referralCode) return '';
-      return `https://t.me/${BOT_USERNAME}?start=${encodeURIComponent(state.referralCode)}`;
-    }
-
-    async function copyReferralLink(){
-      const link=referralLink();
-      if(!link){ showToast('نام کاربری ربات هنوز در کد تنظیم نشده است'); return; }
-      try{
-        if(navigator.clipboard){ await navigator.clipboard.writeText(link); showToast('لینک دعوت کپی شد'); }
-        else showToast(link);
-      }catch(e){ showToast('کپی لینک انجام نشد'); }
-    }
-
-    /* LUNARO MINERS — ATF-style level cards / LNR holding unlock UI */
-    function levelRequiredLNR(level){
-      level=Math.max(1,Math.floor(Number(level)||1));
-      // Level 1 starts at zero requirement.
-      // Level 2 = 5,000 LNR; each following level adds 5,000 LNR.
-      // Level 1000 = 4,995,000 LNR.
-      if(level<=1) return 0;
-      return 5000*(level-1);
-    }
-    function demoReferencePrice(){
-      // UI preview only. Later this value will come from the backend price engine / market average.
-      return 0.0008;
-    }
-    function minersTotalAssets(){
-      const pool=Number(state.pool||0);
-      const holding=Number(state.holding);
-      return pool+(Number.isFinite(holding)?holding:0);
-    }
-    function moneyFromLNR(amount){ return Number(amount||0)*demoReferencePrice(); }
-    function minersCard(level){
-      const required=levelRequiredLNR(level);
-      const assets=minersTotalAssets();
-      const active=Number(state.level||1)===level;
-      const unlocked=assets>=required;
-      const missing=Math.max(0,required-assets);
-      const rate=(Number(state.level||1)===level && Number(state.rate)>0) ? Number(state.rate) : levelRate(level);
-      const price=moneyFromLNR(required);
-      const missingUsd=moneyFromLNR(missing);
-      let action='LOCKED';
-      let cls='locked';
-      if(active){ action='ACTIVE'; cls='active'; }
-      else if(unlocked){ action='UNLOCK'; cls='unlock'; }
-      else { action=`NEED ${fmt(missing,0)} LNR`; cls='need'; }
-      return `<div class="miner-level-card ${cls}" data-miner-level="${level}">
-        <div class="miner-card-head"><span>Level ${level}</span><span class="miner-card-price">$${price.toFixed(2)}</span></div>
-        <div class="miner-card-speed">${rate.toFixed(2)} LNR/h</div>
-        <button class="miner-card-action ${cls}">${action}</button>
-        ${(!active && !unlocked && level===Number(state.level||1)+1)?`<div class="miner-card-missing">≈ $${missingUsd.toFixed(2)} to unlock</div>`:''}
-      </div>`;
-    }
-    function renderMinersPage(){
-      const current=Math.max(1,Math.min(1000,Number(state.level)||1));
-      // فقط Level فعلی و Levelهای بعدی تا 1000 نمایش داده می‌شوند؛ Levelهای پشت سر گذاشته‌شده حذف می‌شوند.
-      const start=current;
-      const end=1000;
-      const cards=[];
-      for(let i=start;i<=end;i++) cards.push(minersCard(i));
-      modalBody.innerHTML=`<div class="miners-screen" dir="ltr">
-        <div class="miners-topbar"><div><b>Miners</b><span> LNR LEVELS</span></div><div class="miners-assets">${fmt(minersTotalAssets(),0)} LNR</div></div>
-        <div class="miners-grid">${cards.join('')}</div>
-      </div>`;
-      modalExtra.innerHTML=`<div class="miners-price-note">Reference price preview: <b>$${demoReferencePrice().toFixed(4)}</b> / LNR<br><span>قیمت نهایی بعداً از سیستم قیمت مرجع بازار خوانده می‌شود.</span></div>`;
-      setTimeout(()=>{
-        modalBody.querySelectorAll('.miner-level-card').forEach(card=>card.addEventListener('click',()=>openMinerLevel(Number(card.dataset.minerLevel))));
-      },0);
-    }
-    function openMinerLevel(level){
-      const required=levelRequiredLNR(level);
-      const assets=minersTotalAssets();
-      const missing=Math.max(0,required-assets);
-      const ref=demoReferencePrice();
-      const requiredUsd=required*ref;
-      const missingUsd=missing*ref;
-      const active=Number(state.level||1)===level;
-      const unlocked=assets>=required;
-      modalTitle.textContent=`Lvl ${level}`;
-      modalBody.innerHTML=`<div class="miner-detail" dir="ltr">
-        <div class="miner-detail-price">$${requiredUsd.toFixed(2)}</div>
-        <div class="miner-detail-speed"><span>Mining Speed</span><b>${(Number(state.level||1)===level && Number(state.rate)>0 ? Number(state.rate) : levelRate(level)).toFixed(2)} LNR/h</b></div>
-        <div class="miner-detail-row"><span>Required Holding</span><b>${fmt(required,0)} LNR ($${requiredUsd.toFixed(2)})</b></div>
-        <div class="miner-detail-row"><span>Your Assets</span><b>${fmt(assets,0)} LNR ($${moneyFromLNR(assets).toFixed(2)})</b></div>
-        <div class="miner-detail-row missing"><span>Missing</span><b>${fmt(missing,0)} LNR ($${missingUsd.toFixed(2)})</b></div>
-        <div class="miner-detail-note">Wallet holding + pool wallet</div>
-        <div class="miner-detail-note">قیمت دلار فقط برای نمایش ارزش تقریبی است؛ شرط Level بر اساس تعداد LNR است.</div>
-      </div>`;
-      modalExtra.innerHTML=`<button class="modal-btn" id="minerBuyBtn">${active?'ACTIVE':(unlocked?'BUY LEVEL '+level:'BUY LEVEL '+level)}</button>`;
-      modalOverlay.classList.add('active');
-      setTimeout(()=>{
-        document.getElementById('minerBuyBtn')?.addEventListener('click',()=>{
-          if(active){ showToast(`Level ${level} فعال است`); return; }
-          if(unlocked){ showToast(`Level ${level} آماده فعال‌سازی است`); return; }
-          // Placeholder only: later connect this action to the real Swap page/router.
-          modalOverlay.classList.remove('active');
-          openSwapPlaceholder(level, missing, missingUsd);
-        });
-      },0);
-    }
-
-    function openSwapPlaceholder(level, missing, missingUsd){
-      modalTitle.textContent='Swap';
-      modalBody.innerHTML=`<div style="direction:rtl;text-align:center;color:#d2e5e1;line-height:1.9">
-        <div style="font-size:24px;font-weight:800;color:#f3d66d;margin-bottom:10px">Swap LNR</div>
-        <div>برای Level ${level} حدود <b style="color:#fff">${fmt(missing,0)} LNR</b> نیاز دارید.</div>
-        <div style="margin-top:8px;color:#9fb4af">ارزش تقریبی: <b style="color:#f3d66d">$${missingUsd.toFixed(2)} USDT</b></div>
-        <div style="margin-top:14px;padding:12px;border:1px solid rgba(0,245,155,.25);border-radius:14px;background:rgba(0,30,22,.6);font-size:11px">صفحه Swap فعلاً به‌صورت جای‌نگهدار است. بعداً لینک/Router واقعی Swap اینجا متصل می‌شود.</div>
-      </div>`;
-      modalExtra.innerHTML='<button class="modal-btn" id="swapBackBtn">Back to Miners</button>';
-      btnModalAction.textContent='Close';
-      btnModalAction.onclick=()=>modalOverlay.classList.remove('active');
-      modalOverlay.classList.add('active');
-      setTimeout(()=>document.getElementById('swapBackBtn')?.addEventListener('click',()=>renderMinersPage()),0);
-    }
-
-    function openSectionModal(tab){
-      const titles={tasks:'Tasks',miners:'Miners',friends:'Friends',profile:'Profile'};
-      modalTitle.textContent=titles[tab]||tab;
-      modalExtra.innerHTML='';
-      btnModalAction.textContent='Close';
-      btnModalAction.onclick=()=>modalOverlay.classList.remove('active');
-      if(tab==='tasks'){
-        modalBody.innerHTML=`<div style="direction:rtl;text-align:right;color:#d2e5e1"><b>Daily Task</b><p style="margin-top:8px">پاداش روزانه: +3 LNR</p><button class="modal-btn" id="dailyTaskBtn">Claim Daily +3 LNR</button></div>`;
-        setTimeout(()=>{document.getElementById('dailyTaskBtn')?.addEventListener('click',completeDailyTask)},0);
-      }else if(tab==='miners'){
-        renderMinersPage();
-      }else if(tab==='friends'){
-        const link=referralLink();
-        modalBody.innerHTML=`<div style="direction:rtl;text-align:right;color:#d2e5e1;line-height:1.8">
-          <b>لینک دعوت شما</b>
-          <div style="margin-top:8px;padding:10px 12px;border:1px solid rgba(0,245,155,.28);border-radius:12px;background:rgba(0,30,22,.65);direction:ltr;text-align:left;word-break:break-all;color:var(--primary);font-size:12px">${link||'لینک دعوت بعد از تنظیم نام کاربری ربات ساخته می‌شود.'}</div>
-          <br>افراد دعوت‌شده: ${state.friends}
-          <br>افراد دعوت‌شده موفق: ${state.successfulFriends||0}
-          <br>پاداش ۱۰٪ از Claim: ${fmt(state.refRewards,5)} LNR
-          <br>پاداش دعوت موفق: ${fmt(state.referralBonuses || ((state.successfulFriends||0)*500),2)} LNR
-          <br><small style="color:#9fb4af">هر دعوت موفق = 500 LNR قابل برداشت + 10٪ از Claimهای فرد دعوت‌شده.</small>
-          <br><small style="color:#9fb4af">دعوت موفق فقط زمانی ثبت می‌شود که فرد با لینک شما وارد برنامه شود و کیف پول TON خود را متصل و احراز کند.</small>
-        </div>`;
-        modalExtra.innerHTML=`<button class="modal-btn" id="shareRefBtn">ارسال لینک دعوت</button><button class="modal-btn" id="copyRefBtn" style="margin-top:10px;background:rgba(0,245,155,.15);color:#fff;border:1px solid rgba(0,245,155,.35)">کپی لینک دعوت</button>`;
-        setTimeout(()=>{
-          document.getElementById('shareRefBtn')?.addEventListener('click',async()=>{try{
-            if(!link){showToast('لینک دعوت هنوز آماده نیست');return;}
-            const shareUrl=`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('با لینک دعوت من وارد LUNARO شو')}`;
-            if(navigator.share){
-              await navigator.share({title:'LUNARO',text:'با لینک دعوت من وارد LUNARO شو',url:link});
-            }else if(tg?.openTelegramLink){
-              tg.openTelegramLink(shareUrl);
-            }else if(navigator.clipboard){
-              await navigator.clipboard.writeText(link);
-              showToast('لینک دعوت کپی شد');
+              limit: 10
             }
-          }catch(e){
-            try{ if(navigator.share) await navigator.share({title:'LUNARO',text:'با لینک دعوت من وارد LUNARO شو',url:link}); }
-            catch(e2){ showToast('اشتراک‌گذاری انجام نشد'); }
-          }});
-          document.getElementById('copyRefBtn')?.addEventListener('click',copyReferralLink);
-        },0);
-      }else if(tab==='profile'){
-        const hist=Array.isArray(state.history)?state.history:[];
-        modalBody.innerHTML=`<div style="direction:rtl;text-align:right;color:#d2e5e1;line-height:1.8"><b>Wallet:</b><br><span style="direction:ltr;display:inline-block;word-break:break-all">${connectedWallet||'Not connected'}</span><br><br><b>Pool Wallet:</b> ${fmt(state.pool)} LNR<br><b>Holding Wallet:</b> ${Number.isFinite(Number(state.holding))?fmt(state.holding):'—'} LNR<br><b>Total Assets:</b> ${fmt(Number(state.pool)+(Number(state.holding)||0))} LNR</div>`;
-        modalExtra.innerHTML=`<button class="modal-btn" id="withdrawBtn">Withdraw 500 LNR</button><div style="margin-top:12px;direction:rtl;text-align:right;color:#9fb4af;font-size:12px"><b style="color:#fff">Withdrawal History</b>${hist.length?hist.slice(0,5).map(x=>`<div style="padding:6px 0;border-bottom:1px solid rgba(0,245,155,.12)">${x.status||'pending'} — ${x.amount||500} LNR</div>`).join(''):'<div style="padding-top:7px">هنوز برداشت ثبت نشده است.</div>'}</div>`;
-        setTimeout(()=>document.getElementById('withdrawBtn')?.addEventListener('click',requestWithdrawal),0);
+          })
       }
-      modalOverlay.classList.add('active');
+    );
+
+  if (!response.ok) {
+    throw new Error(
+      `TONCENTER_HTTP_${response.status}`
+    );
+  }
+
+  const data =
+    await response.json();
+
+  if (data.error) {
+    throw new Error(
+      data.error.message ||
+      "TONCENTER_RPC_ERROR"
+    );
+  }
+
+  const transactions =
+    data.result || [];
+
+  if (
+    !Array.isArray(
+      transactions
+    )
+  ) {
+    return null;
+  }
+
+  for (
+    const tx of transactions
+  ) {
+
+    const hash =
+      tx?.transaction_id?.hash;
+
+    if (hash) {
+      return hash;
+    }
+  }
+
+  return null;
+}
+
+
+/* =========================================================
+   WITHDRAWAL STATE HELPERS
+   ========================================================= */
+
+async function markCompleted(
+  env,
+  id,
+  txHash
+) {
+  await env.DB
+    .prepare(`
+      UPDATE withdrawals
+      SET
+        status = 'completed',
+        tx_hash = ?,
+        completed_at =
+          CURRENT_TIMESTAMP,
+        processed_at =
+          CURRENT_TIMESTAMP,
+        error_stage = NULL,
+        error_code = NULL,
+        error_message = NULL,
+        error_details = NULL
+      WHERE id = ?
+        AND status = 'processing'
+    `)
+    .bind(
+      String(
+        txHash || ""
+      ),
+      id
+    )
+    .run();
+}
+
+
+async function markNeedsReview(
+  env,
+  id,
+  error,
+  details = {}
+) {
+  const info =
+    classifyWithdrawalError(
+      details.stage ||
+      "confirmation",
+      error
+    );
+
+  await env.DB
+    .prepare(`
+      UPDATE withdrawals
+      SET
+        status = 'needs_review',
+        error_stage = ?,
+        error_code = ?,
+        error_message = ?,
+        error_details = ?
+      WHERE id = ?
+        AND status = 'processing'
+    `)
+    .bind(
+      info.stage,
+      info.code,
+      info.message,
+      JSON.stringify(
+        details
+      ).slice(0, 10000),
+      id
+    )
+    .run();
+}
+
+
+async function refundWithdrawal(
+  env,
+  withdrawal
+) {
+  /*
+   * This function is ONLY called when
+   * no blockchain broadcast happened.
+   */
+
+  await env.DB
+    .prepare(`
+      UPDATE users
+      SET
+        balance =
+          COALESCE(balance,0) + ?,
+        updated_at =
+          CURRENT_TIMESTAMP
+      WHERE telegram_id = ?
+    `)
+    .bind(
+      num(
+        withdrawal.requested_amount
+      ),
+      String(
+        withdrawal.telegram_id
+      )
+    )
+    .run();
+
+  await env.DB
+    .prepare(`
+      UPDATE withdrawals
+      SET
+        status = 'failed',
+        completed_at =
+          CURRENT_TIMESTAMP,
+        processed_at =
+          CURRENT_TIMESTAMP
+      WHERE id = ?
+        AND status = 'processing'
+    `)
+    .bind(
+      withdrawal.id
+    )
+    .run();
+}
+
+
+/* =========================================================
+   PROCESS ONE WITHDRAWAL
+   ========================================================= */
+
+async function processWithdrawal(
+  env,
+  withdrawal
+) {
+  const id =
+    Number(
+      withdrawal.id
+    );
+
+  /*
+   * Atomic lock.
+   */
+  const lock =
+    await env.DB
+      .prepare(`
+        UPDATE withdrawals
+        SET
+          status = 'processing',
+          processing_started_at =
+            CURRENT_TIMESTAMP
+        WHERE id = ?
+          AND status = 'pending'
+      `)
+      .bind(id)
+      .run();
+
+  if (
+    !lock?.meta ||
+    Number(
+      lock.meta.changes || 0
+    ) !== 1
+  ) {
+    return {
+      success: false,
+      skipped: true,
+      withdrawal_id: id
+    };
+  }
+
+  let broadcasted =
+    false;
+
+  let sendInfo =
+    null;
+
+  try {
+
+    const payout =
+      num(
+        withdrawal.payout_amount
+      );
+
+    if (
+      payout <= 0
+    ) {
+      throw new Error(
+        "INVALID_PAYOUT_AMOUNT"
+      );
     }
 
-    walletChip?.addEventListener('click',async()=>{
-      modalIcon.innerHTML='<span style="font-size:20px">💎</span>';
-      modalTitle.textContent=connectedWallet?'TON Wallet Connected':'Connect TON Wallet';
-      modalBody.innerHTML=connectedWallet?`<div style="direction:ltr;word-break:break-all;text-align:center">${connectedWallet}</div>`:'<div style="direction:rtl;text-align:center">برای شروع Mining باید کیف پول TON را متصل کنید.</div>';
-      modalExtra.innerHTML='';
-      btnModalAction.textContent=connectedWallet?'Disconnect Wallet':'Connect Wallet';
-      btnModalAction.onclick=connectedWallet?disconnectWallet:connectWallet;
-      modalOverlay.classList.add('active');
+    if (
+      !safeWallet(
+        withdrawal.wallet
+      )
+    ) {
+      throw new Error(
+        "INVALID_DESTINATION_WALLET"
+      );
+    }
+
+    const rawAmount =
+      rawLnrAmount(
+        payout
+      );
+
+    await env.DB
+      .prepare(`
+        UPDATE withdrawals
+        SET
+          raw_amount = ?,
+          jetton_decimals = ?
+        WHERE id = ?
+      `)
+      .bind(
+        rawAmount.toString(),
+        LNR_DECIMALS,
+        id
+      )
+      .run();
+
+    /*
+     * BEFORE BROADCAST:
+     * treasury checks.
+     */
+    try {
+
+      sendInfo =
+        await sendLnrFromTreasury(
+          env,
+          withdrawal.wallet,
+          payout,
+          id
+        );
+
+    } catch (error) {
+
+      await saveWithdrawalError(
+        env,
+        id,
+        "pre_broadcast",
+        error,
+        {
+          payout,
+          raw_amount:
+            rawAmount.toString(),
+          decimals:
+            LNR_DECIMALS
+        }
+      );
+
+      throw error;
+    }
+
+    /*
+     * From this point the transaction
+     * has been sent to the network.
+     *
+     * NEVER refund automatically
+     * after this point.
+     */
+    broadcasted =
+      true;
+
+    await env.DB
+      .prepare(`
+        UPDATE withdrawals
+        SET
+          broadcast_at = ?,
+          error_stage = NULL,
+          error_code = NULL,
+          error_message = NULL,
+          error_details = ?
+        WHERE id = ?
+      `)
+      .bind(
+        sendInfo.broadcastAt,
+        JSON.stringify({
+          seqno:
+            sendInfo.seqno,
+
+          raw_amount:
+            sendInfo.rawAmount
+              .toString(),
+
+          decimals:
+            sendInfo.decimals,
+
+          treasury:
+            sendInfo.treasury,
+
+          treasury_jetton_wallet:
+            sendInfo.treasuryJettonWallet
+        }),
+        id
+      )
+      .run();
+
+    /*
+     * Wait for wallet seqno to advance.
+     */
+    try {
+
+      await waitForSeqnoAdvance(
+        env,
+        sendInfo.seqno,
+        120000
+      );
+
+    } catch (error) {
+
+      await saveWithdrawalError(
+        env,
+        id,
+        "confirmation",
+        error,
+        {
+          broadcasted: true,
+          seqno:
+            sendInfo.seqno
+        }
+      );
+
+      await markNeedsReview(
+        env,
+        id,
+        error,
+        {
+          stage:
+            "confirmation",
+
+          code:
+            "BROADCASTED_CONFIRMATION_TIMEOUT",
+
+          broadcasted: true,
+
+          seqno:
+            sendInfo.seqno
+        }
+      );
+
+      return {
+        success: false,
+        status:
+          "needs_review",
+        withdrawal_id:
+          id
+      };
+    }
+
+    /*
+     * Give TON Center a moment
+     * to index the transaction.
+     */
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          3000
+        )
+    );
+
+    let txHash =
+      null;
+
+    try {
+
+      txHash =
+        await findRecentTreasuryTx(
+          env,
+          sendInfo.seqno
+        );
+
+    } catch (error) {
+
+      await saveWithdrawalError(
+        env,
+        id,
+        "tx_lookup",
+        error,
+        {
+          broadcasted: true
+        }
+      );
+    }
+
+    /*
+     * Broadcast happened but hash
+     * cannot be found:
+     * DO NOT REFUND.
+     */
+    if (!txHash) {
+
+      const error =
+        new Error(
+          "TX_HASH_NOT_FOUND_AFTER_BROADCAST"
+        );
+
+      await markNeedsReview(
+        env,
+        id,
+        error,
+        {
+          stage:
+            "tx_lookup",
+
+          code:
+            "TX_HASH_NOT_FOUND",
+
+          broadcasted: true,
+
+          seqno:
+            sendInfo.seqno
+        }
+      );
+
+      return {
+        success: false,
+        status:
+          "needs_review",
+        withdrawal_id:
+          id
+      };
+    }
+
+    /*
+     * SUCCESS
+     */
+    await markCompleted(
+      env,
+      id,
+      txHash
+    );
+
+    console.log(
+      "LNR_WITHDRAWAL_COMPLETED",
+      JSON.stringify({
+        withdrawal_id:
+          id,
+
+        wallet:
+          withdrawal.wallet,
+
+        requested:
+          withdrawal.requested_amount,
+
+        payout:
+          withdrawal.payout_amount,
+
+        raw_amount:
+          sendInfo.rawAmount
+            .toString(),
+
+        decimals:
+          LNR_DECIMALS,
+
+        tx_hash:
+          txHash
+      })
+    );
+
+    return {
+      success: true,
+      status:
+        "completed",
+
+      withdrawal_id:
+        id,
+
+      tx_hash:
+        txHash
+    };
+
+  } catch (error) {
+
+    console.error(
+      "LNR_WITHDRAWAL_PROCESS_ERROR",
+      JSON.stringify({
+        withdrawal_id:
+          id,
+
+        broadcasted,
+
+        error:
+          readableError(error)
+      })
+    );
+
+    /*
+     * CRITICAL SAFETY:
+     * if broadcast happened,
+     * never refund automatically.
+     */
+    if (broadcasted) {
+
+      await saveWithdrawalError(
+        env,
+        id,
+        "post_broadcast",
+        error,
+        {
+          broadcasted: true
+        }
+      );
+
+      await markNeedsReview(
+        env,
+        id,
+        error,
+        {
+          stage:
+            "post_broadcast",
+
+          code:
+            "POST_BROADCAST_UNCERTAIN",
+
+          broadcasted: true
+        }
+      );
+
+      return {
+        success: false,
+        status:
+          "needs_review",
+
+        withdrawal_id:
+          id
+      };
+    }
+
+    /*
+     * NO BROADCAST:
+     * safe to refund.
+     */
+    try {
+
+      await refundWithdrawal(
+        env,
+        withdrawal
+      );
+
+      await saveWithdrawalError(
+        env,
+        id,
+        "pre_broadcast",
+        error,
+        {
+          broadcasted: false,
+          refunded: true
+        }
+      );
+
+      return {
+        success: false,
+        status:
+          "failed",
+
+        refunded: true,
+
+        withdrawal_id:
+          id,
+
+        error:
+          readableError(error)
+      };
+
+    } catch (refundError) {
+
+      await saveWithdrawalError(
+        env,
+        id,
+        "refund",
+        refundError,
+        {
+          original_error:
+            readableError(error)
+        }
+      );
+
+      try {
+
+        await env.DB
+          .prepare(`
+            UPDATE withdrawals
+            SET
+              status =
+                'needs_review',
+              error_stage =
+                'refund',
+              error_code =
+                'REFUND_FAILED',
+              error_message = ?,
+              error_details = ?
+            WHERE id = ?
+              AND status =
+                'processing'
+          `)
+          .bind(
+            readableError(
+              refundError
+            ),
+
+            JSON.stringify({
+              original_error:
+                readableError(error)
+            }).slice(
+              0,
+              10000
+            ),
+
+            id
+          )
+          .run();
+
+      } catch (_) {}
+
+      return {
+        success: false,
+
+        status:
+          "needs_review",
+
+        refunded:
+          false,
+
+        withdrawal_id:
+          id
+      };
+    }
+  }
+}
+
+
+/* =========================================================
+   PROCESS PENDING WITHDRAWALS
+   ========================================================= */
+
+async function processPendingWithdrawals(
+  env
+) {
+  const result =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          telegram_id,
+          wallet,
+          requested_amount,
+          fee,
+          payout_amount,
+          status,
+          tx_hash,
+          created_at
+        FROM withdrawals
+        WHERE status = 'pending'
+        ORDER BY id ASC
+        LIMIT 5
+      `)
+      .all();
+
+  const rows =
+    result.results || [];
+
+  const results = [];
+
+  for (
+    const withdrawal
+    of rows
+  ) {
+
+    try {
+
+      const result =
+        await processWithdrawal(
+          env,
+          withdrawal
+        );
+
+      results.push(
+        result
+      );
+
+    } catch (error) {
+
+      console.error(
+        "LNR_WITHDRAWAL_UNHANDLED",
+        readableError(error)
+      );
+
+      results.push({
+        success: false,
+        status: "error",
+
+        withdrawal_id:
+          withdrawal.id,
+
+        error:
+          readableError(error)
+      });
+    }
+
+    /*
+     * Avoid hammering TON Center.
+     */
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          1000
+        )
+    );
+  }
+
+  return results;
+}
+
+
+/* =========================================================
+   MANUAL PROCESS ENDPOINT
+   ========================================================= */
+
+async function handleProcessWithdrawals(
+  request,
+  env
+) {
+  const secret =
+    String(
+      env.LNR_CRON_SECRET ||
+      ""
+    );
+
+  const supplied =
+    String(
+      request.headers.get(
+        "X-LNR-CRON-SECRET"
+      ) ||
+      ""
+    );
+
+  if (
+    !secret ||
+    supplied !== secret
+  ) {
+    return json({
+      success: false,
+      error:
+        "Unauthorized"
+    }, 401);
+  }
+
+  try {
+
+    const results =
+      await processPendingWithdrawals(
+        env
+      );
+
+    return json({
+      success: true,
+
+      processed:
+        results.length,
+
+      results
     });
 
-    btnHelpGuide?.addEventListener('click',()=>{
-      modalTitle.textContent='راهنمای LUNARO';
-      modalBody.innerHTML='<div style="direction:rtl;text-align:right;color:#d2e5e1;line-height:1.8">استخراج به‌صورت خودکار انجام می‌شود. مقدار ماین‌شده در Unclaimed باقی می‌ماند و فقط بعد از Claim به Pool Wallet منتقل شده و Total Assets را افزایش می‌دهد. سرعت Mining بر اساس Level محاسبه می‌شود.</div>';
-      modalExtra.innerHTML=''; btnModalAction.textContent='متوجه شدم'; btnModalAction.onclick=()=>modalOverlay.classList.remove('active'); modalOverlay.classList.add('active');
+  } catch (error) {
+
+    console.error(
+      "PROCESS_WITHDRAWALS_ERROR",
+      readableError(error)
+    );
+
+    return json({
+      success: false,
+      error:
+        readableError(error)
+    }, 500);
+  }
+}
+
+
+/* =========================================================
+   WITHDRAW REQUEST
+   ========================================================= */
+
+async function handleWithdraw(
+  request,
+  env
+) {
+  const data =
+    await request.json();
+
+  const telegramId =
+    String(
+      data.telegram_id || ""
+    );
+
+  const wallet =
+    String(
+      data.wallet || ""
+    ).trim();
+
+  if (!telegramId)
+    return json({
+      success: false,
+      error:
+        "telegram_id is required"
+    }, 400);
+
+  if (!wallet)
+    return json({
+      success: false,
+      error:
+        "wallet is required"
+    }, 400);
+
+  if (
+    !safeWallet(wallet)
+  ) {
+    return json({
+      success: false,
+      error:
+        "Invalid wallet"
+    }, 400);
+  }
+
+  const user =
+    await getUser(
+      env,
+      telegramId
+    );
+
+  if (!user)
+    return json({
+      success: false,
+      error:
+        "User not found"
+    }, 404);
+
+  /*
+   * Withdrawal wallet must match
+   * the connected wallet stored for user.
+   */
+  if (
+    user.wallet &&
+    String(user.wallet) !==
+      wallet
+  ) {
+    return json({
+      success: false,
+      error:
+        "Withdrawal wallet does not match connected wallet"
+    }, 403);
+  }
+
+  const amount =
+    num(data.amount);
+
+  if (
+    !Number.isFinite(amount) ||
+    amount <
+      CONFIG.WITHDRAWAL_MIN
+  ) {
+    return json({
+      success: false,
+      error:
+        `Minimum withdrawal is ${CONFIG.WITHDRAWAL_MIN} LNR`
+    }, 400);
+  }
+
+  const balance =
+    num(user.balance);
+
+  if (
+    balance < amount
+  ) {
+    return json({
+      success: false,
+      error:
+        "Insufficient balance"
+    }, 400);
+  }
+
+  const fee =
+    CONFIG.WITHDRAWAL_FEE;
+
+  const net =
+    amount - fee;
+
+  if (net <= 0) {
+    return json({
+      success: false,
+      error:
+        "Invalid payout amount"
+    }, 400);
+  }
+
+  try {
+
+    /*
+     * Deduct balance first.
+     */
+    const update =
+      await env.DB
+        .prepare(`
+          UPDATE users
+          SET
+            balance =
+              balance - ?,
+            updated_at =
+              CURRENT_TIMESTAMP
+          WHERE telegram_id = ?
+            AND balance >= ?
+        `)
+        .bind(
+          amount,
+          telegramId,
+          amount
+        )
+        .run();
+
+    if (
+      Number(
+        update?.meta?.changes ||
+        0
+      ) !== 1
+    ) {
+      return json({
+        success: false,
+        error:
+          "Insufficient balance"
+      }, 400);
+    }
+
+    /*
+     * Record pending withdrawal.
+     */
+    await env.DB
+      .prepare(`
+        INSERT INTO withdrawals
+        (
+          telegram_id,
+          wallet,
+          requested_amount,
+          fee,
+          payout_amount,
+          amount,
+          net_amount,
+          status,
+          jetton_decimals,
+          created_at
+        )
+        VALUES
+        (?, ?, ?, ?, ?, ?, ?, 'pending', ?, CURRENT_TIMESTAMP)
+      `)
+      .bind(
+        telegramId,
+        wallet,
+        amount,
+        fee,
+        net,
+        amount,
+        net,
+        LNR_DECIMALS
+      )
+      .run();
+
+  } catch (error) {
+
+    /*
+     * If record creation failed after balance
+     * deduction, return the balance.
+     */
+    try {
+
+      await env.DB
+        .prepare(`
+          UPDATE users
+          SET
+            balance =
+              balance + ?,
+            updated_at =
+              CURRENT_TIMESTAMP
+          WHERE telegram_id = ?
+        `)
+        .bind(
+          amount,
+          telegramId
+        )
+        .run();
+
+    } catch (_) {}
+
+    return json({
+      success: false,
+      error:
+        readableError(error)
+    }, 500);
+  }
+
+  const updated =
+    await getUser(
+      env,
+      telegramId
+    );
+
+  return json({
+    success: true,
+
+    withdrawal: {
+      amount,
+
+      requested_amount:
+        amount,
+
+      fee,
+
+      net_amount:
+        net,
+
+      payout_amount:
+        net,
+
+      raw_amount:
+        rawLnrAmount(
+          net
+        ).toString(),
+
+      decimals:
+        LNR_DECIMALS,
+
+      status:
+        "pending",
+
+      wallet
+    },
+
+    user:
+      await buildUserPayload(
+        env,
+        updated
+      )
+  });
+}
+
+
+/* =========================================================
+   REFERRAL API
+   ========================================================= */
+
+async function handleReferral(
+  request,
+  env
+) {
+  const url =
+    new URL(
+      request.url
+    );
+
+  let telegramId =
+    url.searchParams.get(
+      "telegram_id"
+    );
+
+  if (
+    request.method ===
+    "POST"
+  ) {
+    try {
+      const data =
+        await request.json();
+
+      telegramId =
+        String(
+          data.telegram_id ||
+          telegramId ||
+          ""
+        );
+    } catch (_) {}
+  }
+
+  if (!telegramId)
+    return json({
+      success: false,
+      error:
+        "telegram_id is required"
+    }, 400);
+
+  const user =
+    await getUser(
+      env,
+      telegramId
+    );
+
+  if (!user)
+    return json({
+      success: false,
+      error:
+        "User not found"
+    }, 404);
+
+  return json({
+    success: true,
+
+    referral_code:
+      user.referral_code,
+
+    referral_link:
+      `https://t.me/${CONFIG.BOT_USERNAME}?start=${encodeURIComponent(
+        user.referral_code || ""
+      )}`,
+
+    successful_referrals:
+      Number(
+        user.referral_success ||
+        0
+      ),
+
+    referral_earnings:
+      num(
+        user.referral_earnings,
+        0
+      ),
+
+    success_bonus:
+      CONFIG.REFERRAL_SUCCESS_BONUS,
+
+    claim_percent:
+      CONFIG.REFERRAL_CLAIM_PERCENT
+  });
+}
+
+
+/* =========================================================
+   WITHDRAWAL HISTORY
+   ========================================================= */
+
+async function handleWithdrawals(
+  request,
+  env
+) {
+  const url =
+    new URL(
+      request.url
+    );
+
+  const telegramId =
+    url.searchParams.get(
+      "telegram_id"
+    );
+
+  if (!telegramId)
+    return json({
+      success: false,
+      error:
+        "telegram_id is required"
+    }, 400);
+
+  try {
+
+    const result =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            wallet,
+            requested_amount,
+            requested_amount AS amount,
+            fee,
+            payout_amount,
+            payout_amount AS net_amount,
+            status,
+            tx_hash,
+            created_at,
+            completed_at,
+            completed_at AS processed_at,
+            error_stage,
+            error_code,
+            error_message,
+            error_details,
+            processing_started_at,
+            broadcast_at,
+            jetton_decimals,
+            raw_amount
+          FROM withdrawals
+          WHERE telegram_id = ?
+          ORDER BY id DESC
+          LIMIT 100
+        `)
+        .bind(
+          telegramId
+        )
+        .all();
+
+    return json({
+      success: true,
+      withdrawals:
+        result.results || []
     });
 
-    document.querySelector('.level-compact-card')?.addEventListener('click',()=>{
-      document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
-      document.querySelector('.nav-item[data-tab="miners"]')?.classList.add('active');
-      openSectionModal('miners');
+  } catch (error) {
+
+    return json({
+      success: false,
+      error:
+        readableError(error)
+    }, 500);
+  }
+}
+
+
+/* =========================================================
+   MINERS API
+   ========================================================= */
+
+async function handleMiners(
+  env
+) {
+  const levels = [];
+
+  for (
+    let level = 1;
+    level <= CONFIG.MAX_LEVEL;
+    level++
+  ) {
+
+    levels.push({
+      level,
+
+      required_lnr:
+        levelRequiredLNR(
+          level
+        ),
+
+      mining_rate:
+        miningRateForLevel(
+          level
+        )
     });
+  }
 
-    document.querySelectorAll('.nav-item').forEach(btn=>btn.addEventListener('click',()=>{
-      document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-      const tab=btn.dataset.tab; if(tab==='mine'){modalOverlay.classList.remove('active'); updateUI();} else openSectionModal(tab);
-    }));
-    btnModalClose?.addEventListener('click',()=>modalOverlay.classList.remove('active'));
-    modalOverlay?.addEventListener('click',e=>{if(e.target===modalOverlay) modalOverlay.classList.remove('active')});
+  return json({
+    success: true,
 
-    document.addEventListener('visibilitychange',()=>{
-      if(document.hidden) syncMiningFromServer();
-      else if(connectedWallet){ syncMiningFromServer(); loadUser(); }
-    });
+    max_level:
+      CONFIG.MAX_LEVEL,
 
-    initTelegram();
-    updateUI();
-    initTonConnect().then(()=>updateUI());
-</script>
-</body>
-</html>
+    level_step_lnr:
+      CONFIG.LEVEL_STEP_LNR,
+
+    levels
+  });
+}
+
+
+/* =========================================================
+   MAIN FETCH
+   ========================================================= */
+
+export default {
+
+  async fetch(
+    request,
+    env
+  ) {
+
+    if (
+      request.method ===
+      "OPTIONS"
+    ) {
+      return new Response(
+        null,
+        {
+          status: 204,
+          headers:
+            corsHeaders
+        }
+      );
+    }
+
+    const url =
+      new URL(
+        request.url
+      );
+
+    const path =
+      url.pathname;
+
+
+    /* -----------------------------------------
+       ROOT
+       ----------------------------------------- */
+
+    if (
+      path === "/" &&
+      request.method === "GET"
+    ) {
+      return json({
+        success: true,
+        app: "LUNARO",
+        api: "running",
+        version:
+          "auto-withdraw-v1"
+      });
+    }
+
+
+    /* -----------------------------------------
+       HEALTH
+       ----------------------------------------- */
+
+    if (
+      path === "/health" &&
+      request.method === "GET"
+    ) {
+      return json({
+        success: true,
+
+        service:
+          "LUNARO API",
+
+        version:
+          "auto-withdraw-v1",
+
+        time:
+          nowIso()
+      });
+    }
+
+
+    /* -----------------------------------------
+       CONFIG
+       ----------------------------------------- */
+
+    if (
+      path === "/config" &&
+      request.method === "GET"
+    ) {
+      return json({
+        success: true,
+
+        bot_username:
+          CONFIG.BOT_USERNAME,
+
+        max_level:
+          CONFIG.MAX_LEVEL,
+
+        level_step_lnr:
+          CONFIG.LEVEL_STEP_LNR,
+
+        withdrawal_min:
+          CONFIG.WITHDRAWAL_MIN,
+
+        withdrawal_fee:
+          CONFIG.WITHDRAWAL_FEE,
+
+        withdrawal_net:
+          CONFIG.WITHDRAWAL_NET,
+
+        referral_success_bonus:
+          CONFIG.REFERRAL_SUCCESS_BONUS,
+
+        referral_claim_percent:
+          CONFIG.REFERRAL_CLAIM_PERCENT,
+
+        lnr_master:
+          LNR_MASTER,
+
+        treasury:
+          TREASURY_OWNER,
+
+        lnr_decimals:
+          LNR_DECIMALS
+      });
+    }
+
+
+    /* -----------------------------------------
+       PRICE
+       ----------------------------------------- */
+
+    if (
+      path === "/price" &&
+      request.method === "GET"
+    ) {
+      return json({
+        success: true,
+
+        symbol:
+          "LNR",
+
+        reference_price_usdt:
+          num(
+            env.LNR_REFERENCE_PRICE,
+            CONFIG.DEFAULT_LNR_PRICE
+          ),
+
+        source:
+          env.LNR_REFERENCE_PRICE
+            ? "env"
+            : "reference"
+      });
+    }
+
+
+    /*
+     * D1 migration.
+     */
+    try {
+      await bestEffortSchema(
+        env
+      );
+    } catch (_) {}
+
+
+    try {
+
+
+      /* -----------------------------------------
+         USER POST
+         ----------------------------------------- */
+
+      if (
+        path === "/user" &&
+        request.method === "POST"
+      ) {
+        return await handleUserPost(
+          request,
+          env
+        );
+      }
+
+
+      /* -----------------------------------------
+         USER GET
+         ----------------------------------------- */
+
+      if (
+        path === "/user" &&
+        request.method === "GET"
+      ) {
+
+        const telegramId =
+          url.searchParams.get(
+            "telegram_id"
+          );
+
+        if (!telegramId)
+          return json({
+            success: false,
+            error:
+              "telegram_id is required"
+          }, 400);
+
+        const user =
+          await getUser(
+            env,
+            telegramId
+          );
+
+        if (!user)
+          return json({
+            success: false,
+            error:
+              "User not found"
+          }, 404);
+
+        return json({
+          success: true,
+
+          user:
+            await buildUserPayload(
+              env,
+              user
+            )
+        });
+      }
+
+
+      /* -----------------------------------------
+         MINE
+         ----------------------------------------- */
+
+      if (
+        path === "/mine" &&
+        request.method === "POST"
+      ) {
+        return await handleMine(
+          request,
+          env
+        );
+      }
+
+
+      /* -----------------------------------------
+         CLAIM
+         ----------------------------------------- */
+
+      if (
+        path === "/claim" &&
+        request.method === "POST"
+      ) {
+        return await handleClaim(
+          request,
+          env
+        );
+      }
+
+
+      /* -----------------------------------------
+         TASK
+         ----------------------------------------- */
+
+      if (
+        path === "/task" &&
+        request.method === "POST"
+      ) {
+        return await handleTask(
+          request,
+          env
+        );
+      }
+
+
+      /* -----------------------------------------
+         WITHDRAW REQUEST
+         ----------------------------------------- */
+
+      if (
+        path === "/withdraw" &&
+        request.method === "POST"
+      ) {
+        return await handleWithdraw(
+          request,
+          env
+        );
+      }
+
+
+      /* -----------------------------------------
+         MANUAL CRON PROCESS
+         ----------------------------------------- */
+
+      if (
+        path ===
+          "/process-withdrawals" &&
+        request.method === "POST"
+      ) {
+        return await handleProcessWithdrawals(
+          request,
+          env
+        );
+      }
+
+
+      /* -----------------------------------------
+         REFERRAL
+         ----------------------------------------- */
+
+      if (
+        path === "/referral" &&
+        (
+          request.method === "GET" ||
+          request.method === "POST"
+        )
+      ) {
+        return await handleReferral(
+          request,
+          env
+        );
+      }
+
+
+      /* -----------------------------------------
+         WITHDRAWAL HISTORY
+         ----------------------------------------- */
+
+      if (
+        path === "/withdrawals" &&
+        request.method === "GET"
+      ) {
+        return await handleWithdrawals(
+          request,
+          env
+        );
+      }
+
+
+      /* -----------------------------------------
+         MINERS
+         ----------------------------------------- */
+
+      if (
+        path === "/miners" &&
+        request.method === "GET"
+      ) {
+        return await handleMiners(
+          env
+        );
+      }
+
+
+      return json({
+        success: false,
+        error:
+          "Not Found"
+      }, 404);
+
+
+    } catch (error) {
+
+      console.error(
+        "LUNARO_API_ERROR",
+        readableError(error)
+      );
+
+      return json({
+        success: false,
+
+        error:
+          readableError(error)
+      }, 500);
+    }
+  },
+
+
+  /* =======================================================
+     CLOUDFLARE CRON
+     ======================================================= */
+
+  async scheduled(
+    event,
+    env,
+    ctx
+  ) {
+
+    ctx.waitUntil(
+      (async () => {
+
+        try {
+
+          console.log(
+            "LNR_AUTO_WITHDRAW_CRON_START",
+            nowIso()
+          );
+
+          const results =
+            await processPendingWithdrawals(
+              env
+            );
+
+          console.log(
+            "LNR_AUTO_WITHDRAW_CRON_DONE",
+            JSON.stringify({
+              processed:
+                results.length,
+
+              results
+            })
+          );
+
+        } catch (error) {
+
+          console.error(
+            "LNR_AUTO_WITHDRAW_CRON_ERROR",
+            readableError(error)
+          );
+        }
+
+      })()
+    );
+  }
+};
