@@ -1,0 +1,13 @@
+{
+  "name": "lunaro-api",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@ton/core": "0.63.1",
+    "@ton/crypto": "3.3.0",
+    "@ton/ton": "16.3.0"
+  },
+  "devDependencies": {
+    "wrangler": "4.136.3"
+  }
+}
