@@ -49,7 +49,7 @@ const TONCENTER_URL =
 const TONCENTER_V3 =
   "https://toncenter.com/api/v3";
 
-const LNR_DECIMALS = 9;
+const LNR_DECIMALS = 6;
 
 
 /* =========================================================
